@@ -1,0 +1,79 @@
+import { Group } from './group.entity';
+import * as crypto from 'crypto';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  JoinTable,
+} from 'typeorm';
+import { Audit } from '../../commons';
+import { ChangePassword } from './change-password.entity';
+import { Expose } from 'class-transformer';
+
+@Entity()
+export class User extends Audit {
+  @PrimaryGeneratedColumn('uuid')
+  @Expose()
+  id: string;
+
+  @Column({
+    nullable: false,
+  })
+  @Expose()
+  name: string;
+
+  @Column({ unique: true })
+  @Expose()
+  email: string;
+
+  @Column()
+  @Expose()
+  password: string;
+
+  @Column({ name: 'url_facebook', nullable: true })
+  @Expose()
+  urlFacebook: string;
+
+  @Column({ name: 'url_instagram', nullable: true })
+  @Expose()
+  urlInstagram: string;
+
+  @Column({
+    default: '',
+  })
+  @Expose()
+  salt: string;
+
+  @Column({ name: 'facebook_id', nullable: true })
+  @Expose()
+  facebookId: string;
+
+  @Column({ name: 'google_sub', nullable: true })
+  @Expose()
+  googleSub: string;
+
+  @ManyToMany<Group>(
+    () => Group,
+    (group: Group) => group.users,
+  )
+  @JoinTable()
+  @Expose()
+  groups: Group[];
+
+  @OneToMany<ChangePassword>(
+    () => ChangePassword,
+    (changePassword: ChangePassword) => changePassword.user,
+  )
+  @Expose()
+  changePasswordRequests: ChangePassword[];
+
+  validPassword(password: string) {
+    const hash = crypto
+      .pbkdf2Sync(password, this.salt, 1000, 64, `sha512`)
+      .toString(`hex`);
+    return this.password === hash;
+  }
+}
