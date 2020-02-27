@@ -5,8 +5,9 @@ export class Constants {
 
     static CLIENT_CREDENTIALS_ENDPOINT = 'credentials';  
     static USER_ENDPOINT = 'user';
+    static GROUP_ENDPOINT = 'group';
     static UPLOAD_ENDPOINT = 'upload';
-  
+
     static MESSAGE_ENDPOINT = 'message';
   }
   

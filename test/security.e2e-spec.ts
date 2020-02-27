@@ -96,6 +96,7 @@ describe('SecurityController (e2e)', () => {
 
 
   beforeAll(async () => {
+    jest.setTimeout(30000);
     return new Promise(async (resolve,reject) => {
       
       moduleFixture = await Test.createTestingModule({
@@ -360,7 +361,7 @@ describe('SecurityController (e2e)', () => {
     const state = "RANDOMADOHDUSHDUOSDS";
     const uri = "http://localhost:3000/callback";
     const redirectUri = encodeURIComponent(uri);
-    const scope = `${ScopeEnum.CLIENT_CREDENTIALS_CREATE}+${ScopeEnum.GROUP_CREATE}`;
+    const scope = `${ScopeEnum.CLIENT_CREDENTIALS_CREATE}+${ScopeEnum.GROUP_CREATE}+${ScopeEnum.TOKEN_INFO}`;
     const clientId=ClientCredentialsEnum["PLUGIN@APP"];
 
     await authorizationCodeStep1(state,scope,clientId,redirectUri)
@@ -377,7 +378,7 @@ describe('SecurityController (e2e)', () => {
           postRequest(token,`/oauth/token/details`)
           .expect(200)
           .then(data => {
-            expect(data.body.scope.split(" ").length).toBe(2);
+            expect(data.body.scope.split(" ").length).toBe(3);
             done();
           })
           

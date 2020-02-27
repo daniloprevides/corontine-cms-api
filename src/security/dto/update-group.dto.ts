@@ -1,24 +1,24 @@
 import { NewScopeDTO } from './new-scope.dto';
-import { IsEnum, IsOptional, IsString, IsArray, IsNumber } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateClientCredentialsDTO {
+export class UpdateGroupDTO {
 
   @ApiProperty()
   @IsString()
   id: string;
-  
+
   @ApiProperty()
   @IsString()
   name: string;
 
   @ApiProperty()
-  @IsString()  
+  @IsString()
   @IsOptional()
-  secret: string;
+  description: string;
 
   @ApiProperty({type: Array})
   @IsArray()
-  scopes: NewScopeDTO[];
+  scopes: string[];
 
 }

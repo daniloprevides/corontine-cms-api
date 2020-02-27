@@ -10,18 +10,18 @@ export class ClientCredentialsMapper extends Mapper<ClientCredentials, ClientCre
   }
 
   toDto(entityObject: ClientCredentials): ClientCredentialsDTO {
-    return super.toDto(entityObject,false);
+    return super.toDto(entityObject);
   }
 
   toDtoList(entityArray: ClientCredentials[]): ClientCredentialsDTO[] {
-    return super.toDtoList(entityArray,false);
+    return super.toDtoList(entityArray);
   }
 
   toEntity(dtoObject: ClientCredentialsDTO): ClientCredentials {
-    return super.toEntity(dtoObject,false);
+    return super.toEntity(dtoObject);
   }
 
   toEntityList(dtoArray: ClientCredentialsDTO[]): ClientCredentials[] {
-    return super.toEntityList(dtoArray,false);
+    return super.toEntityList(dtoArray);
   }
 }

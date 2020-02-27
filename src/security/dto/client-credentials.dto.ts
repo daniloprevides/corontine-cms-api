@@ -1,6 +1,8 @@
 import { ClientCredentials } from './../entity/client-credentials.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import { NewScopeDTO } from './new-scope.dto';
+import { IsArray, IsOptional } from 'class-validator';
 
 export class ClientCredentialsDTO {
 
@@ -12,8 +14,11 @@ export class ClientCredentialsDTO {
   @Expose()
   name: ClientCredentials['name'];
 
-  @ApiProperty({type: Array})
+  @ApiProperty({type: () => NewScopeDTO})
+  @IsArray()
+  @IsOptional()
   @Expose()
-  scopes: ClientCredentials['scopes'];
+  @Type(() => NewScopeDTO)
+  scopes: NewScopeDTO[];
 
 }

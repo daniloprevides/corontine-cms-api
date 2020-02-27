@@ -34,6 +34,7 @@ export class InitialData1581605239948 implements MigrationInterface {
             [ScopeEnum.CLIENT_CREDENTIALS_DELETE] : await createScope(ScopeEnum.CLIENT_CREDENTIALS_DELETE, "Delete permission for client credentials"),
             [ScopeEnum.CLIENT_CREDENTIALS_UPDATE] : await createScope(ScopeEnum.CLIENT_CREDENTIALS_UPDATE, "Update permission for client credentials"),
 
+            [ScopeEnum.TOKEN_INFO] : await createScope(ScopeEnum.TOKEN_INFO, "Allows retrieving informations from a token"),
 
         }
     }

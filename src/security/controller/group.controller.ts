@@ -1,3 +1,8 @@
+import { GroupDTO } from './../dto/group.dto';
+import { NewGroupDTO } from "./../dto/new-group.dto";
+import { UpdateGroupDTO } from "./../dto/update-group.dto";
+import { GroupMapper } from "./../mapper/group.mapper";
+import { GroupService } from "./../service/group.service";
 import { UpdateClientCredentialsDTO } from "./../dto/update-client-credentials.dto";
 import { ClientCredentialsMapper } from "./../mapper/client-credentials.mapper";
 import { ClientCredentialsService } from "./../service/client-credentials.service";
@@ -35,51 +40,49 @@ import { ClientCredentials } from "../entity/client-credentials.entity";
 import { NeedScope } from "../guard/scope-metadata.guard";
 import { ScopeEnum } from "../enum/scope.enum";
 import { ScopeGuard } from "../guard/scope.guard";
+import { Group } from "../entity/group.entity";
 
-@ApiTags("ClientCredentials")
+@ApiTags("Group")
 @ApiBearerAuth()
 @Controller(
-  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.CLIENT_CREDENTIALS_ENDPOINT}`
+  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.GROUP_ENDPOINT}`
 )
-export class ClientCredentialsController {
-  private readonly logger = new Logger(ClientCredentialsController.name);
+export class GroupController {
+  private readonly logger = new Logger(GroupController.name);
 
   constructor(
-    private readonly service: ClientCredentialsService,
-    private readonly mapper: ClientCredentialsMapper
+    private readonly service: GroupService,
+    private readonly mapper: GroupMapper
   ) {}
 
   @Get()
   @HttpCode(200)
-  @ApiOperation({
-    summary: "Get Client Credentials",
-    description: "Get all Client Credentials"
-  })
+  @ApiOperation({ summary: "Get Groups", description: "Get all Groups" })
   @ApiOkResponse({
-    type: NewClientCredentialsDTO,
+    type: GroupDTO,
     isArray: true,
-    description: "All Client Credentials"
+    description: "All groups"
   })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  @NeedScope(ScopeEnum.CLIENT_CREDENTIALS_READ)
+  @NeedScope(ScopeEnum.GROUP_READ)
   @UseGuards(ScopeGuard)
-  public async getAll(): Promise<ClientCredentialsDTO[]> {
+  public async getAll(): Promise<GroupDTO[]> {
     return this.mapper.toDtoList(await this.service.getAll());
   }
 
   @Get(":id")
   @HttpCode(200)
   @ApiOperation({
-    summary: "Get Client Credential By Id",
-    description: "Get Client Credential by Id"
+    summary: "Get Group By Id",
+    description: "Get Group by Id"
   })
   @ApiOkResponse({
-    type: NewClientCredentialsDTO,
+    type: GroupDTO,
     isArray: false,
-    description: "Get Client Credential by Id"
+    description: "Get Group by Id"
   })
   @ApiUnauthorizedResponse({
     description:
@@ -88,56 +91,52 @@ export class ClientCredentialsController {
   @NeedScope(ScopeEnum.CLIENT_CREDENTIALS_READ)
   @UseGuards(ScopeGuard)
   public async getById(
-    @Headers("authorization") authorization: string,
-    @Param("id") id: ClientCredentials["id"]
-  ): Promise<ClientCredentialsDTO> {
+    @Param("id") id: Group["id"]
+  ): Promise<GroupDTO> {
     return this.mapper.toDto(await this.service.findById(id));
   }
 
   @Post()
   @HttpCode(201)
   @ApiCreatedResponse({
-    type: NewClientCredentialsDTO,
-    description: "Credential created"
+    type: GroupDTO,
+    description: "Group created"
   })
-  @ApiOperation({ summary: "Add user", description: "Creates a new user" })
-  @ApiBody({ type: NewClientCredentialsDTO })
+  @ApiOperation({ summary: "Add Group", description: "Creates a new group" })
+  @ApiBody({ type: NewGroupDTO })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have needed scopes"
   })
-  @NeedScope(ScopeEnum.CLIENT_CREDENTIALS_CREATE)
+  @NeedScope(ScopeEnum.GROUP_CREATE)
   @UseGuards(ScopeGuard)
   async add(
     // eslint-disable-next-line @typescript-eslint/camelcase
-    @Body() newItem: NewClientCredentialsDTO,
-    @Headers("authorization") authorization: string
-  ): Promise<ClientCredentialsDTO> {
-    if (!authorization) {
-      throw new UnauthorizedException();
-    }
-    return this.mapper.toDto(await this.service.add(newItem));
+    @Body() newItem: NewGroupDTO,
+  ): Promise<GroupDTO> {
+    let item = await this.service.add(newItem);
+    return this.mapper.toDto(item);
   }
 
   @Put(":id")
   @HttpCode(200)
-  @ApiOkResponse({ type: ClientCredentialsDTO })
+  @ApiOkResponse({ type: GroupDTO })
   @ApiOperation({
-    summary: "Update Client Credentials",
-    description: "Updates the client Credential By ID"
+    summary: "Update Group",
+    description: "Updates the Group By ID"
   })
-  @ApiNotFoundResponse({ description: "Client Credential Not Found" })
+  @ApiNotFoundResponse({ description: "Group Not Found" })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  @NeedScope(ScopeEnum.CLIENT_CREDENTIALS_UPDATE)
+  @NeedScope(ScopeEnum.GROUP_UPDATE)
   @UseGuards(ScopeGuard)
-  public async updateClientCredential(
+  public async update(
     @Headers("authorization") authorization: string,
-    @Param("id") id: ClientCredentials["id"],
-    @Body() updateInfo: UpdateClientCredentialsDTO
-  ): Promise<ClientCredentialsDTO> {
+    @Param("id") id: Group["id"],
+    @Body() updateInfo: UpdateGroupDTO
+  ): Promise<GroupDTO> {
     if (!authorization) {
       throw new UnauthorizedException();
     }
@@ -151,22 +150,22 @@ export class ClientCredentialsController {
     name: "id",
     type: Number,
     required: true,
-    description: "User id"
+    description: "Group id"
   })
   @ApiOperation({
-    summary: "Delete Client Credentials",
-    description: "Deletes the client Credential By ID"
+    summary: "Delete Group",
+    description: "Deletes Group By ID"
   })
-  @ApiNotFoundResponse({ description: "Client Credential Not Found" })
+  @ApiNotFoundResponse({ description: "Group Not Found" })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  @NeedScope(ScopeEnum.CLIENT_CREDENTIALS_DELETE)
+  @NeedScope(ScopeEnum.GROUP_DELETE)
   @UseGuards(ScopeGuard)
-  public async deleteClientCredential(
+  public async delete(
     @Headers("authorization") authorization: string,
-    @Param("id") id: ClientCredentials["id"]
+    @Param("id") id: Group["id"]
   ): Promise<void> {
     if (!authorization) {
       throw new UnauthorizedException();

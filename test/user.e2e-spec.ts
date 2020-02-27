@@ -101,6 +101,7 @@ describe('UserController', () => {
 
 
   beforeAll(async () => {
+    jest.setTimeout(30000);
     return new Promise(async (resolve,reject) => {
       moduleFixture = await Test.createTestingModule({
         imports: [

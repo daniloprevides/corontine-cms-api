@@ -14,6 +14,7 @@ import { ClientCredentials } from '../src/security/entity/client-credentials.ent
 import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.enum';
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
 import { NewScopeDTO } from 'src/security/dto/new-scope.dto';
+import { UpdateClientCredentialsDTO } from 'src/security/dto/update-client-credentials.dto';
 
 
 const stringToBase64 = (string: string) => {
@@ -98,6 +99,7 @@ describe('ClientCredentials (e2e)', () => {
 
 
   beforeAll(async () => {
+    jest.setTimeout(30000);
     return new Promise(async (resolve,reject) => {
       moduleFixture = await Test.createTestingModule({
         imports: [
@@ -126,7 +128,7 @@ describe('ClientCredentials (e2e)', () => {
       let credential = {
         name: "Test",
         scopes: [{name: ScopeEnum.USER_CREATE, description: "User Creation"} as NewScopeDTO],
-        secret: "Toda Criança sabe ler e escrever"
+        secret: "obladioblada"
       } as NewClientCredentialsDTO
       return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
         .then(res => {
@@ -157,7 +159,6 @@ describe('ClientCredentials (e2e)', () => {
               expect(data.body.scopes.length > 0).toBe(true);
               expect(data.body.scopes[0].name).toBe(credential.scopes[0].name);
               expect(data.body.scopes[0].description).toBe(credential.scopes[0].description); //Credential must have reutilized scope by name, so description is different
-              expect(data.body.secret).toBe(credential.secret);
               expect(data.body.name).toBe(credential.name);
               done();
             });        
@@ -205,7 +206,7 @@ describe('ClientCredentials (e2e)', () => {
             return createRequest(credential,res.body.accessToken, credentialUrl)
             .expect(201) 
             .then((permission) => {
-              let item = permission.body as ClientCredentialsDTO;
+              let item = permission.body as UpdateClientCredentialsDTO;
               item.name = "plus_another_name";
               return updateRequest(item,res.body.accessToken,`${credentialUrl}/${item.id}`)
               .expect(200)

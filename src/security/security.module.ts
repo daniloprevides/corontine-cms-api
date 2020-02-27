@@ -1,3 +1,5 @@
+import { GroupController } from './controller/group.controller';
+import { GroupService } from './service/group.service';
 import { AuthorizationCodeRepository } from './repository/authorization-code.repository';
 import { AuthorizationCode } from './entity/authorization-code.entity';
 import { ClientCredentialsService } from './service/client-credentials.service';
@@ -24,6 +26,7 @@ import { UserMapper } from './mapper/user.mapper';
 import { Group } from './entity/group.entity';
 import { Scope } from './entity/scope.entity';
 import { AuthorizationCodeService } from './service/authorization-code.service';
+import { GroupMapper } from './mapper/group.mapper';
 
 @Module({
     imports: [
@@ -52,8 +55,8 @@ import { AuthorizationCodeService } from './service/authorization-code.service';
             
           ]),   
     ],
-    controllers: [SecurityController,UserController,ClientCredentialsController],
-    providers: [SecurityService, UserService, UserMapper, ClientCredentialsMapper, ClientCredentialsService, ChangePasswordService, AuthorizationCodeService],
-    exports: [SecurityService, UserService, ClientCredentialsService, AuthorizationCodeService],
+    controllers: [SecurityController,UserController,ClientCredentialsController, GroupController],
+    providers: [SecurityService, UserService, UserMapper, ClientCredentialsMapper, GroupMapper, ClientCredentialsService, ChangePasswordService, AuthorizationCodeService, GroupService],
+    exports: [SecurityService, UserService, ClientCredentialsService, AuthorizationCodeService, GroupService],
 })
 export class SecurityModule {}

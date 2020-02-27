@@ -108,7 +108,7 @@ export class ClientCredentialsService {
     return await this.repository.save(
       {
         name: updateInfo.name,
-        secret: updateInfo.secret,
+        secret: updateInfo.secret ? updateInfo.secret : credential.secret,
         scopes: scopes
       }
     );

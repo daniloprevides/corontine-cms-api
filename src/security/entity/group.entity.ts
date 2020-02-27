@@ -18,6 +18,7 @@ export class Group extends Audit {
 
   @Column({
     nullable: false,
+    unique: true
   })
   @Expose()
   name: string;
