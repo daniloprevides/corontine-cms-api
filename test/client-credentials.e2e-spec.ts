@@ -2,7 +2,7 @@ import { ClientCredentialsDTO } from './../src/security/dto/client-credentials.d
 import { ScopeEnum } from './../src/security/enum/scope.enum';
 import { NewClientCredentialsDTO } from './../src/security/dto/new-client-credentials.dto';
 import { AppModule } from './../src/app.module';
-import * as request from 'supertest';
+import request = require('supertest');
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { QueryRunner, Repository } from 'typeorm';

@@ -1,6 +1,6 @@
 import { ScopeEnum } from './../src/security/enum/scope.enum';
 import { AppModule } from './../src/app.module';
-import * as request from 'supertest';
+import request = require('supertest');
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { QueryRunner, Repository } from 'typeorm';

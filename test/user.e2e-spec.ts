@@ -3,7 +3,7 @@ import { AdminChangePasswordDTO } from './../src/security/dto/admin-change-passw
 import { User } from './../src/security/entity/user.entity';
 import { UserDTO } from './../src/security/dto/user.dto';
 import { AppModule } from './../src/app.module';
-import * as request from 'supertest';
+import request = require('supertest');
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { QueryRunner, Repository } from 'typeorm';
