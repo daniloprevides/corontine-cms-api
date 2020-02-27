@@ -1,3 +1,4 @@
+import { SecurityConstants } from './../constants';
 import { AuthorizationCodeService } from './../service/authorization-code.service';
 import {
   Body,
@@ -29,7 +30,7 @@ import { NeedScope } from '../../commons/guard/scope-metadata.guard';
 import { ScopeEnum } from '../enum/scope.enum';
 import { ScopeGuard } from '../guard/scope.guard';
 
-@Controller(`/${Constants.OAUTH_ENDPOINT}`)
+@Controller(`/${SecurityConstants.OAUTH_ENDPOINT}`)
 export class SecurityController {
   private readonly logger = new Logger(SecurityController.name);
 

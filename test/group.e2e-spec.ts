@@ -1,10 +1,9 @@
+import { SecurityConstants } from './../src/security/constants';
 import { Group } from './../src/security/entity/group.entity';
 import { UpdateGroupDTO } from './../src/security/dto/update-group.dto';
 import { GroupDTO } from './../src/security/dto/group.dto';
 import { NewGroupDTO } from './../src/security/dto/new-group.dto';
-import { ClientCredentialsDTO } from './../src/security/dto/client-credentials.dto';
 import { ScopeEnum } from './../src/security/enum/scope.enum';
-import { NewClientCredentialsDTO } from './../src/security/dto/new-client-credentials.dto';
 import { AppModule } from './../src/app.module';
 import request = require('supertest');
 import { Test, TestingModule } from '@nestjs/testing';
@@ -17,8 +16,6 @@ import { initializeTransactionalContext } from 'typeorm-transactional-cls-hooked
 import { ClientCredentials } from '../src/security/entity/client-credentials.entity';
 import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.enum';
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
-import { NewScopeDTO } from 'src/security/dto/new-scope.dto';
-
 
 const stringToBase64 = (string: string) => {
   return Buffer.from(string).toString('base64');
@@ -28,9 +25,9 @@ describe('Group (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
   let authorization: string;
-  const userUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.USER_ENDPOINT}`;
-  const credentialUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.CLIENT_CREDENTIALS_ENDPOINT}`;
-  const groupUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.GROUP_ENDPOINT}`;
+  const userUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.USER_ENDPOINT}`;
+  const credentialUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.CLIENT_CREDENTIALS_ENDPOINT}`;
+  const groupUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.GROUP_ENDPOINT}`;
 
   let server = null;
 

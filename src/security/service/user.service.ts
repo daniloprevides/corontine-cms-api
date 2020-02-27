@@ -1,5 +1,6 @@
-import { Constants } from './../../commons/constants';
-import * as crypto from 'crypto';
+import { SecurityConstants } from "./../constants";
+import { Constants } from "./../../commons/constants";
+import * as crypto from "crypto";
 import {
   BadRequestException,
   ConflictException,
@@ -8,26 +9,26 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+  NotFoundException
+} from "@nestjs/common";
 
-import { ChangePasswordService } from './change-password.service';
-import { MailerService } from '@nest-modules/mailer';
-import { Transactional } from 'typeorm-transactional-cls-hooked';
-import { ConfigService } from '@nestjs/config';
-import { Group } from '../entity/group.entity';
-import { UserRepository } from '../repository/user.repository';
-import { User } from '../entity/user.entity';
-import { NewUserDTO } from '../dto/new-user.dto';
-import { UserUpdateDTO } from '../dto/user-update.dto';
-import { ForgotPasswordDTO } from '../dto/forgot-password';
-import { ChangePassword } from '../entity/change-password.entity';
-import { UserNotFoundError } from '../exception/user-not-found.error';
-import { AdminChangePasswordDTO } from '../dto/admin-change-password.dto';
-import { ChangePasswordDTO } from '../dto/change-password.dto';
-import { ChangePasswordForgotFlowDTO } from '../dto/change-password-forgot-flow.dto';
-import { GroupRepository } from '../repository/group.repository';
-import { Scope } from '../entity/scope.entity';
+import { ChangePasswordService } from "./change-password.service";
+import { MailerService } from "@nest-modules/mailer";
+import { Transactional } from "typeorm-transactional-cls-hooked";
+import { ConfigService } from "@nestjs/config";
+import { Group } from "../entity/group.entity";
+import { UserRepository } from "../repository/user.repository";
+import { User } from "../entity/user.entity";
+import { NewUserDTO } from "../dto/new-user.dto";
+import { UserUpdateDTO } from "../dto/user-update.dto";
+import { ForgotPasswordDTO } from "../dto/forgot-password";
+import { ChangePassword } from "../entity/change-password.entity";
+import { UserNotFoundError } from "../exception/user-not-found.error";
+import { AdminChangePasswordDTO } from "../dto/admin-change-password.dto";
+import { ChangePasswordDTO } from "../dto/change-password.dto";
+import { ChangePasswordForgotFlowDTO } from "../dto/change-password-forgot-flow.dto";
+import { GroupRepository } from "../repository/group.repository";
+import { Scope } from "../entity/scope.entity";
 
 @Injectable()
 export class UserService {
@@ -41,8 +42,8 @@ export class UserService {
     @Inject(forwardRef(() => ConfigService))
     private readonly configService: ConfigService,
     @Inject(forwardRef(() => GroupRepository))
-    private readonly groupRepository: GroupRepository,
-    ) {}
+    private readonly groupRepository: GroupRepository
+  ) {}
 
   @Transactional()
   public async getAll(): Promise<User[]> {
@@ -50,16 +51,16 @@ export class UserService {
   }
 
   @Transactional()
-  public async findById(id: User['id'], loadScopes = false): Promise<User> {
+  public async findById(id: User["id"], loadScopes = false): Promise<User> {
     const options = {
-      relations: ['groups']
-    }
+      relations: ["groups"]
+    };
 
     if (loadScopes) options.relations.push("groups.scopes");
 
     const user: User | undefined = await this.repository.findOne(id, options);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
     return user;
   }
@@ -69,10 +70,12 @@ export class UserService {
     const salt: string = this.createSalt();
     const hashPassword: string = this.createHashedPassword(user.password, salt);
     //Find groupd by ID
-    let groups:Array<Group> = new Array();
-    if (user.groups){
-      for (let groupName of user.groups){
-        groups.push(await this.groupRepository.findOne({where: {name: groupName}}));
+    let groups: Array<Group> = new Array();
+    if (user.groups) {
+      for (let groupName of user.groups) {
+        groups.push(
+          await this.groupRepository.findOne({ where: { name: groupName } })
+        );
       }
     }
     try {
@@ -84,39 +87,39 @@ export class UserService {
       });
     } catch (e) {
       console.error(e);
-      if (e.code === 'ER_DUP_ENTRY') {
-        throw new ConflictException('User with same email already exists');
+      if (e.code === "ER_DUP_ENTRY") {
+        throw new ConflictException("User with same email already exists");
       }
       throw new InternalServerErrorException(e.message);
     }
   }
 
   @Transactional()
-  public async delete(id: User['id']): Promise<void> {
+  public async delete(id: User["id"]): Promise<void> {
     await this.findById(id);
     await this.repository.delete(id);
   }
 
   @Transactional()
   public async update(
-    id: User['id'],
-    userUpdatedInfo: UserUpdateDTO,
+    id: User["id"],
+    userUpdatedInfo: UserUpdateDTO
   ): Promise<User> {
-    const user: User = await this.findById(id);    
+    const user: User = await this.findById(id);
     return await this.repository.save({
       ...user,
       ...userUpdatedInfo,
       groups: user.groups,
-      id: user.id,
+      id: user.id
     });
   }
 
   public async forgotPassword(
-    forgotPasswordDTO: ForgotPasswordDTO,
+    forgotPasswordDTO: ForgotPasswordDTO
   ): Promise<string> {
     const user: User = await this.findByEmail(forgotPasswordDTO.email);
     const changePassword: ChangePassword = await this.changePasswordService.createChangePasswordRequest(
-      user,
+      user
     );
     await this.sendChangePasswordEmail(user, changePassword.id);
     return changePassword.id;
@@ -134,7 +137,7 @@ export class UserService {
   @Transactional()
   public async findByEmailAndPassword(
     email: string,
-    password: string,
+    password: string
   ): Promise<User> {
     const user: User = await this.findByEmail(email);
     if (!user.validPassword(password)) {
@@ -146,11 +149,11 @@ export class UserService {
   @Transactional()
   public async findByEmailAndFacebookId(
     email: string,
-    facebookId: string,
+    facebookId: string
   ): Promise<User> {
     const user: User = await this.repository.findByEmailAndFacebookId(
       email,
-      facebookId,
+      facebookId
     );
     if (!user) {
       throw new UserNotFoundError();
@@ -161,7 +164,7 @@ export class UserService {
   @Transactional()
   public async validateChangePassword(changePasswordRequestId: string) {
     const changePassword: ChangePassword = await this.changePasswordService.findById(
-      changePasswordRequestId,
+      changePasswordRequestId
     );
     if (
       Date.now() >
@@ -173,32 +176,31 @@ export class UserService {
   }
 
   @Transactional()
-  public async getAllUserScopes(id: User["id"]) : Promise<Array<Scope>>{
+  public async getAllUserScopes(id: User["id"]): Promise<Array<Scope>> {
     let user = await this.findById(id, true);
     if (!user) throw new UserNotFoundError();
 
     const scopes = new Array<Scope>();
-    user.groups.forEach(g => g.scopes.forEach(i => scopes.push(i)))
+    user.groups.forEach(g => g.scopes.forEach(i => scopes.push(i)));
 
     return scopes;
-
   }
 
   @Transactional()
   public async adminChangePassword(
     id: string,
-    changePasswordDTO: AdminChangePasswordDTO,
+    changePasswordDTO: AdminChangePasswordDTO
   ): Promise<User> {
     if (
       changePasswordDTO.newPassword !== changePasswordDTO.confirmNewPassword
     ) {
-      throw new BadRequestException('New passwords does not match');
+      throw new BadRequestException("New passwords does not match");
     }
     const user: User = await this.findById(id);
     user.salt = this.createSalt();
     user.password = this.createHashedPassword(
       changePasswordDTO.newPassword,
-      user.salt,
+      user.salt
     );
     return await this.repository.save(user);
   }
@@ -206,23 +208,23 @@ export class UserService {
   @Transactional()
   public async changePassword(
     id: string,
-    changePasswordDTO: ChangePasswordDTO,
+    changePasswordDTO: ChangePasswordDTO
   ): Promise<User> {
     if (
       changePasswordDTO.newPassword !== changePasswordDTO.confirmNewPassword
     ) {
-      throw new BadRequestException('New passwords does not match');
+      throw new BadRequestException("New passwords does not match");
     }
     const user: User = await this.findById(id);
     if (!user.validPassword(changePasswordDTO.password)) {
       throw new BadRequestException(
-        'Old password does not match with given password',
+        "Old password does not match with given password"
       );
     }
     user.salt = this.createSalt();
     user.password = this.createHashedPassword(
       changePasswordDTO.newPassword,
-      user.salt,
+      user.salt
     );
     return await this.repository.save(user);
   }
@@ -230,27 +232,26 @@ export class UserService {
   @Transactional()
   public async changePasswordForgotPasswordFlow(
     changePasswordRequestId: string,
-    changePasswordDTO: ChangePasswordForgotFlowDTO,
+    changePasswordDTO: ChangePasswordForgotFlowDTO
   ): Promise<User> {
     if (
       changePasswordDTO.newPassword !== changePasswordDTO.confirmNewPassword
     ) {
-      throw new BadRequestException('passwords does not match');
+      throw new BadRequestException("passwords does not match");
     }
     const { user }: ChangePassword = await this.changePasswordService.findById(
-      changePasswordRequestId,
+      changePasswordRequestId
     );
     user.salt = this.createSalt();
     user.password = this.createHashedPassword(
       changePasswordDTO.newPassword,
-      user.salt,
+      user.salt
     );
     return await this.repository.save(user);
   }
 
-
   private createSalt(): string {
-    return crypto.randomBytes(16).toString('hex');
+    return crypto.randomBytes(16).toString("hex");
   }
 
   private createHashedPassword(password: string, salt: string): string {
@@ -261,18 +262,22 @@ export class UserService {
 
   private async sendChangePasswordEmail(
     user: User,
-    changePasswordRequestId: string,
+    changePasswordRequestId: string
   ): Promise<void> {
     try {
       await this.mailerService.sendMail({
         to: user.email,
         from: this.configService.get("mail").from,
-        subject: 'Password Change Request',
-        template: 'change-password',
+        subject: "Password Change Request",
+        template: "change-password",
         context: {
           name: user.name,
-          urlTrocaSenha: `${this.configService.get('serverUrl')}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.USER_ENDPOINT}/forgot-password/${changePasswordRequestId}` 
-        },
+          urlTrocaSenha: `${this.configService.get("serverUrl")}/${
+            Constants.API_PREFIX
+          }/${Constants.API_VERSION_1}/${
+            SecurityConstants.USER_ENDPOINT
+          }/forgot-password/${changePasswordRequestId}`
+        }
       });
     } catch (e) {
       throw new InternalServerErrorException(e);

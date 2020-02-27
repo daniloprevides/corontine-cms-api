@@ -1,3 +1,4 @@
+import { SecurityConstants } from './../src/security/constants';
 import { ClientCredentialsDTO } from './../src/security/dto/client-credentials.dto';
 import { ScopeEnum } from './../src/security/enum/scope.enum';
 import { NewClientCredentialsDTO } from './../src/security/dto/new-client-credentials.dto';
@@ -25,8 +26,8 @@ describe('ClientCredentials (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
   let authorization: string;
-  const userUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.USER_ENDPOINT}`;
-  const credentialUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.CLIENT_CREDENTIALS_ENDPOINT}`;
+  const userUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.USER_ENDPOINT}`;
+  const credentialUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.CLIENT_CREDENTIALS_ENDPOINT}`;
 
   let server = null;
 

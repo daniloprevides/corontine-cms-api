@@ -3,11 +3,6 @@ import { NewGroupDTO } from "./../dto/new-group.dto";
 import { UpdateGroupDTO } from "./../dto/update-group.dto";
 import { GroupMapper } from "./../mapper/group.mapper";
 import { GroupService } from "./../service/group.service";
-import { UpdateClientCredentialsDTO } from "./../dto/update-client-credentials.dto";
-import { ClientCredentialsMapper } from "./../mapper/client-credentials.mapper";
-import { ClientCredentialsService } from "./../service/client-credentials.service";
-import { NewClientCredentialsDTO } from "./../dto/new-client-credentials.dto";
-import { ClientCredentialsDTO } from "./../dto/client-credentials.dto";
 import {
   Body,
   Controller,
@@ -36,16 +31,16 @@ import {
   ApiNotFoundResponse,
   ApiParam
 } from "@nestjs/swagger";
-import { ClientCredentials } from "../entity/client-credentials.entity";
 import { NeedScope } from "../../commons/guard/scope-metadata.guard";
 import { ScopeEnum } from "../enum/scope.enum";
 import { ScopeGuard } from "../guard/scope.guard";
 import { Group } from "../entity/group.entity";
+import { SecurityConstants } from '../constants';
 
 @ApiTags("Group")
 @ApiBearerAuth()
 @Controller(
-  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.GROUP_ENDPOINT}`
+  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.GROUP_ENDPOINT}`
 )
 export class GroupController {
   private readonly logger = new Logger(GroupController.name);

@@ -10,6 +10,7 @@ import { MailerAsyncOptions } from '@nest-modules/mailer/dist/interfaces/mailer-
 import { MailerModule } from '@nest-modules/mailer';
 import { getConnection, Connection } from 'typeorm';
 import { initializeTransactionalContext } from 'typeorm-transactional-cls-hooked';
+import { PluginModule } from './plugin/plugin.module';
 
 const databaseModule: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -35,7 +36,8 @@ const mailerAsyncModule: MailerAsyncOptions = {
     TypeOrmModule.forRootAsync(databaseModule),
     MailerModule.forRootAsync(mailerAsyncModule),
     CommonsModule,
-    forwardRef(() => SecurityModule),                 
+    forwardRef(() => SecurityModule),
+    forwardRef(() => PluginModule),                 
   ],
   controllers: [AppController],
   providers: [AppService],

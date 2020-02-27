@@ -43,10 +43,11 @@ import { AdminChangePasswordDTO } from '../dto/admin-change-password.dto';
 import { ChangePasswordRequestIdDTO } from '../dto/change-password-request-id.dto';
 import { ForgotPasswordDTO } from '../dto/forgot-password';
 import { ChangePasswordForgotFlowDTO } from '../dto/change-password-forgot-flow.dto';
+import { SecurityConstants } from '../constants';
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller(
-  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.USER_ENDPOINT}`,
+  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.USER_ENDPOINT}`,
 )
 export class UserController {
   private readonly logger = new Logger(UserController.name);

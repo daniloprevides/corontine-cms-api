@@ -1,3 +1,4 @@
+import { SecurityConstants } from './../src/security/constants';
 import { ForgotPasswordDTO } from './../src/security/dto/forgot-password';
 import { AdminChangePasswordDTO } from './../src/security/dto/admin-change-password.dto';
 import { User } from './../src/security/entity/user.entity';
@@ -27,8 +28,8 @@ describe('UserController', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
   let authorization: string;
-  const userUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.USER_ENDPOINT}`;
-  const credentialUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.CLIENT_CREDENTIALS_ENDPOINT}`;
+  const userUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.USER_ENDPOINT}`;
+  const credentialUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.CLIENT_CREDENTIALS_ENDPOINT}`;
 
   let server = null;
 

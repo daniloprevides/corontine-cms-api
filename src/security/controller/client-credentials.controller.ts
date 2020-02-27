@@ -1,3 +1,4 @@
+import { SecurityConstants } from './../constants';
 import { UpdateClientCredentialsDTO } from "./../dto/update-client-credentials.dto";
 import { ClientCredentialsMapper } from "./../mapper/client-credentials.mapper";
 import { ClientCredentialsService } from "./../service/client-credentials.service";
@@ -39,7 +40,7 @@ import { ScopeGuard } from "../guard/scope.guard";
 @ApiTags("ClientCredentials")
 @ApiBearerAuth()
 @Controller(
-  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${Constants.CLIENT_CREDENTIALS_ENDPOINT}`
+  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.CLIENT_CREDENTIALS_ENDPOINT}`
 )
 export class ClientCredentialsController {
   private readonly logger = new Logger(ClientCredentialsController.name);
