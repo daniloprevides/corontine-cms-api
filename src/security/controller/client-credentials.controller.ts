@@ -32,7 +32,7 @@ import {
   ApiParam
 } from "@nestjs/swagger";
 import { ClientCredentials } from "../entity/client-credentials.entity";
-import { NeedScope } from "../guard/scope-metadata.guard";
+import { NeedScope } from "../../commons/guard/scope-metadata.guard";
 import { ScopeEnum } from "../enum/scope.enum";
 import { ScopeGuard } from "../guard/scope.guard";
 
