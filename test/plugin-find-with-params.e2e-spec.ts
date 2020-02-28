@@ -1,7 +1,7 @@
-import { FindParamsDto } from '../src/commons/dto/find-params.dto';
-import { Pagination } from 'nestjs-typeorm-paginate';
-import { Plugin } from '../src/plugin/entity/plugin.entity';
-import { PluginDto } from '../src/plugin/dto/plugin.dto';
+import { FindParamsDto } from "../src/commons/dto/find-params.dto";
+import { Pagination } from "nestjs-typeorm-paginate";
+import { Plugin } from "../src/plugin/entity/plugin.entity";
+import { PluginDto } from "../src/plugin/dto/plugin.dto";
 import { ScopeEnum } from "../src/security/enum/scope.enum";
 import { Scope } from "../src/security/entity/scope.entity";
 import { HttpExceptionFilter } from "../src/commons/filters/http-exception.filter";
@@ -22,7 +22,7 @@ import { ClientCredentials } from "../src/security/entity/client-credentials.ent
 import { ClientCredentialsEnum } from "../src/security/enum/client-credentials.enum";
 import { GrantTypeEnum } from "../src/security/enum/grant-type.enum";
 import { PluginEnvironmentEnum } from "../src/plugin/enum/environment.enum";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 const stringToBase64 = (string: string) => {
   return Buffer.from(string).toString("base64");
 };
@@ -138,7 +138,7 @@ describe("Plugin(Find With Filters) (e2e)", () => {
   const getRequest = (token: string, url: string, limit = 10, page = 0) => {
     return request(app.getHttpServer())
       .get(url)
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${token}`);
   };
 
   beforeAll(async () => {
@@ -178,29 +178,31 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         apiUrl: "http://localhost",
         environment: PluginEnvironmentEnum.STAGE,
         pluginType: PluginTypeEnum.CLIENT,
-        components : [
+        components: [
           {
             name: "component"
           } as NewComponentsDto
-        ]     
+        ]
       } as NewPluginDto;
-      return createRequest(plugin,res.body.accessToken,pluginUrl)
-      .expect(201)
-      .then(newPluginResponse => {
-        let newPluginItem = newPluginResponse.body as PluginDto;
-        const filter = {
-          name: newPluginItem.name
-        };
-        return getRequest(res.body.accessToken, `${pluginUrl}?q=${JSON.stringify(filter)}`)
-          .expect(200)
-          .then(async data => {
-            let pagination = data.body as Pagination<PluginDto>;
-            expect(pagination.itemCount).toBe(1);
-            expect(pagination.items[0].name).toBe(newPluginItem.name);           
-            done();        
-        });  
-      });
-
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(newPluginResponse => {
+          let newPluginItem = newPluginResponse.body as PluginDto;
+          const filter = {
+            name: newPluginItem.name
+          };
+          return getRequest(
+            res.body.accessToken,
+            `${pluginUrl}?q=${JSON.stringify(filter)}`
+          )
+            .expect(200)
+            .then(async data => {
+              let pagination = data.body as Pagination<PluginDto>;
+              expect(pagination.itemCount).toBe(1);
+              expect(pagination.items[0].name).toBe(newPluginItem.name);
+              done();
+            });
+        });
     });
   });
 
@@ -213,29 +215,31 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         apiUrl: "http://localhost",
         environment: PluginEnvironmentEnum.STAGE,
         pluginType: PluginTypeEnum.CLIENT,
-        components : [
+        components: [
           {
             name: "component"
           } as NewComponentsDto
-        ]     
+        ]
       } as NewPluginDto;
-      return createRequest(plugin,res.body.accessToken,pluginUrl)
-      .expect(201)
-      .then(newPluginResponse => {
-        let newPluginItem = newPluginResponse.body as PluginDto;
-        const filter = {
-          name: {$eq: newPluginItem.name}
-        };
-        return getRequest(res.body.accessToken, `${pluginUrl}?q=${JSON.stringify(filter)}`)
-          .expect(200)
-          .then(async data => {
-            let pagination = data.body as Pagination<PluginDto>;
-            expect(pagination.itemCount).toBe(1);
-            expect(pagination.items[0].name).toBe(newPluginItem.name);           
-            done();        
-        });  
-      });
-
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(newPluginResponse => {
+          let newPluginItem = newPluginResponse.body as PluginDto;
+          const filter = {
+            name: { $eq: newPluginItem.name }
+          };
+          return getRequest(
+            res.body.accessToken,
+            `${pluginUrl}?q=${JSON.stringify(filter)}`
+          )
+            .expect(200)
+            .then(async data => {
+              let pagination = data.body as Pagination<PluginDto>;
+              expect(pagination.itemCount).toBe(1);
+              expect(pagination.items[0].name).toBe(newPluginItem.name);
+              done();
+            });
+        });
     });
   });
 
@@ -248,28 +252,32 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         apiUrl: "http://localhost",
         environment: PluginEnvironmentEnum.STAGE,
         pluginType: PluginTypeEnum.CLIENT,
-        components : [
+        components: [
           {
             name: "component"
           } as NewComponentsDto
-        ]     
+        ]
       } as NewPluginDto;
-      return createRequest(plugin,res.body.accessToken,pluginUrl)
-      .expect(201)
-      .then(newPluginResponse => {
-        let newPluginItem = newPluginResponse.body as PluginDto;
-        const filter = {
-          name: {$not: newPluginItem.name}
-        };
-        return getRequest(res.body.accessToken, `${pluginUrl}?q=${JSON.stringify(filter)}`)
-          .expect(200)
-          .then(async data => {
-            let pagination = data.body as Pagination<PluginDto>;
-            expect(pagination.items.find(i => i.name === newPluginItem.name)).toBeFalsy();           
-            done();        
-        });  
-      });
-
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(newPluginResponse => {
+          let newPluginItem = newPluginResponse.body as PluginDto;
+          const filter = {
+            name: { $not: newPluginItem.name }
+          };
+          return getRequest(
+            res.body.accessToken,
+            `${pluginUrl}?q=${JSON.stringify(filter)}`
+          )
+            .expect(200)
+            .then(async data => {
+              let pagination = data.body as Pagination<PluginDto>;
+              expect(
+                pagination.items.find(i => i.name === newPluginItem.name)
+              ).toBeFalsy();
+              done();
+            });
+        });
     });
   });
 
@@ -282,32 +290,33 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         apiUrl: "http://localhost",
         environment: PluginEnvironmentEnum.STAGE,
         pluginType: PluginTypeEnum.CLIENT,
-        components : [
+        components: [
           {
             name: "component"
           } as NewComponentsDto
-        ]     
+        ]
       } as NewPluginDto;
-      return createRequest(plugin,res.body.accessToken,pluginUrl)
-      .expect(201)
-      .then(newPluginResponse => {
-        let newPluginItem = newPluginResponse.body as PluginDto;
-        const filter = {
-          name: {$in: [newPluginItem.name]}
-        };
-        return getRequest(res.body.accessToken, `${pluginUrl}?q=${JSON.stringify(filter)}`)
-          .expect(200)
-          .then(async data => {           
-            let pagination = data.body as Pagination<PluginDto>;
-            expect(pagination.itemCount).toBe(1);
-            expect(pagination.items[0].name).toBe(newPluginItem.name);          
-            done();        
-        });  
-      });
-
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(newPluginResponse => {
+          let newPluginItem = newPluginResponse.body as PluginDto;
+          const filter = {
+            name: { $in: [newPluginItem.name] }
+          };
+          return getRequest(
+            res.body.accessToken,
+            `${pluginUrl}?q=${JSON.stringify(filter)}`
+          )
+            .expect(200)
+            .then(async data => {
+              let pagination = data.body as Pagination<PluginDto>;
+              expect(pagination.itemCount).toBe(1);
+              expect(pagination.items[0].name).toBe(newPluginItem.name);
+              done();
+            });
+        });
     });
   });
-
 
   it("Query Plugin and sort by name ASC", async done => {
     return defaultGrantRequest(
@@ -318,31 +327,33 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         apiUrl: "http://localhost",
         environment: PluginEnvironmentEnum.STAGE,
         pluginType: PluginTypeEnum.CLIENT,
-        components : [
+        components: [
           {
             name: "component"
           } as NewComponentsDto
-        ]     
+        ]
       } as NewPluginDto;
-      return createRequest(plugin,res.body.accessToken,pluginUrl)
-      .expect(201)
-      .then(newPluginResponse => {
-        let newPluginItem = newPluginResponse.body as PluginDto;
-        const filter = {
-          
-        };
-        const sort = {
-          name: "ASC"
-        }
-        return getRequest(res.body.accessToken, `${pluginUrl}?q=${JSON.stringify(filter)}&sort=${JSON.stringify(sort)}`)
-          .expect(200)
-          .then(async data => {    
-            let pagination = data.body as Pagination<PluginDto>;
-            expect(pagination.items[0].name).toBe(newPluginItem.name);          
-            done();        
-        });  
-      });
-
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(newPluginResponse => {
+          let newPluginItem = newPluginResponse.body as PluginDto;
+          const filter = {};
+          const sort = {
+            name: "ASC"
+          };
+          return getRequest(
+            res.body.accessToken,
+            `${pluginUrl}?q=${JSON.stringify(filter)}&sort=${JSON.stringify(
+              sort
+            )}`
+          )
+            .expect(200)
+            .then(async data => {
+              let pagination = data.body as Pagination<PluginDto>;
+              expect(pagination.items[0].name).toBe(newPluginItem.name);
+              done();
+            });
+        });
     });
   });
 
@@ -355,31 +366,35 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         apiUrl: "http://localhost",
         environment: PluginEnvironmentEnum.STAGE,
         pluginType: PluginTypeEnum.CLIENT,
-        components : [
+        components: [
           {
             name: "component"
           } as NewComponentsDto
-        ]     
+        ]
       } as NewPluginDto;
-      return createRequest(plugin,res.body.accessToken,pluginUrl)
-      .expect(201)
-      .then(newPluginResponse => {
-        let newPluginItem = newPluginResponse.body as PluginDto;
-        const filter = {
-          
-        };
-        const sort = {
-          name: "DESC"
-        }
-        return getRequest(res.body.accessToken, `${pluginUrl}?q=${JSON.stringify(filter)}&sort=${JSON.stringify(sort)}`)
-          .expect(200)
-          .then(async data => {    
-            let pagination = data.body as Pagination<PluginDto>;
-            expect(pagination.items[pagination.items.length -1].name).toBe(newPluginItem.name);          
-            done();        
-        });  
-      });
-
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(newPluginResponse => {
+          let newPluginItem = newPluginResponse.body as PluginDto;
+          const filter = {};
+          const sort = {
+            name: "DESC"
+          };
+          return getRequest(
+            res.body.accessToken,
+            `${pluginUrl}?q=${JSON.stringify(filter)}&sort=${JSON.stringify(
+              sort
+            )}`
+          )
+            .expect(200)
+            .then(async data => {
+              let pagination = data.body as Pagination<PluginDto>;
+              expect(pagination.items[pagination.items.length - 1].name).toBe(
+                newPluginItem.name
+              );
+              done();
+            });
+        });
     });
   });
 
