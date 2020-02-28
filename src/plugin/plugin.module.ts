@@ -1,3 +1,8 @@
+import { AuthenticationService } from "./../commons/services/authentication-service";
+import { ConfigService } from "@nestjs/config";
+import { Reflector } from "@nestjs/core";
+import { RedirectorService } from "./services/redirector.service";
+import { RedirectorController } from "./controllers/redirector.controller";
 import { PluginMapper } from "./mapper/plugin.mapper";
 import { FieldsMapper } from "./mapper/fields.mapper";
 import { ComponentsMapper } from "./mapper/components.mapper";
@@ -18,7 +23,7 @@ import { Attributes } from "./entity/attributes.entity";
 import { Fields } from "./entity/fields.entity";
 import { Components } from "./entity/components.entity";
 import { Plugin } from "./entity/plugin.entity";
-import { Module } from "@nestjs/common";
+import { Module, HttpService, HttpModule } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 @Module({
@@ -32,24 +37,34 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       ComponentsRepository,
       FieldsRepository,
       AttributesRepository
-    ])
+    ]),
+    HttpModule
   ],
   controllers: [
     AttributesController,
     ComponentsController,
     FieldsController,
-    PluginController
+    PluginController,
+    RedirectorController
   ],
   providers: [
     AttributeService,
     ComponentsService,
     FieldsService,
     PluginService,
+    RedirectorService,
     AttributesMapper,
     ComponentsMapper,
     FieldsMapper,
-    PluginMapper
+    PluginMapper,
+    AuthenticationService
   ],
-  exports: [AttributeService, ComponentsService, FieldsService, PluginService]
+  exports: [
+    AttributeService,
+    ComponentsService,
+    FieldsService,
+    PluginService,
+    RedirectorService
+  ]
 })
 export class PluginModule {}

@@ -1,4 +1,4 @@
-import { TokenDto } from './../dto/token.dto';
+import { TokenDto } from '../../commons/dto/token.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   Injectable,
@@ -66,8 +66,8 @@ export class SecurityService {
   }
 
   @Transactional()
-  public decodeToken(jwt: string): ClientCredentials | User {
-    return this.jwtService.verify<ClientCredentials | User>(jwt);
+  public decodeToken(jwt: string): TokenDto {
+    return this.jwtService.verify<TokenDto>(jwt);
   }
 
   private splitClientCredentials(login: string): string[] {

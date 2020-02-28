@@ -3,7 +3,7 @@ import { NewAttributesDto } from "./../dto/new-attributes.dto";
 import { AttributesRepository } from "./../repository/attributes.repository";
 import { Attributes } from "./../entity/attributes.entity";
 import {GenericService} from "../../commons/services/generic.service";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject, forwardRef } from "@nestjs/common";
 
 @Injectable()
 export class AttributeService extends GenericService<
@@ -12,7 +12,9 @@ export class AttributeService extends GenericService<
   NewAttributesDto,
   UpdateAttributesDto
 > {
-  constructor(public readonly attributesRepository: AttributesRepository) {
+  constructor(
+    @Inject(forwardRef(() => AttributesRepository))
+    public readonly attributesRepository: AttributesRepository) {
     super(attributesRepository, "Atributes");
   }
 

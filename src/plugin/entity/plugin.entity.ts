@@ -1,3 +1,4 @@
+import { PluginTypeEnum } from '../../commons/enum/plugin-type.enum';
 import { BasicEntity } from './../../commons/entity/basic.entity';
 import { Components } from './components.entity';
 import { TokenTypeEnum } from './../enum/token-type.enum';
@@ -28,23 +29,23 @@ export class Plugin extends BasicEntity{
   @Expose()
   apiUrl: string;
 
-  @Column({ nullable: false , name: "add_url"})
+  @Column({ nullable: true , name: "add_url"})
   @Expose()
   addUrl: string;
 
-  @Column({ nullable: false, name: "remove_url"  })
+  @Column({ nullable: true, name: "remove_url"  })
   @Expose()
   removeUrl: string;
 
-  @Column({ nullable: false, name: "update_url" })
+  @Column({ nullable: true, name: "update_url" })
   @Expose()
   updateUrl: string;
 
-  @Column({ nullable: false , name: "get_url"})
+  @Column({ nullable: true , name: "get_url"})
   @Expose()
   getUrl: string;
 
-  @Column({ nullable: false , name: "get_all_url"})
+  @Column({ nullable: true , name: "get_all_url"})
   @Expose()
   getAllUrl: string;
 
@@ -52,9 +53,17 @@ export class Plugin extends BasicEntity{
   @Expose()
   accessToken: string;
 
+  @Column({ nullable: true, name: "client_id" })
+  @Expose()
+  clientId: string;
+
   @Column({ nullable: true, name: "token_type" })
   @Expose()
   tokenType: TokenTypeEnum;
+
+  @Column({ nullable: false, name: "plugin_type", default: PluginTypeEnum.CLIENT })
+  @Expose()
+  pluginType: PluginTypeEnum;
 
   @Column({ nullable: false, default: true , type: Boolean})
   @Expose()

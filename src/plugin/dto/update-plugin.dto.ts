@@ -23,26 +23,31 @@ export class UpdatePluginDto {
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   addUrl: Plugin["addUrl"];
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   removeUrl: Plugin["removeUrl"];
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   updateUrl: Plugin["updateUrl"];
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   getUrl: Plugin["getUrl"];
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   getAllUrl: Plugin["getAllUrl"];
 
@@ -51,6 +56,11 @@ export class UpdatePluginDto {
   @Expose()
   @IsOptional()
   accessToken: Plugin["accessToken"];
+
+  @ApiProperty()
+  @IsString()
+  @Expose()
+  pluginType: Plugin["pluginType"];
 
   @ApiProperty()
   @IsString()
@@ -70,7 +80,7 @@ export class UpdatePluginDto {
   environment: Plugin["environment"];
 
   @ApiProperty({ type: () => NewComponentsDto })
-  @IsString()
+  @IsOptional()
   @Expose()  
   components: NewComponentsDto[];
 }

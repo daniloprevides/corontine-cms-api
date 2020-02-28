@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { Expose } from 'class-transformer';
-import { User } from '../entity/user.entity';
+import { User } from '../../security/entity/user.entity';
 
 export class TokenDto {
   @ApiProperty({ type: String })

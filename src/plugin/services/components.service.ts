@@ -3,7 +3,7 @@ import { NewComponentsDto } from "./../dto/new-components.dto";
 import { ComponentsRepository } from "../repository/components.repository";
 import { Components } from "./../entity/components.entity";
 import {GenericService} from "../../commons/services/generic.service";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject, forwardRef } from "@nestjs/common";
 
 @Injectable()
 export class ComponentsService extends GenericService<
@@ -12,7 +12,9 @@ export class ComponentsService extends GenericService<
   NewComponentsDto,
   UpdateComponentsDto
 > {
-  constructor(public readonly componentsRepository: ComponentsRepository) {
+  constructor(
+    @Inject(forwardRef(() => ComponentsRepository))
+    public readonly componentsRepository: ComponentsRepository) {
     super(componentsRepository, "Components");
   }
 

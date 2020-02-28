@@ -1,3 +1,5 @@
+import { HttpExceptionFilter } from './../src/commons/filters/http-exception.filter';
+import { Scope } from './../src/security/entity/scope.entity';
 import { SecurityConstants } from './../src/security/constants';
 import { Group } from './../src/security/entity/group.entity';
 import { UpdateGroupDTO } from './../src/security/dto/update-group.dto';
@@ -39,7 +41,32 @@ describe('Group (e2e)', () => {
     );
   }
 
-  
+  const createDefaultClientCredentialsForTesting = async () => {
+    const clientCredentialRepository: Repository<ClientCredentials> = moduleFixture.get<Repository<ClientCredentials>>(getRepositoryToken(ClientCredentials));
+    const scopeRepository:Repository<Scope> = moduleFixture.get<Repository<Scope>>(getRepositoryToken(Scope));
+
+    let allScopes = await scopeRepository.find();
+    let userReadPermission = allScopes.find(s => s.name == ScopeEnum.USER_READ);
+
+    let userCredential = new ClientCredentials();
+    userCredential.name = ClientCredentialsEnum["USER@APP"].toString();
+    userCredential.secret = "OIDAIDOAHPDADH3232";
+    userCredential.scopes = [userReadPermission];
+
+    let pluginCredential = new ClientCredentials();
+    pluginCredential.name = ClientCredentialsEnum["PLUGIN@APP"].toString();
+    pluginCredential.secret = "8202ndhdskHauwbxmsksgsiyfewjlda890AAg0";
+    pluginCredential.scopes = allScopes //All Scopes
+
+    let adminCredential = new ClientCredentials();
+    adminCredential.name = ClientCredentialsEnum["ADMIN@APP"].toString();
+    adminCredential.secret = "a3NiYWtpcHFqSVkpOXctcWp3ZcOncW5xdXVUKFQ2NzcpKiYwNzAmKCkqKSnCqCk";
+    adminCredential.scopes = allScopes; //All Scopes
+
+    userCredential = await clientCredentialRepository.save(userCredential);
+    pluginCredential = await clientCredentialRepository.save(pluginCredential);
+    adminCredential = await clientCredentialRepository.save(adminCredential);
+  }
 
   const defaultGrantRequest = (auth?:string) => {
     return request(server)
@@ -101,19 +128,21 @@ describe('Group (e2e)', () => {
 
   beforeAll(async () => {
     jest.setTimeout(30000);
-    return new Promise(async (resolve,reject) => {
+    return new Promise(async (resolve, reject) => {
       moduleFixture = await Test.createTestingModule({
-        imports: [
-          AppModule
-        ],
+        imports: [AppModule]
       }).compile();
-  
+
       initializeTransactionalContext();
       app = moduleFixture.createNestApplication();
-      app.useGlobalPipes(new ValidationPipe());
+      app.useGlobalPipes(new ValidationPipe({
+        disableErrorMessages: false
+      }));
+      app.useGlobalFilters(new HttpExceptionFilter());
       await app.init();
   
       setTimeout(async () => {
+        await createDefaultClientCredentialsForTesting();
         authorization  = await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]);    
         server = app.getHttpServer();  
         resolve();

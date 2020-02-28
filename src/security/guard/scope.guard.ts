@@ -1,4 +1,4 @@
-import { TokenDto } from "../dto/token.dto";
+import { TokenDto } from "../../commons/dto/token.dto";
 import { ClientCredentials } from "../entity/client-credentials.entity";
 import { ScopeEnum } from "../enum/scope.enum";
 import { getRepository } from "typeorm";

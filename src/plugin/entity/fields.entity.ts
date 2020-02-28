@@ -25,7 +25,8 @@ export class Fields extends BasicEntity {
 
   @ManyToOne(
     () => Components,
-    (components: Components) => components.fields
+    (components: Components) => components.fields,
+    { onDelete: 'CASCADE' }
   )
   component: Components;
 

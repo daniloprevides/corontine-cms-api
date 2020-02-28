@@ -18,6 +18,12 @@ export class Mapper<E, D> {
     });
   }
 
+  toPagination(entityArray: E[], exclude = true): D[] {
+    return plainToClass<D, E>(this.dtoClass, entityArray, {
+      excludeExtraneousValues: exclude,
+    });
+  }
+
   toEntity(dtoObject: Partial<D>, exclude = true): E {
     return plainToClass<E, Partial<D>>(this.entityClass, dtoObject, {
       excludeExtraneousValues: exclude,

@@ -1,3 +1,4 @@
+import { FindParamsDto } from './../../commons/dto/find-params.dto';
 import { Constants } from './../../commons/constants';
 import { FieldsService } from './../services/fields.service';
 import { FieldsMapper } from './../mapper/fields.mapper';
@@ -15,7 +16,8 @@ import {
   ApiCreatedResponse,
   ApiBody,
   ApiNotFoundResponse,
-  ApiParam
+  ApiParam,
+  ApiQuery
 } from "@nestjs/swagger";
 import {
   Controller,
@@ -25,8 +27,11 @@ import {
   Post,
   Body,
   Put,
-  Delete
+  Delete,
+  Query,
+  Req
 } from "@nestjs/common";
+import Request = require('request');
 
 @ApiTags("Fields")
 @Controller(
@@ -55,12 +60,16 @@ export class FieldsController extends GenericController<
     isArray: true,
     description: "All Fields"
   })
+  @ApiQuery({
+    type: FindParamsDto,
+    name: "Pagination and Filter Params"
+  })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async getAll(): Promise<FieldsDto[]> {
-    return super.getAll();
+  public async getAll(@Query() queryParams:FindParamsDto, @Req() req:Request): Promise<FieldsDto[]> {
+    return super.getAll(queryParams,req);
   }
 
   @Get(":id")

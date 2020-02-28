@@ -13,8 +13,7 @@ import { Expose } from "class-transformer";
 @Entity()
 export class Components extends BasicEntity {
   @Column({
-    nullable: false,
-    unique: true
+    nullable: false
   })
   @Expose()
   name: string;
@@ -29,7 +28,8 @@ export class Components extends BasicEntity {
 
   @ManyToOne(
     () => Plugin,
-    (plugin: Plugin) => plugin.components
+    (plugin: Plugin) => plugin.components,
+    { onDelete: 'CASCADE', nullable: false }
   )
   plugin: Plugin;
 

@@ -1,7 +1,15 @@
-import { GenericServiceInterface } from './interface.generic.service';
+import { GenericFilterService } from "./generic-filter.service";
+import { FindParamsDto } from "./../dto/find-params.dto";
+import { GenericServiceInterface } from "./interface.generic.service";
 import { BasicEntity } from "./../entity/basic.entity";
-import { Repository, FindManyOptions } from "typeorm";
+import { Repository, FindManyOptions, FindOneOptions } from "typeorm";
 import { Transactional } from "typeorm-transactional-cls-hooked";
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions
+} from "nestjs-typeorm-paginate";
+
 import {
   NotFoundException,
   ConflictException,
@@ -13,28 +21,51 @@ export abstract class GenericService<
   R extends Repository<E>,
   NEWDTO,
   UPDATEDTO
-> implements GenericServiceInterface<E,NEWDTO,UPDATEDTO>{
+> implements GenericServiceInterface<E, NEWDTO, UPDATEDTO> {
   constructor(private readonly repository: R, private readonly name: string) {}
 
-  protected getRelations() : Array<string> {
+  protected getRelations(): Array<string> {
     return [];
   }
 
   @Transactional()
-  public async getAll(relations?: Array<string>): Promise<E[]> {
-    let options = {relations: this.getRelations()} as FindManyOptions;
+  public async getAll(
+    findParamsDto: FindParamsDto,
+    url?: string,
+    relations?: Array<string>
+  ): Promise<Pagination<E>> {
+    let options = { relations: this.getRelations() } as FindManyOptions;
+    let paginationOptions = {
+      page: findParamsDto.page,
+      limit: findParamsDto.limit,
+      route: url
+    } as IPaginationOptions;
     if (relations) options.relations = relations;
-    return this.repository.find(options);
+    //Building filters
+    const whereQuery = [];
+    const genericFilterService = new GenericFilterService();
+    if (findParamsDto.q && findParamsDto.q.length) {
+      whereQuery.push(
+        ...genericFilterService.getRepositoryQuery(findParamsDto.q)
+      );
+    }
+
+    if (findParamsDto.sort) {
+      const sortOption = genericFilterService.getObjectFromQuery(findParamsDto.sort);
+      options.order = sortOption;
+    }
+
+    if (whereQuery && whereQuery.length) options.where = whereQuery;
+
+    return await paginate<E>(this.repository, paginationOptions, options);
   }
 
   @Transactional()
   public async findById(id: E["id"], relations?: Array<string>): Promise<E> {
-    let options = {relations: this.getRelations()} as FindManyOptions;
+    let options = { relations: this.getRelations() } as FindOneOptions;
     if (relations) options.relations = relations;
 
-    const items: E | undefined = await this.repository.findOne(id, {
-      relations: ["scopes"]
-    });
+    const items: E | undefined = await this.repository.findOne(id, options);
 
     if (!items) {
       throw new NotFoundException(`${this.name} not found`);
@@ -43,11 +74,10 @@ export abstract class GenericService<
   }
 
   @Transactional()
-  public async add(group: NEWDTO): Promise<E> {
+  public async add(item: NEWDTO): Promise<E> {
     try {
-      return await this.repository.save(group);
+      return await this.repository.save(item);
     } catch (e) {
-      console.error(e);
       if (e.code === "ER_DUP_ENTRY" || e.code === "SQLITE_CONSTRAINT") {
         throw new ConflictException(`${this.name} already exists`);
       }

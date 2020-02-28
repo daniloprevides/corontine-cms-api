@@ -3,6 +3,7 @@ import { HandlebarsAdapter } from '@nest-modules/mailer';
 
 export default () => ({
     port: parseInt(process.env.PORT, 10) || 3000,
+    env: process.env.ENV || "DEVELOPMENT",
     api: {
         title: process.env.API_TITLE || "API",
         description: process.env.API_DESCRIPTION || 'API description',

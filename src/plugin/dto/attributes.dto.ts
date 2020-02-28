@@ -28,7 +28,7 @@ export class AttributesDto {
   @Expose()
   type: Attributes["type"];
 
-  @ApiProperty({ type: NewFieldsDto })
+  @ApiProperty({ type: () => NewFieldsDto })
   @Expose()
   field: NewFieldsDto;
 }

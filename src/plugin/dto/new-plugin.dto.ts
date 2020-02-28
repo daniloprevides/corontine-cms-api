@@ -1,7 +1,7 @@
 import { Plugin } from './../entity/plugin.entity';
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, IsBoolean } from "class-validator";
+import { IsString, IsOptional, IsBoolean, IsFQDN } from "class-validator";
 import { NewComponentsDto } from './new-components.dto';
 
 export class NewPluginDto {
@@ -23,26 +23,31 @@ export class NewPluginDto {
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   addUrl: Plugin["addUrl"];
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   removeUrl: Plugin["removeUrl"];
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   updateUrl: Plugin["updateUrl"];
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   getUrl: Plugin["getUrl"];
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   getAllUrl: Plugin["getAllUrl"];
 
@@ -69,9 +74,15 @@ export class NewPluginDto {
   @Expose()
   environment: Plugin["environment"];
 
-  @ApiProperty({ type: () => NewComponentsDto })
+  @ApiProperty()
   @IsString()
+  @Expose()
+  pluginType: Plugin["pluginType"];
+
+  @ApiProperty({ type: () => NewComponentsDto })
   @Expose()  
   @IsOptional()
   components: NewComponentsDto[];
+
+  clientId:string;
 }

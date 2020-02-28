@@ -16,7 +16,7 @@ export class Scope extends Audit {
     nullable: false,
     unique: true,
   })
-  name: ScopeEnum;
+  name: string;
 
   @Column({
     type: 'varchar',

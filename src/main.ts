@@ -1,11 +1,10 @@
-import { getConnection } from 'typeorm';
+import 'reflect-metadata';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './commons/filters/http-exception.filter';
-import 'reflect-metadata';
 import { join } from 'path';
 
 async function buildSwagger(app:INestApplication, appConfigService:ConfigService){  

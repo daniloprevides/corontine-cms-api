@@ -3,7 +3,7 @@ import { FieldsRepository } from "./../repository/fields.repository";
 import {GenericService} from "../../commons/services/generic.service";
 import { Fields } from "../entity/fields.entity";
 import { UpdateFieldsDto } from "../dto/update-fields.dto";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject, forwardRef } from "@nestjs/common";
 
 @Injectable()
 export class FieldsService extends GenericService<
@@ -12,7 +12,10 @@ export class FieldsService extends GenericService<
   NewFieldsDto,
   UpdateFieldsDto
 > {
-  constructor(public readonly fieldsRepository: FieldsRepository) {
+  constructor(
+    @Inject(forwardRef(() => FieldsRepository))
+    public readonly fieldsRepository: FieldsRepository
+    ) {
     super(fieldsRepository, "Fields");
   }
 

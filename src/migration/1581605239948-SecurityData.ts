@@ -1,11 +1,11 @@
-import { ScopeEnum } from './../security/enum/scope.enum';
-import { Scope } from './../security/entity/scope.entity';
-import { Group } from './../security/entity/group.entity';
+import { ScopeEnum } from '../security/enum/scope.enum';
+import { Scope } from '../security/entity/scope.entity';
+import { Group } from '../security/entity/group.entity';
 import { ClientCredentialsEnum } from '../security/enum/client-credentials.enum';
 import { ClientCredentials } from '../security/entity/client-credentials.entity';
 import {MigrationInterface, QueryRunner, getRepository} from "typeorm";
 
-export class InitialData1581605239948 implements MigrationInterface {
+export class SecurityData1581605239948 implements MigrationInterface {
 
     private async createScopes(){
         const scopeRepository = getRepository<Scope>("scope");
@@ -40,39 +40,17 @@ export class InitialData1581605239948 implements MigrationInterface {
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {
-
-       
         const clientCredentialsRepository = getRepository<ClientCredentials>("client-credentials");
         const groupRepository = getRepository<Group>("group");
 
         //Creating default scopes
         const scopes = await this.createScopes();
 
-        //Creating default valures for Client Credentials
-        let userCredential = new ClientCredentials();
-        userCredential.name = ClientCredentialsEnum["USER@APP"].toString();
-        userCredential.secret = "OIDAIDOAHPDADH3232";
-        userCredential.scopes = [scopes[ScopeEnum.USER_READ]];
+        let defaultUserCredential = new ClientCredentials();
+        defaultUserCredential.name = ClientCredentialsEnum["USER_PERMISSIONS@APP"];
+        defaultUserCredential.secret = "QSBNaW5oYSB0aWEgdGluaGEgdW1hIHZhcXVpbmhhIHF1ZSBkaXppYSAyMDIwIHZpcmVpIHZlZ2Fubw==" 
 
-        let pluginCredential = new ClientCredentials();
-        pluginCredential.name = ClientCredentialsEnum["PLUGIN@APP"].toString();
-        pluginCredential.secret = "8202ndhdskHauwbxmsksgsiyfewjlda890AAg0";
-        pluginCredential.scopes = Object.values(scopes); //All Scopes
-
-        let adminCredential = new ClientCredentials();
-        adminCredential.name = ClientCredentialsEnum["ADMIN@APP"].toString();
-        adminCredential.secret = "a3NiYWtpcHFqSVkpOXctcWp3ZcOncW5xdXVUKFQ2NzcpKiYwNzAmKCkqKSnCqCk";
-        adminCredential.scopes = Object.values(scopes); //All Scopes
-
-        let testCredential = new ClientCredentials();
-        testCredential.name = ClientCredentialsEnum["TEST@APP"].toString();
-        testCredential.secret = "TESTTESTAPP";
-
-
-        userCredential = await clientCredentialsRepository.save(userCredential);
-        pluginCredential = await clientCredentialsRepository.save(pluginCredential);
-        testCredential = await clientCredentialsRepository.save(testCredential);
-        adminCredential = await clientCredentialsRepository.save(adminCredential);
+        await clientCredentialsRepository.save(defaultUserCredential);
 
         //Creating default group
         let adminGroup = new Group();
@@ -81,7 +59,6 @@ export class InitialData1581605239948 implements MigrationInterface {
         adminGroup.scopes = [];
         adminGroup.scopes.push(...Object.values(scopes));
         adminGroup = await groupRepository.save(adminGroup);
-    
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

@@ -1,3 +1,4 @@
+import { TokenDto } from './../../commons/dto/token.dto';
 import { SecurityConstants } from './../constants';
 import { AuthorizationCodeService } from './../service/authorization-code.service';
 import {
@@ -88,7 +89,7 @@ export class SecurityController {
   @UseGuards(ScopeGuard)
   getTokenDetails(
     @Headers('authorization') authorizationHeader: string,
-  ): ClientCredentials | User {
+  ): TokenDto {
     const [, jwt] = authorizationHeader.split(' ');
     this.logger.log(`jwt: ${jwt}`);
     return this.service.decodeToken(jwt);

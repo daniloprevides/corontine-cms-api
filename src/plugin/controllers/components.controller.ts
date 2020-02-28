@@ -1,3 +1,4 @@
+import { FindParamsDto } from './../../commons/dto/find-params.dto';
 import { ComponentsService } from "./../services/components.service";
 import { ComponentsMapper } from "./../mapper/components.mapper";
 import { ComponentsDto } from "./../dto/components.dto";
@@ -13,7 +14,8 @@ import {
   ApiCreatedResponse,
   ApiBody,
   ApiNotFoundResponse,
-  ApiParam
+  ApiParam,
+  ApiQuery
 } from "@nestjs/swagger";
 import {
   Controller,
@@ -23,10 +25,13 @@ import {
   Post,
   Body,
   Put,
-  Delete
+  Delete,
+  Query,
+  Req
 } from "@nestjs/common";
 import { Constants } from "../../commons";
 import { GenericController } from "../../commons/controller/generic.controller";
+import Request = require('request');
 
 @ApiTags("Components")
 @Controller(
@@ -55,12 +60,16 @@ export class ComponentsController extends GenericController<
     isArray: true,
     description: "All Components"
   })
+  @ApiQuery({
+    type: FindParamsDto,
+    name: "Pagination and Filter Params"
+  })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async getAll(): Promise<ComponentsDto[]> {
-    return super.getAll();
+  public async getAll(@Query() queryParams:FindParamsDto, @Req() req:Request): Promise<ComponentsDto[]> {
+    return super.getAll(queryParams,req);
   }
 
   @Get(":id")

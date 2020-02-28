@@ -1,5 +1,8 @@
-import { Constants } from './../../commons/constants';
-import { Plugin } from './../entity/plugin.entity';
+import { FindParamsDto } from './../../commons/dto/find-params.dto';
+import { SecurityGuard } from "./../../commons/guard/security.guard";
+import { NeedScope } from "./../../commons/guard/scope-metadata.guard";
+import { Constants } from "./../../commons/constants";
+import { Plugin } from "./../entity/plugin.entity";
 import { PluginConstants } from "./../constants";
 import {
   ApiTags,
@@ -9,7 +12,8 @@ import {
   ApiCreatedResponse,
   ApiBody,
   ApiNotFoundResponse,
-  ApiParam
+  ApiParam,
+  ApiQuery
 } from "@nestjs/swagger";
 import {
   Controller,
@@ -19,14 +23,21 @@ import {
   Post,
   Body,
   Put,
-  Delete
+  Delete,
+  Headers,
+  UseGuards,
+  UnauthorizedException,
+  Req,
+  Query
 } from "@nestjs/common";
-import { NewPluginDto } from '../dto/new-plugin.dto';
-import { UpdatePluginDto } from '../dto/update-plugin.dto';
-import { PluginDto } from '../dto/plugin.dto';
-import { PluginMapper } from '../mapper/plugin.mapper';
-import { PluginService } from '../services/plugin.service';
-import {GenericController} from "../../commons/controller/generic.controller";
+import { NewPluginDto } from "../dto/new-plugin.dto";
+import { UpdatePluginDto } from "../dto/update-plugin.dto";
+import { PluginDto } from "../dto/plugin.dto";
+import { PluginMapper } from "../mapper/plugin.mapper";
+import { PluginService } from "../services/plugin.service";
+import { GenericController } from "../../commons/controller/generic.controller";
+import { ScopeEnum } from "../enum/scope.enum";
+import Request = require('request');
 
 @ApiTags("Plugin")
 @Controller(
@@ -55,12 +66,18 @@ export class PluginController extends GenericController<
     isArray: true,
     description: "All Plugin"
   })
+  @ApiQuery({
+    type: FindParamsDto,
+    name: "Pagination and Filter Params"
+  })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async getAll(): Promise<PluginDto[]> {
-    return super.getAll();
+  @NeedScope(ScopeEnum.PLUGIN_READ)
+  @UseGuards(SecurityGuard)
+  public async getAll(@Query() queryParams:FindParamsDto, @Req() req: Request): Promise<PluginDto[]> {
+    return super.getAll(queryParams,req);
   }
 
   @Get(":id")
@@ -78,9 +95,9 @@ export class PluginController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async getById(
-    @Param("id") id: Plugin["id"]
-  ): Promise<PluginDto> {
+  @NeedScope(ScopeEnum.PLUGIN_READ)
+  @UseGuards(SecurityGuard)
+  public async getById(@Param("id") id: Plugin["id"]): Promise<PluginDto> {
     return super.getById(id);
   }
 
@@ -99,11 +116,19 @@ export class PluginController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have needed scopes"
   })
-  async add(
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    @Body() newItem: NewPluginDto
+  @NeedScope(ScopeEnum.PLUGIN_CREATE)
+  @UseGuards(SecurityGuard)
+  async addItem(
+    @Body() newItem: NewPluginDto,
+    @Headers("authorization") authorizationHeader: string,
+    @Req() req: Request
   ): Promise<PluginDto> {
-    return super.add(newItem);
+    if (!authorizationHeader) {
+      throw new UnauthorizedException();
+    }
+    const url = req.protocol + '://' + req.get('host');
+    let item = await this.service.addItem(newItem, authorizationHeader, url);
+    return this.mapper.toDto(item);
   }
 
   @Put(":id")
@@ -118,6 +143,8 @@ export class PluginController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
+  @NeedScope(ScopeEnum.PLUGIN_UPDATE)
+  @UseGuards(SecurityGuard)
   public async update(
     @Param("id") id: Plugin["id"],
     @Body() updateInfo: UpdatePluginDto
@@ -142,6 +169,8 @@ export class PluginController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
+  @NeedScope(ScopeEnum.PLUGIN_DELETE)
+  @UseGuards(SecurityGuard)
   public async delete(@Param("id") id: Plugin["id"]): Promise<void> {
     return super.delete(id);
   }

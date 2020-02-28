@@ -1,8 +1,10 @@
+import { FindParamsDto } from './../dto/find-params.dto';
+import { AuthenticationService } from './../services/authentication-service';
 import { Mapper } from "../mapper/mapper";
 import { BasicEntity } from "../entity/basic.entity";
 import { GenericServiceInterface } from "../services/interface.generic.service";
-import { Logger, Param, Body } from "@nestjs/common";
-
+import { Logger, Param, Body, Query, Req } from "@nestjs/common";
+import Request = require('request');
 export abstract class GenericController<
   E extends BasicEntity,
   NEWDTO,
@@ -21,8 +23,11 @@ export abstract class GenericController<
     this.logger = new Logger(this.name);
   }
 
-  public async getAll(): Promise<DTO[]> {
-    return this.mapper.toDtoList(await this.service.getAll());
+  public async getAll(@Query() queryParams:FindParamsDto, @Req() req:Request): Promise<DTO[]> {
+    const url = req.protocol + '://' + req.get('host') + req.path;
+    const paginatedItems = await this.service.getAll(queryParams,url) as any;
+    paginatedItems.items = this.mapper.toDtoList(paginatedItems.items)
+    return paginatedItems;
   }
 
   public async getById(@Param("id") id: E["id"]): Promise<DTO> {

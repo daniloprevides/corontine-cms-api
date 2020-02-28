@@ -1,7 +1,14 @@
+import { FindParamsDto } from './../src/commons/dto/find-params.dto';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { Plugin } from './../src/plugin/entity/plugin.entity';
+import { PluginDto } from './../src/plugin/dto/plugin.dto';
+import { ScopeEnum } from "./../src/security/enum/scope.enum";
+import { Scope } from "./../src/security/entity/scope.entity";
+import { HttpExceptionFilter } from "./../src/commons/filters/http-exception.filter";
+import { PluginTypeEnum } from "../src/commons/enum/plugin-type.enum";
 import { NewComponentsDto } from "./../src/plugin/dto/new-components.dto";
 import { NewPluginDto } from "./../src/plugin/dto/new-plugin.dto";
 import { PluginConstants } from "./../src/plugin/constants";
-import { SecurityConstants } from "./../src/security/constants";
 import { AppModule } from "./../src/app.module";
 import request = require("supertest");
 import { Test, TestingModule } from "@nestjs/testing";
@@ -15,7 +22,7 @@ import { ClientCredentials } from "../src/security/entity/client-credentials.ent
 import { ClientCredentialsEnum } from "../src/security/enum/client-credentials.enum";
 import { GrantTypeEnum } from "../src/security/enum/grant-type.enum";
 import { PluginEnvironmentEnum } from "../src/plugin/enum/environment.enum";
-
+import { v4 as uuidv4 } from 'uuid';
 const stringToBase64 = (string: string) => {
   return Buffer.from(string).toString("base64");
 };
@@ -40,6 +47,49 @@ describe("Plugin (e2e)", () => {
     return stringToBase64(
       `${clientCredentials.name}:${clientCredentials.secret}`
     );
+  };
+
+  const getRawClientCredentials = async (credential: ClientCredentialsEnum) => {
+    const clientCredentialRepository: Repository<ClientCredentials> = moduleFixture.get<
+      Repository<ClientCredentials>
+    >(getRepositoryToken(ClientCredentials));
+    const clientCredentials = await clientCredentialRepository.findOne({
+      name: credential
+    });
+
+    return clientCredentials;
+  };
+
+  const createDefaultClientCredentialsForTesting = async () => {
+    const clientCredentialRepository: Repository<ClientCredentials> = moduleFixture.get<
+      Repository<ClientCredentials>
+    >(getRepositoryToken(ClientCredentials));
+    const scopeRepository: Repository<Scope> = moduleFixture.get<
+      Repository<Scope>
+    >(getRepositoryToken(Scope));
+
+    let allScopes = await scopeRepository.find();
+    let userReadPermission = allScopes.find(s => s.name == ScopeEnum.USER_READ);
+
+    let userCredential = new ClientCredentials();
+    userCredential.name = ClientCredentialsEnum["USER@APP"].toString();
+    userCredential.secret = "OIDAIDOAHPDADH3232";
+    userCredential.scopes = [userReadPermission];
+
+    let pluginCredential = new ClientCredentials();
+    pluginCredential.name = ClientCredentialsEnum["PLUGIN@APP"].toString();
+    pluginCredential.secret = "8202ndhdskHauwbxmsksgsiyfewjlda890AAg0";
+    pluginCredential.scopes = allScopes; //All Scopes
+
+    let adminCredential = new ClientCredentials();
+    adminCredential.name = ClientCredentialsEnum["ADMIN@APP"].toString();
+    adminCredential.secret =
+      "a3NiYWtpcHFqSVkpOXctcWp3ZcOncW5xdXVUKFQ2NzcpKiYwNzAmKCkqKSnCqCk";
+    adminCredential.scopes = allScopes; //All Scopes
+
+    userCredential = await clientCredentialRepository.save(userCredential);
+    pluginCredential = await clientCredentialRepository.save(pluginCredential);
+    adminCredential = await clientCredentialRepository.save(adminCredential);
   };
 
   const defaultGrantRequest = (auth?: string) => {
@@ -85,11 +135,10 @@ describe("Plugin (e2e)", () => {
       .send();
   };
 
-  const getRequest = (token: string, url: string) => {
+  const getRequest = (token: string, url: string, limit = 10, page = 0) => {
     return request(app.getHttpServer())
       .get(url)
       .set("Authorization", `Bearer ${token}`)
-      .send();
   };
 
   beforeAll(async () => {
@@ -101,10 +150,16 @@ describe("Plugin (e2e)", () => {
 
       initializeTransactionalContext();
       app = moduleFixture.createNestApplication();
-      app.useGlobalPipes(new ValidationPipe());
+      app.useGlobalPipes(
+        new ValidationPipe({
+          disableErrorMessages: false
+        })
+      );
+      app.useGlobalFilters(new HttpExceptionFilter());
       await app.init();
 
       setTimeout(async () => {
+        await createDefaultClientCredentialsForTesting();
         authorization = await getUserClientCredentials(
           ClientCredentialsEnum["USER@APP"]
         );
@@ -117,14 +172,121 @@ describe("Plugin (e2e)", () => {
   it("Should add new Plugin using already created permission", async done => {
     let plugin = {
       name: "NewPlugin",
-      description: "New test Plugin",
-      addUrl: "http://localhost/addUrl",
       apiUrl: "http://localhost",
-      getAllUrl: "http://localhost/GetAllUrl",
-      removeUrl: "http://localhost/removeUrl",
-      updateUrl: "http://localhost/updateUrl",
-      getUrl: "http://localhost/getUrl",
-      environment: PluginEnvironmentEnum.STAGE
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT
+    } as NewPluginDto;
+    const userCredential = await getUserClientCredentials(
+      ClientCredentialsEnum["ADMIN@APP"]
+    );
+    return defaultGrantRequest(userCredential).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(async data => {
+          const rawClientCredential = await getRawClientCredentials(ClientCredentialsEnum["ADMIN@APP"]);
+          expect(data.body.name).toBe(plugin.name);
+          expect(data.body.apiUrl).toBe(plugin.apiUrl);
+          expect(data.body.environment).toBe(plugin.environment);
+          expect(data.body.pluginType).toBe(plugin.pluginType);
+          //checking if clientId has been filled with right information
+          expect(data.body.clientId).toBe(rawClientCredential.id);
+          done();
+        });
+    });
+  });
+
+  it("Should add new Plugin with components", async done => {
+    let plugin = {
+      name: "NewPluginWithComponents",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT,
+      components: [
+        {
+          name: "component",          
+        } as NewComponentsDto
+      ]
+    } as NewPluginDto;
+    const userCredential = await getUserClientCredentials(
+      ClientCredentialsEnum["ADMIN@APP"]
+    );
+    return defaultGrantRequest(userCredential).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(async data => {
+          const rawClientCredential = await getRawClientCredentials(ClientCredentialsEnum["ADMIN@APP"]);
+          expect(data.body.name).toBe(plugin.name);
+          expect(data.body.apiUrl).toBe(plugin.apiUrl);
+          expect(data.body.environment).toBe(plugin.environment);
+          expect(data.body.pluginType).toBe(plugin.pluginType);
+          //checking if clientId has been filled with right information
+          expect(data.body.clientId).toBe(rawClientCredential.id);
+          expect(data.body.components).toStrictEqual(plugin.components);
+          done();
+        });
+    });
+  });
+
+  it("Should fail creating plugin without credentials", async done => {
+    let plugin = {
+      name: "NewPlugin",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT
+    } as NewPluginDto;
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["USER@APP"])
+    ).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(401)
+        .then(data => {
+          done();
+        });
+    });
+  });
+
+  it("Should fail creating plugin with same name", async done => {
+    let plugin = {
+      name: "NewPlugin",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT
+    } as NewPluginDto;
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(409)
+        .then(data => {
+          done();
+        });
+    });
+  });
+
+  it("Should fail creating plugin with missing properties", async done => {
+    let plugin = {
+      //name: "NewPlugin",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT
+    } as NewPluginDto;
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(400)
+        .then(data => {
+          done();
+        });
+    });
+  });
+
+  it("Should update plugin data", async done => {
+    let plugin = {
+      name: "NewPluginForUpdate",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT,
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -132,200 +294,192 @@ describe("Plugin (e2e)", () => {
       return createRequest(plugin, res.body.accessToken, pluginUrl)
         .expect(201)
         .then(data => {
-          expect(data.body.name).toBe(plugin.name);
-          expect(data.body.description).toBe(plugin.description);
-          expect(data.body.addUrl).toBe(plugin.addUrl);
-          expect(data.body.apiUrl).toBe(plugin.apiUrl);
-          expect(data.body.getAllUrl).toBe(plugin.getAllUrl);
-          expect(data.body.removeUrl).toBe(plugin.removeUrl);
-          expect(data.body.updateUrl).toBe(plugin.updateUrl);
-          expect(data.body.getUrl).toBe(plugin.getUrl);
-          expect(data.body.environment).toBe(plugin.environment);
-
-          done();
+          let item = data.body as PluginDto;
+          item.name = "Gesse";
+          return updateRequest(item,res.body.accessToken,`${pluginUrl}/${item.id}`)
+          .expect(200)
+          .then(updateResponse => {
+            expect(updateResponse.body.name).toBe(item.name);
+            done();
+          })
         });
     });
   });
 
-  //       it('Should add group with scopes', async done => {
-  //         let group = {
-  //           name: "NewGroup2",
-  //           description: "MyGroup2",
-  //           scopes: [ScopeEnum.GROUP_CREATE]
+  it("Should update components of plugin data", async done => {
+    let plugin = {
+      name: "NewPluginForUpdateWithComponents",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT     
+    } as NewPluginDto;
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(data => {
+          let item = data.body as PluginDto;
+          item.name = "NewPluginForUpdateWithComponentsUpdated";
+          item.components = [
+            {
+              name: "component"
+            } as NewComponentsDto
+          ]
+          return updateRequest(item,res.body.accessToken,`${pluginUrl}/${item.id}`)
+          .expect(200)
+          .then(updateResponse => {
+            expect(updateResponse.body.name).toBe(item.name);
+            expect(updateResponse.body.components).toStrictEqual(item.components);
+            done();
+          })
+        });
+    });
+  });
 
-  //         } as NewGroupDTO
-  //         return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  //           .then(res => {
-  //             return createRequest(group,res.body.accessToken, groupUrl)
-  //             .expect(201)
-  //             .then((data) => {
-  //               expect(data.body.name).toBe(group.name);
-  //               expect(data.body.description).toBe(group.description);
-  //               expect(data.body.scopes != null && data.body.scopes.length).toBeTruthy();
-  //               expect(data.body.scopes[0].name).toBe(ScopeEnum.GROUP_CREATE);
-  //               done();
-  //             });
-  //           });
-  //         });
+  it("Should delete plugin", async done => {
+    let plugin = {
+      name: "DeletePluginForUpdateWithComponents",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT     
+    } as NewPluginDto;
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(data => {
+          let item = data.body as PluginDto;
+          return deleteRequest(res.body.accessToken,`${pluginUrl}/${item.id}`)
+          .expect(200)
+          .then(updateResponse => {            
+            done();
+          })
+        });
+    });
+  });
 
-  //         it('Should throw error 404 on scope not found', async done => {
-  //           let group = {
-  //             name: "NewGroup2",
-  //             description: "MyGroup2",
-  //             scopes: ["Scope that does not exist"]
 
-  //           } as NewGroupDTO
-  //           return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  //             .then(res => {
-  //               return createRequest(group,res.body.accessToken, groupUrl)
-  //               .expect(404)
-  //               .then((data) => {
-  //                 done();
-  //               });
-  //             });
-  //           });
+  it("Should delete plugin with components", async done => {
+    let plugin = {
+      name: "DeletePluginWithComponents",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT,
+      components : [
+        {
+          name: "component"
+        } as NewComponentsDto
+      ]     
+    } as NewPluginDto;
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(data => {
+          let item = data.body as PluginDto;
+          return deleteRequest(res.body.accessToken,`${pluginUrl}/${item.id}`)
+          .expect(200)
+          .then(updateResponse => {            
+            done();
+          })
+        });
+    });
+  });
 
-  //       it('Should fail on missing required property on group', async done => {
-  //         let group = {
-  //           description: "MyGroup"
+  it("Should find plugin by id", async done => {
+    let plugin = {
+      name: "DeletePluginWithComponents2",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT,
+      components : [
+        {
+          name: "component"
+        } as NewComponentsDto
+      ]     
+    } as NewPluginDto;
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(data => {
+          let item = data.body as PluginDto;
+          return getRequest(res.body.accessToken,`${pluginUrl}/${item.id}`)
+          .expect(200)
+          .then(response => {
+            expect(response.body.name).toBe(item.name);            
+            done();
+          })
+        });
+    });
+  });
 
-  //         } as NewGroupDTO
-  //         return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  //           .then(res => {
-  //             return createRequest(group,res.body.accessToken, groupUrl)
-  //             .expect(400)
-  //             .then((data) => {
-  //               done();
-  //             });
-  //           });
-  //       });
+  it("Should throw not found when search for plugin id", async done => {
+    let plugin = {
+      name: "DeletePluginWithComponents3",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT,
+      components : [
+        {
+          name: "component"
+        } as NewComponentsDto
+      ]     
+    } as NewPluginDto;
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return createRequest(plugin, res.body.accessToken, pluginUrl)
+        .expect(201)
+        .then(data => {
+          let item = data.body as PluginDto;
+          return getRequest(res.body.accessToken,`${pluginUrl}/${uuidv4()}`)
+          .expect(404)
+          .then(response => {               
+            done();
+          })
+        });
+    });
+  });
 
-  //       it('Should throw error on group name already exists', async done => {
-  //         let group = {
-  //           name: "NewGroup3",
-  //           description: "MyGroup"
+  it("Should find all plugins", async done => {
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return getRequest(res.body.accessToken, pluginUrl)
+        .expect(200)
+        .then(async data => {
+          let pagination = data.body as Pagination<PluginDto>;
+          const pluginRepository: Repository<Plugin> = moduleFixture.get<Repository<Plugin>>(getRepositoryToken(Plugin));
+          let total = await pluginRepository.count();
+          expect(pagination.itemCount).toBe(total);
+          expect(pagination.pageCount).toBeFalsy;
+          done();        
+      });
+    });
+  });
 
-  //         } as NewGroupDTO
-  //         return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  //           .then(res => {
-  //             return createRequest(group,res.body.accessToken, groupUrl)
-  //             .expect(201)
-  //             .then((data) => {
-  //               return createRequest(group,res.body.accessToken, groupUrl)
-  //               .expect(409 || 501)
-  //               .then(d => {
-  //                 done();
-  //               })
-  //             });
-  //           });
-  //       });
+  it("Should break pagination in one item per page", async done => {
+    return defaultGrantRequest(
+      await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
+    ).then(res => {
+      return getRequest(res.body.accessToken, `${pluginUrl}?limit=1&page=1`)
+        .expect(200)
+        .then(async data => {
+          let pagination = data.body as Pagination<PluginDto>;
+          const pluginRepository: Repository<Plugin> = moduleFixture.get<Repository<Plugin>>(getRepositoryToken(Plugin));
+          let total = await pluginRepository.count();
+          expect(pagination.itemCount).toBe(1);
+          expect(pagination.pageCount).toBe(total);
+          done();        
+      });
+    });
+  });
 
-  //       it('Should update group info', async done => {
-  //         let group = {
-  //           name: "NewGroup5",
-  //           description: "MyGroup"
-
-  //         } as NewGroupDTO
-  //         return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  //           .then(res => {
-  //             return createRequest(group,res.body.accessToken, groupUrl)
-  //             .expect(201)
-  //             .then((data) => {
-  //               let item = data.body as UpdateGroupDTO;
-  //               item.name = "NewName1Oblll";
-  //               return updateRequest(item,res.body.accessToken, `${groupUrl}/${item.id}`)
-  //               .expect(200)
-  //               .then((data) => {
-  //                 let updatedItem = data.body as GroupDTO;
-  //                 expect(updatedItem.name).toBe(item.name);
-  //                 expect(updatedItem.description).toBe(item.description);
-  //                 done();
-  //               });
-  //             });
-  //           });
-  //         });
-
-  //         it('Should delete group', async done => {
-  //           let group = {
-  //             name: "NewGroup6",
-  //             description: "MyGroup"
-
-  //           } as NewGroupDTO
-  //           return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  //             .then(res => {
-  //               return createRequest(group,res.body.accessToken, groupUrl)
-  //               .expect(201)
-  //               .then((data) => {
-  //                 let item = data.body as GroupDTO;
-  //                 return deleteRequest(res.body.accessToken, `${groupUrl}/${item.id}`)
-  //                 .expect(200)
-  //                 .then((data) => {
-  //                   done();
-  //                 });
-  //               });
-  //             });
-  //           });
-
-  //           it('Should find group by id', async done => {
-  //             let group = {
-  //               name: "NewGroup7",
-  //               description: "MyGroup"
-
-  //             } as NewGroupDTO
-  //             return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  //               .then(res => {
-  //                 return createRequest(group,res.body.accessToken, groupUrl)
-  //                 .expect(201)
-  //                 .then((data) => {
-  //                   let item = data.body as GroupDTO;
-  //                   return getRequest(res.body.accessToken, `${groupUrl}/${item.id}`)
-  //                   .expect(200)
-  //                   .then((data) => {
-  //                     let foundGroup = data.body as GroupDTO;
-
-  //                     expect(foundGroup.name).toBe(item.name);
-  //                     expect(foundGroup.description).toBe(item.description);
-  //                     done();
-  //                   });
-  //                 });
-  //               });
-  //             });
-
-  //         it('Shoud find all groups', async done => {
-  //           return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  //             .then(res => {
-  //               return getRequest(res.body.accessToken, groupUrl)
-  //               .expect(200)
-  //               .then(async (groupResponse) => {
-  //                 const groupRepository: Repository<Group> = moduleFixture.get<Repository<Group>>(getRepositoryToken(Group));
-  //                 const length = await groupRepository.count();
-  //                 expect(length).toBe(groupResponse.body.length);
-  //                 done();
-  //               })
-  //             });
-  //         });
-
-  // //         it('Should find one client credential', async done => {
-  // //           let credential = {
-  // //             name: "NewTest5",
-  // //             scopes: [{name: "another_perm_5", description: "Another new Perm 5"} as NewScopeDTO],
-  // //             secret: "Shhhh_Its_secret!"
-  // //           } as NewClientCredentialsDTO
-  // //           return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
-  // //             .then(res => {
-  // //               return createRequest(credential,res.body.accessToken, credentialUrl)
-  // //               .expect(201)
-  // //               .then((clientCredentialResponse) => {
-  // //                 let item = clientCredentialResponse.body as ClientCredentialsDTO;
-  // //                 return getRequest(res.body.accessToken,`${credentialUrl}/${item.id}`)
-  // //                 .expect(200)
-  // //                 .then((foundResponse) => {
-  // //                   expect(foundResponse.body.name).toBe(credential.name);
-  // //                   done();
-  // //                 });
-  // //               })
-  // //             });
-  // //         });
 
   afterAll(async () => {
     await app.close();
