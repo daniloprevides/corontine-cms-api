@@ -23,6 +23,7 @@ import { ClientCredentialsEnum } from "../src/security/enum/client-credentials.e
 import { GrantTypeEnum } from "../src/security/enum/grant-type.enum";
 import { PluginEnvironmentEnum } from "../src/plugin/enum/environment.enum";
 import { v4 as uuidv4 } from "uuid";
+import { RequestContextMiddleware } from "../src/middlewares/request-context-middleware";
 const stringToBase64 = (string: string) => {
   return Buffer.from(string).toString("base64");
 };
@@ -156,6 +157,8 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         })
       );
       app.useGlobalFilters(new HttpExceptionFilter());
+      app.use(RequestContextMiddleware);
+
       await app.init();
 
       setTimeout(async () => {
@@ -165,7 +168,7 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         );
         server = app.getHttpServer();
         resolve();
-      }, 1000);
+      }, 4000);
     });
   });
 
@@ -177,10 +180,12 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         name: "PluginForSearchWithFilters",
         apiUrl: "http://localhost",
         environment: PluginEnvironmentEnum.STAGE,
-        pluginType: PluginTypeEnum.CLIENT,
-        components: [
+        pluginType: PluginTypeEnum.CLIENT
+        ,componentsUrl: "abc"
+        ,components: [
           {
             name: "component"
+            ,url: "abc"
           } as NewComponentsDto
         ]
       } as NewPluginDto;
@@ -218,8 +223,10 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         components: [
           {
             name: "component"
+            ,url: "abc"
           } as NewComponentsDto
         ]
+        ,componentsUrl: "abc"
       } as NewPluginDto;
       return createRequest(plugin, res.body.accessToken, pluginUrl)
         .expect(201)
@@ -254,9 +261,11 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         pluginType: PluginTypeEnum.CLIENT,
         components: [
           {
-            name: "component"
+            name: "component",
+            url: "abc"
           } as NewComponentsDto
         ]
+        ,componentsUrl: "abc"
       } as NewPluginDto;
       return createRequest(plugin, res.body.accessToken, pluginUrl)
         .expect(201)
@@ -293,8 +302,10 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         components: [
           {
             name: "component"
+            ,url: "abc"
           } as NewComponentsDto
         ]
+        ,componentsUrl: "abc"
       } as NewPluginDto;
       return createRequest(plugin, res.body.accessToken, pluginUrl)
         .expect(201)
@@ -330,8 +341,10 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         components: [
           {
             name: "component"
+            ,url: "abc"
           } as NewComponentsDto
         ]
+        ,componentsUrl: "abc"
       } as NewPluginDto;
       return createRequest(plugin, res.body.accessToken, pluginUrl)
         .expect(201)
@@ -369,8 +382,10 @@ describe("Plugin(Find With Filters) (e2e)", () => {
         components: [
           {
             name: "component"
+            ,url: "abc"
           } as NewComponentsDto
         ]
+        ,componentsUrl: "abc"
       } as NewPluginDto;
       return createRequest(plugin, res.body.accessToken, pluginUrl)
         .expect(201)

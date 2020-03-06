@@ -23,10 +23,11 @@ export class UpdateFieldsDto {
   description: Fields["description"];
 
   @ApiProperty({ type: () => NewAttributesDto })
+  @IsOptional()
   @Expose()
   attributes: NewAttributesDto[];
 
-  @ApiProperty({ type: () => NewComponentsDto })
+  @ApiProperty({ type: () => String })
   @Expose()
-  component: NewComponentsDto;
+  component: String;
 }

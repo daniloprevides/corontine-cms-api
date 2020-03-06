@@ -9,6 +9,11 @@ export enum ScopeEnum {
     ATTRIBUTES_CREATE = 'attributes_create',
     ATTRIBUTES_DELETE = 'attributes_delete',
 
+    EVENTS_READ = 'events_read',
+    EVENTS_UPDATE = 'events_update',
+    EVENTS_CREATE = 'events_create',
+    EVENTS_DELETE = 'events_delete',
+
     COMPONENTS_READ = 'components_read',
     COMPONENTS_UPDATE = 'components_update',
     COMPONENTS_CREATE = 'components_create',
@@ -18,6 +23,8 @@ export enum ScopeEnum {
     FIELDS_UPDATE = 'fields_update',
     FIELDS_CREATE = 'fields_create',
     FIELDS_DELETE = 'fields_delete',
+
+    CMS="cms"
 
 
 }

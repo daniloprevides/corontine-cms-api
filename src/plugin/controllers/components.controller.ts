@@ -1,4 +1,7 @@
-import { FindParamsDto } from './../../commons/dto/find-params.dto';
+import { AuthenticationService } from "./../../commons/services/authentication-service";
+import { SecurityGuard } from "./../../commons/guard/security.guard";
+import { NeedScope } from "./../../commons/guard/scope-metadata.guard";
+import { FindParamsDto } from "./../../commons/dto/find-params.dto";
 import { ComponentsService } from "./../services/components.service";
 import { ComponentsMapper } from "./../mapper/components.mapper";
 import { ComponentsDto } from "./../dto/components.dto";
@@ -15,7 +18,9 @@ import {
   ApiBody,
   ApiNotFoundResponse,
   ApiParam,
-  ApiQuery
+  ApiQuery,
+  ApiBearerAuth,
+  ApiHeader
 } from "@nestjs/swagger";
 import {
   Controller,
@@ -27,13 +32,22 @@ import {
   Put,
   Delete,
   Query,
-  Req
+  Req,
+  Headers,
+  UseGuards
 } from "@nestjs/common";
 import { Constants } from "../../commons";
 import { GenericController } from "../../commons/controller/generic.controller";
-import Request = require('request');
+import Request = require("request");
+import { ScopeEnum } from "../enum/scope.enum";
 
 @ApiTags("Components")
+@ApiBearerAuth()
+@ApiHeader({
+  name: "authorization",
+  allowEmptyValue: false,
+  description: "Bearer Authorization token"
+})
 @Controller(
   `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PluginConstants.COMPONENTS_ENDPOINT}`
 )
@@ -45,8 +59,16 @@ export class ComponentsController extends GenericController<
   ComponentsMapper,
   ComponentsService
 > {
-  constructor(service: ComponentsService, mapper: ComponentsMapper) {
-    super(service, mapper, "Components");
+  constructor(
+    service: ComponentsService,
+    mapper: ComponentsMapper,
+    authenticationSevice: AuthenticationService
+  ) {
+    super(service, mapper, authenticationSevice, "Components");
+  }
+
+  public getParentFieldName(): string {
+    return "plugin";
   }
 
   @Get()
@@ -68,8 +90,13 @@ export class ComponentsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async getAll(@Query() queryParams:FindParamsDto, @Req() req:Request): Promise<ComponentsDto[]> {
-    return super.getAll(queryParams,req);
+  @NeedScope(ScopeEnum.COMPONENTS_READ)
+  @UseGuards(SecurityGuard)
+  public async getAll(
+    @Query() queryParams: FindParamsDto,
+    @Req() req: Request
+  ): Promise<ComponentsDto[]> {
+    return await super.getAll(queryParams, req);
   }
 
   @Get(":id")
@@ -87,10 +114,13 @@ export class ComponentsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
+  @NeedScope(ScopeEnum.COMPONENTS_READ)
+  @UseGuards(SecurityGuard)
   public async getById(
-    @Param("id") id: Components["id"]
+    @Param("id") id: Components["id"],
+    @Req() req: Request
   ): Promise<ComponentsDto> {
-    return super.getById(id);
+    return await super.getById(id, req);
   }
 
   @Post()
@@ -108,11 +138,14 @@ export class ComponentsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have needed scopes"
   })
+  @NeedScope(ScopeEnum.COMPONENTS_CREATE)
+  @UseGuards(SecurityGuard)
   async add(
     // eslint-disable-next-line @typescript-eslint/camelcase
-    @Body() newItem: NewComponentsDto
+    @Body() newItem: NewComponentsDto,
+    @Req() req: Request
   ): Promise<ComponentsDto> {
-    return super.add(newItem);
+    return await super.add(newItem, req);
   }
 
   @Put(":id")
@@ -127,11 +160,14 @@ export class ComponentsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
+  @NeedScope(ScopeEnum.COMPONENTS_UPDATE)
+  @UseGuards(SecurityGuard)
   public async update(
     @Param("id") id: Components["id"],
-    @Body() updateInfo: UpdateComponentsDto
-  ): Promise<ComponentsDto> {
-    return super.update(id, updateInfo);
+    @Body() updateInfo: UpdateComponentsDto,
+    @Req() req: Request,
+    ): Promise<ComponentsDto> {
+    return await super.update(id, updateInfo, req);
   }
 
   @Delete(":id")
@@ -151,7 +187,12 @@ export class ComponentsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async delete(@Param("id") id: Components["id"]): Promise<void> {
-    return super.delete(id);
+  @NeedScope(ScopeEnum.COMPONENTS_DELETE)
+  @UseGuards(SecurityGuard)
+  public async delete(
+    @Param("id") id: Components["id"],
+    @Req() req: Request
+  ): Promise<void> {
+    return await super.delete(id, req);
   }
 }

@@ -18,10 +18,12 @@ export class NewFieldsDto {
   description: Fields["description"];
 
   @ApiProperty({ type: () => NewAttributesDto })
+  @IsOptional()
   @Expose()
   attributes: NewAttributesDto[];
 
-  @ApiProperty({ type: () => NewComponentsDto })
+  @ApiProperty({ type: () => String })
+  @IsOptional()
   @Expose()
-  component: NewComponentsDto;
+  component: string;
 }

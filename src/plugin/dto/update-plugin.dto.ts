@@ -8,6 +8,11 @@ export class UpdatePluginDto {
   @ApiProperty()
   @IsString()
   @Expose()
+  id: Plugin["id"];
+
+  @ApiProperty()
+  @IsString()
+  @Expose()
   name: Plugin["name"];
 
   @ApiProperty()
@@ -15,6 +20,12 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   description: Plugin["description"];
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  @Expose()
+  componentsUrl: Plugin["componentsUrl"];
 
   @ApiProperty()
   @IsString()

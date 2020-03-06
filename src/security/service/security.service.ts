@@ -1,3 +1,4 @@
+import { UserNotFoundError } from './../exception/user-not-found.error';
 import { TokenDto } from '../../commons/dto/token.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -25,6 +26,7 @@ import { User } from '../entity/user.entity';
 import { ClientCredentialsEnum } from '../enum/client-credentials.enum';
 import { InvalidClientCredentialsError } from '../exception/invalid-client-credentials.error';
 import { AuthorizationCodeRepository } from '../repository/authorization-code.repository';
+import { UserMustChangePasswordError } from '../exception/user-must-change-password.error';
 
 @Injectable()
 export class SecurityService {
@@ -44,13 +46,15 @@ export class SecurityService {
   @Transactional()
   public async validateClientCredentials(
     base64Login: string,
+    clientId:string, 
+    clientSecret: string
   ): Promise<GeneratedTokenDTO> {
-    const [name, secret]: string[] = this.splitClientCredentials(
+    const [name, secret]: string[] = base64Login ? this.splitClientCredentials(
       this.base64ToString(base64Login),
-    );
+    ) : [clientId,clientSecret]
 
     const clientCredentials: ClientCredentials = await this.findClientCredentialsByNameAndSecret(
-      ClientCredentialsEnum[name],
+      name,
       secret,
     );
 
@@ -78,32 +82,38 @@ export class SecurityService {
     return Buffer.from(base64Login, 'base64').toString('ascii');
   }
 
-  @Transactional()
-  public async getClientCredentialLogin(
-    base64Login: string,
-    username: string,
-    password: string,
-  ): Promise<GeneratedTokenDTO> {
-    const [name, secret]: string[] = this.splitClientCredentials(
-      this.base64ToString(base64Login),
-    );
-    await this.findClientCredentialsByNameAndSecret(
-      ClientCredentialsEnum[name],
-      secret,
-    );
+  public async getTokenDtoByUsernameAndPassword(username: string, password: string) : Promise<TokenDto>{
     const user: User = await this.userService.findByEmailAndPassword(
       username,
       password,
     );
 
-    //@TODO -> Get all permissions
-    const tokenDto = {
+    if (!user){
+      throw new UserNotFoundError();
+    }
+
+    return {
       id: user.id,
       username: user.name,
       secret: user.password,
       type: "user",
       scope: (await this.userService.getAllUserScopes(user.id)).map(s => s.name).join(" ")
     } as TokenDto;
+
+  }
+
+  @Transactional()
+  public async getClientCredentialLogin(
+    username: string,
+    password: string,
+  ): Promise<GeneratedTokenDTO> {
+
+    const tokenDto: TokenDto = await this.getTokenDtoByUsernameAndPassword(username,password);
+    const user: User = await this.userService.findById(tokenDto.id);
+
+    if (user.mustChangePassword){
+      throw new UserMustChangePasswordError();
+    }
 
     return this.generateLoginObject(tokenDto);
   }
@@ -285,7 +295,7 @@ export class SecurityService {
   }
 
   private async findClientCredentialsByNameAndSecret(
-    name: ClientCredentialsEnum,
+    name: string,
     secret: string,
   ): Promise<ClientCredentials> {
     if (!name) {

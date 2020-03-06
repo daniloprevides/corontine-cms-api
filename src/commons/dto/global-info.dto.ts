@@ -1,3 +1,5 @@
+import { ComponentInfoDto } from './component-info.dto';
+import { PluginInfoDto } from './plugin-info.dto';
 import { PluginDto } from '../../plugin/dto/plugin.dto';
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -26,10 +28,16 @@ export class GlobalInfoDto {
     @Expose()
     url: string;
 
-    @ApiProperty({type: () => PluginDto})
+    @ApiProperty({type: () => PluginInfoDto})
     @IsString()
     @Expose()
-    plugins: PluginDto[];
+    plugins: PluginInfoDto[];
+
+
+    @ApiProperty({type: () => ComponentInfoDto})
+    @IsString()
+    @Expose()
+    components: ComponentInfoDto[];
 
 
 }

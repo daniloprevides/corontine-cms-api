@@ -18,7 +18,7 @@ export class AuthenticationService {
     private readonly http: HttpService
   ) {}
 
-  public async getTokenInfo(localUrl:string, authorizationHeader:string){
+  public async getTokenInfo(localUrl:string, authorizationHeader:string) : Promise<TokenDto>{
     const url = this.configService.get("serverUrl");
     let urlAuthEndpoint: string = `${localUrl}/${Constants.AUTH_DETAILS_ENDPOINT}`;
     let tokenDto: TokenDto = null;
@@ -63,24 +63,18 @@ export class AuthenticationService {
   public async authorize(
     authorizationHeader: string,
     localUrl: string,
-    scopes: string[]
+    scopes: string[],
+    token?:TokenDto
   ): Promise<boolean> {
     if (!authorizationHeader) return false;
    
-    let tokenDto:TokenDto = await this.getTokenInfo(localUrl,authorizationHeader);
-
-    if (
-      !tokenDto ||
-      !tokenDto.scope ||
-      !tokenDto.scope.length ||
-      !tokenDto.scope.trim().length
-    ) {
-      throw new UnauthorizedException("User not found");
-    }
+    let tokenDto:TokenDto = !token ? await this.getTokenInfo(localUrl,authorizationHeader) : token;
+    if (!tokenDto.scope || !tokenDto.scope.trim().length) throw new UnauthorizedException("User not found");
+    const tokenScopes = token.scope.split(" ");
 
     let hasPermission = false;
     scopes.forEach(i => {
-      if (tokenDto.scope.split(" ").find(s => s == i) != null) {
+      if (tokenScopes.find(s => s == i) != null) {
         hasPermission = true;
       }
     });

@@ -2,7 +2,7 @@ import { NewFieldsDto } from "./new-fields.dto";
 import { Attributes } from "./../entity/attributes.entity";
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsString, IsOptional } from "class-validator";
 
 export class NewAttributesDto {
   @ApiProperty()
@@ -16,14 +16,21 @@ export class NewAttributesDto {
 
   @ApiProperty()
   @Expose()
-  definition: Attributes["definition"];
+  @IsOptional()
+  required?: Attributes["required"];
+
+  @ApiProperty()
+  @Expose()
+  @IsOptional()
+  defaultValue?: Attributes["defaultValue"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   type: Attributes["type"];
 
-  @ApiProperty({ type: () => NewFieldsDto })
+  @ApiProperty({ type: () => String })
+  @IsOptional()
   @Expose()
-  field: NewFieldsDto;
+  field: String;
 }

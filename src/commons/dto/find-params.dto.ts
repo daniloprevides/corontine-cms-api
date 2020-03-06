@@ -26,5 +26,11 @@ export class FindParamsDto {
   @Expose()
   sort: string;
 
+  @ApiProperty({ type: () => String })
+  @IsString()
+  @IsOptional()  
+  @Expose()
+  relations? : string;
+
 
 }

@@ -1,3 +1,4 @@
+import { UpdatePluginDto } from './update-plugin.dto';
 import { NewPluginDto } from './new-plugin.dto';
 import { NewFieldsDto } from './new-fields.dto';
 import { Components } from './../entity/components.entity';
@@ -24,15 +25,18 @@ export class NewComponentsDto {
   @Expose()
   informationUrl: Components["informationUrl"];
 
+  @ApiProperty()
+  @IsString()
+  @Expose()
+  url: Components["url"];
+
   @ApiProperty({ type: () => NewFieldsDto })
   @IsOptional()
   @Expose()
   fields: NewFieldsDto[];
 
-  @ApiProperty({ type: () => NewPluginDto })
-  @IsOptional()
+  @ApiProperty({ type: () => String})
   @Expose()
-  plugin: NewPluginDto;
-
+  plugin: string;
 
 }

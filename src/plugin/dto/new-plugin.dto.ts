@@ -18,6 +18,12 @@ export class NewPluginDto {
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
+  @Expose()
+  componentsUrl: Plugin["componentsUrl"];
+  
+  @ApiProperty()
+  @IsString()
   @Expose()
   apiUrl: Plugin["apiUrl"];
 

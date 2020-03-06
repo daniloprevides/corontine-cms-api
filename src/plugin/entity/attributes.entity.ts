@@ -4,8 +4,17 @@ import { Fields } from "./fields.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { Audit } from "../../commons";
 import { Expose } from "class-transformer";
+import { RequiredScopes } from "../../commons/annotations/entity-scope.decorator";
+import { ScopeEnum } from "../enum/scope.enum";
 
-@Entity()
+@RequiredScopes(
+  "attributes",
+  ScopeEnum.ATTRIBUTES_CREATE,
+  ScopeEnum.ATTRIBUTES_READ,
+  ScopeEnum.ATTRIBUTES_UPDATE,
+  ScopeEnum.ATTRIBUTES_DELETE
+)
+@Entity({ name: "attributes"})
 export class Attributes extends BasicEntity {
   @Column({
     nullable: false
@@ -13,13 +22,17 @@ export class Attributes extends BasicEntity {
   @Expose()
   name: string;
 
-  @Column("simple-json", { nullable: false })
+  @Column("simple-json", { nullable: true })
   @Expose()
   value: any;
 
-  @Column("simple-json", { nullable: false })
+  @Column({ nullable: false, default: false })
   @Expose()
-  definition: any;
+  required: boolean;
+
+  @Column("simple-json",{ nullable: true })
+  @Expose()
+  defaultValue: any;
 
   @Column({ default: FieldTypeEnum.STRING, nullable: false })
   @Expose()
@@ -27,8 +40,7 @@ export class Attributes extends BasicEntity {
 
   @ManyToOne(
     () => Fields,
-    (fields: Fields) => fields.attributes,
-    { onDelete: 'CASCADE' }
+    (fields: Fields) => fields.attributes, 
   )
   field: Fields;
 }

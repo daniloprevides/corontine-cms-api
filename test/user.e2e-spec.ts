@@ -1,3 +1,4 @@
+import { ChangePasswordDTO } from './../src/security/dto/change-password.dto';
 import { HttpExceptionFilter } from './../src/commons/filters/http-exception.filter';
 import { ScopeEnum } from './../src/security/enum/scope.enum';
 import { Scope } from './../src/security/entity/scope.entity';
@@ -21,6 +22,7 @@ import { UserUpdateDTO } from '../src/security/dto/user-update.dto';
 import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.enum';
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
 import { v4 as uuidv4 } from 'uuid';
+import { RequestContextMiddleware } from '../src/middlewares/request-context-middleware';
 
 
 const stringToBase64 = (string: string) => {
@@ -142,6 +144,7 @@ describe('UserController', () => {
         disableErrorMessages: false
       }));
       app.useGlobalFilters(new HttpExceptionFilter());
+      app.use(RequestContextMiddleware);
       await app.init();
   
       setTimeout(async () => {
@@ -149,7 +152,7 @@ describe('UserController', () => {
         authorization  = await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]);    
         server = app.getHttpServer();  
         resolve();
-      },1000);
+      },4000);
   
     });
     
@@ -536,6 +539,43 @@ describe('UserController', () => {
       });
     });
   },30000); 
+
+
+  it('should change my password by username', async done => {   
+    let user = {
+      email: 'user_chahnge_own_pass@email.com',
+      password: 'password',
+      name: 'myname',
+      groups: ['admin']
+    } as NewUserDTO;
+    return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
+    .then(res => {      
+      return createUserRequest(user,res.body.accessToken)
+      .expect(201)
+      .then(async (userResponse) => {
+        return passwordGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]),user.email,user.password)
+        .expect(200)
+        .then(res => {       
+            let request = {
+             username: user.email,
+             password : "password",
+             newPassword: "abcdefg",
+             confirmNewPassword: "abcdefg"
+            } as ChangePasswordDTO
+            updateRequest(request,res.body.accessToken,`${userUrl}/me/change-password`)
+            .expect(200)
+            .then((response) => {  
+              expect(response.body.name).toBe(user.name);
+              expect(response.body.email).toBe(user.email);
+              expect(response.body.mustChangePassword).toBe(false);
+              done();
+            })
+        })
+      });
+    });
+  },30000); 
+
+
 
 
   afterAll(async () => {

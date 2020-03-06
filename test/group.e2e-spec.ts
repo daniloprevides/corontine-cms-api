@@ -18,6 +18,7 @@ import { initializeTransactionalContext } from 'typeorm-transactional-cls-hooked
 import { ClientCredentials } from '../src/security/entity/client-credentials.entity';
 import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.enum';
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
+import { RequestContextMiddleware } from '../src/middlewares/request-context-middleware';
 
 const stringToBase64 = (string: string) => {
   return Buffer.from(string).toString('base64');
@@ -139,6 +140,8 @@ describe('Group (e2e)', () => {
         disableErrorMessages: false
       }));
       app.useGlobalFilters(new HttpExceptionFilter());
+      app.use(RequestContextMiddleware);
+
       await app.init();
   
       setTimeout(async () => {
@@ -146,7 +149,7 @@ describe('Group (e2e)', () => {
         authorization  = await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]);    
         server = app.getHttpServer();  
         resolve();
-      },1000);
+      },4000);
   
     });
     

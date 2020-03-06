@@ -1,3 +1,5 @@
+import { EntityActionEnum } from './../../commons/enum/entity.action.enum';
+import { EntityMetadataService } from './../../entity-metadata.service';
 import { SecurityConstants } from "./../constants";
 import { Constants } from "./../../commons/constants";
 import * as crypto from "crypto";
@@ -29,6 +31,7 @@ import { ChangePasswordDTO } from "../dto/change-password.dto";
 import { ChangePasswordForgotFlowDTO } from "../dto/change-password-forgot-flow.dto";
 import { GroupRepository } from "../repository/group.repository";
 import { Scope } from "../entity/scope.entity";
+import { ScopeEnum } from '../enum/scope.enum';
 
 @Injectable()
 export class UserService {
@@ -86,7 +89,6 @@ export class UserService {
         groups: groups
       });
     } catch (e) {
-      console.error(e);
       if (e.code === "ER_DUP_ENTRY") {
         throw new ConflictException("User with same email already exists");
       }
@@ -221,6 +223,11 @@ export class UserService {
         "Old password does not match with given password"
       );
     }
+    user.mustChangePassword = false;
+
+    //Adding scopes to context
+    EntityMetadataService.Instance.addTableScope("user", EntityActionEnum.UPDATE, [ScopeEnum.USER_UPDATE])
+
     user.salt = this.createSalt();
     user.password = this.createHashedPassword(
       changePasswordDTO.newPassword,

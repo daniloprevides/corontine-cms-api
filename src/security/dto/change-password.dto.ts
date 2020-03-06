@@ -6,6 +6,11 @@ export class ChangePasswordDTO {
   @ApiProperty({ type: String })
   @IsString()
   @Expose()
+  username: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @Expose()
   password: string;
 
   @ApiProperty({ type: String })

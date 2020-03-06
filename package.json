@@ -35,6 +35,7 @@
     "hbs": "^4.1.0",
     "mysql": "^2.18.1",
     "nestjs-typeorm-paginate": "^1.0.3",
+    "node-request-context": "^1.0.5",
     "nodemailer": "^6.4.3",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.2",

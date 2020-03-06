@@ -1,3 +1,4 @@
+import { AttributesRepository } from './../repository/attributes.repository';
 import { NewFieldsDto } from "./../dto/new-fields.dto";
 import { FieldsRepository } from "./../repository/fields.repository";
 import {GenericService} from "../../commons/services/generic.service";
@@ -14,9 +15,19 @@ export class FieldsService extends GenericService<
 > {
   constructor(
     @Inject(forwardRef(() => FieldsRepository))
-    public readonly fieldsRepository: FieldsRepository
+    public readonly fieldsRepository: FieldsRepository,
+    @Inject(forwardRef(() => AttributesRepository))
+    public readonly attributesRepository: AttributesRepository    
     ) {
     super(fieldsRepository, "Fields");
+  }
+
+  setNeededFieldsOnChildren(clientId:string, item:Fields){
+    item?.attributes?.forEach(f => f.clientId = clientId);
+  }
+
+  public async validateParent(clientId:string, id:string): Promise<boolean>{
+    return await this.attributesRepository.findOne({where: {clientId: clientId, id: id}}) != null;
   }
 
   protected getRelations(): Array<string> {

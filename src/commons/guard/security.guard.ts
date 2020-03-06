@@ -1,20 +1,11 @@
 import { AuthenticationService } from './../services/authentication-service';
-import { TokenDto } from "./../dto/token.dto";
-import { PluginTypeEnum } from "../enum/plugin-type.enum";
-import { GlobalInfoDto } from "../dto/global-info.dto";
-import { ConfigService } from "@nestjs/config";
+
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-  HttpService,
-  NotFoundException
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { JwtService } from "@nestjs/jwt";
-import { Constants } from "../constants";
 
 @Injectable()
 export class SecurityGuard implements CanActivate {
@@ -37,7 +28,14 @@ export class SecurityGuard implements CanActivate {
     if (!authorizationHeader) return false;
 
     const localUrl = request.protocol + "://" + request.get("host");
+    const tokenDto = await this.authenticationService.getTokenInfo(localUrl, authorizationHeader);
 
-    return this.authenticationService.authorize(authorizationHeader,localUrl,scopes);
+    //Adding token to request session
+    request.user = tokenDto;
+
+
+    const isAuthorized = await this.authenticationService.authorize(authorizationHeader,localUrl,scopes, tokenDto);
+
+    return isAuthorized;
   }
 }

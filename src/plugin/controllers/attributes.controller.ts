@@ -1,3 +1,6 @@
+import { SecurityGuard } from './../../commons/guard/security.guard';
+import { NeedScope } from './../../commons/guard/scope-metadata.guard';
+import { AuthenticationService } from './../../commons/services/authentication-service';
 import { FindParamsDto } from './../../commons/dto/find-params.dto';
 import { Constants } from './../../commons/constants';
 import { AttributeService } from "./../services/attributes.service";
@@ -16,7 +19,9 @@ import {
   ApiBody,
   ApiNotFoundResponse,
   ApiParam,
-  ApiQuery
+  ApiQuery,
+  ApiBearerAuth,
+  ApiHeader
 } from "@nestjs/swagger";
 import {
   Controller,
@@ -28,12 +33,21 @@ import {
   Put,
   Delete,
   Query,
-  Req
+  Req,
+  UseGuards
 } from "@nestjs/common";
 import {GenericController} from "../../commons/controller/generic.controller";
 import Request = require('request');
+import { ScopeEnum } from '../enum/scope.enum';
 
 @ApiTags("Attributes")
+@ApiBearerAuth()
+@ApiHeader({
+  name: "authorization",
+  allowEmptyValue: false,
+  description: "Bearer Authorization token"
+})
+
 @Controller(
   `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PluginConstants.ATTRIBUTES_ENDPOINT}`
 )
@@ -45,11 +59,17 @@ export class AttributesController extends GenericController<
   AttributesMapper,
   AttributeService
 > {
+
   constructor(
     attributesService: AttributeService,
-    attributesMapper: AttributesMapper
+    attributesMapper: AttributesMapper,
+    authenticationService:AuthenticationService
   ) {
-    super(attributesService, attributesMapper, "Attributes");
+    super(attributesService, attributesMapper, authenticationService, "Attributes");
+  }
+
+  public getParentFieldName(): string {
+    return "field";
   }
 
   @Get()
@@ -71,6 +91,8 @@ export class AttributesController extends GenericController<
     type: FindParamsDto,
     name: "Pagination and Filter Params"
   })
+  @NeedScope(ScopeEnum.ATTRIBUTES_READ)
+  @UseGuards(SecurityGuard)
   public async getAll(@Query() queryParams:FindParamsDto, @Req() req:Request): Promise<AttributesDto[]> {
     return super.getAll(queryParams,req);
   }
@@ -90,10 +112,13 @@ export class AttributesController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
+  @NeedScope(ScopeEnum.ATTRIBUTES_READ)
+  @UseGuards(SecurityGuard)
   public async getById(
     @Param("id") id: Attributes["id"]
+    , @Req() req: Request
   ): Promise<AttributesDto> {
-    return super.getById(id);
+    return await super.getById(id,req);
   }
 
   @Post()
@@ -111,11 +136,14 @@ export class AttributesController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have needed scopes"
   })
+  @NeedScope(ScopeEnum.ATTRIBUTES_CREATE)
+  @UseGuards(SecurityGuard)
   async add(
     // eslint-disable-next-line @typescript-eslint/camelcase
     @Body() newItem: NewAttributesDto
+    , @Req() req: Request
   ): Promise<AttributesDto> {
-    return super.add(newItem);
+    return await super.add(newItem, req);
   }
 
   @Put(":id")
@@ -130,11 +158,14 @@ export class AttributesController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
+  @NeedScope(ScopeEnum.ATTRIBUTES_UPDATE)
+  @UseGuards(SecurityGuard)
   public async update(
     @Param("id") id: Attributes["id"],
     @Body() updateInfo: UpdateAttributesDto
+    , @Req() req: Request
   ): Promise<AttributesDto> {
-    return super.update(id, updateInfo);
+    return await super.update(id, updateInfo, req);
   }
 
   @Delete(":id")
@@ -149,12 +180,14 @@ export class AttributesController extends GenericController<
     summary: "Delete Attribute",
     description: "Deletes Attributes By ID"
   })
+  @NeedScope(ScopeEnum.ATTRIBUTES_DELETE)
+  @UseGuards(SecurityGuard)
   @ApiNotFoundResponse({ description: "Attributes Not Found" })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async delete(@Param("id") id: Attributes["id"]): Promise<void> {
-    return super.delete(id);
+  public async delete(@Param("id") id: Attributes["id"], @Req() req: Request): Promise<void> {
+    return await super.delete(id, req);
   }
 }

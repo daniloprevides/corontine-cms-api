@@ -30,7 +30,8 @@ import {
   ApiTags,
   ApiOkResponse,
   ApiNotFoundResponse,
-  ApiParam
+  ApiParam,
+  ApiHeader
 } from "@nestjs/swagger";
 import { ClientCredentials } from "../entity/client-credentials.entity";
 import { NeedScope } from "../../commons/guard/scope-metadata.guard";
@@ -39,6 +40,11 @@ import { ScopeGuard } from "../guard/scope.guard";
 
 @ApiTags("ClientCredentials")
 @ApiBearerAuth()
+@ApiHeader({
+  name: "authorization",
+  allowEmptyValue: false,
+  description: "Bearer Authorization token"
+})
 @Controller(
   `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.CLIENT_CREDENTIALS_ENDPOINT}`
 )

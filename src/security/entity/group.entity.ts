@@ -1,18 +1,27 @@
-import { Scope } from './scope.entity';
+import { Scope } from "./scope.entity";
 import {
   Column,
   Entity,
   ManyToMany,
   PrimaryGeneratedColumn,
-  JoinTable,
-} from 'typeorm';
-import { Audit } from '../../commons';
-import { Expose } from 'class-transformer';
-import { User } from './user.entity';
+  JoinTable
+} from "typeorm";
+import { Audit } from "../../commons";
+import { Expose } from "class-transformer";
+import { User } from "./user.entity";
+import { RequiredScopes } from "../../commons/annotations/entity-scope.decorator";
+import { ScopeEnum } from "../enum/scope.enum";
 
-@Entity()
+@RequiredScopes(
+  "group",
+  ScopeEnum.GROUP_CREATE,
+  ScopeEnum.GROUP_READ,
+  ScopeEnum.GROUP_UPDATE,
+  ScopeEnum.GROUP_DELETE
+)
+@Entity({ name: "group" })
 export class Group extends Audit {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   @Expose()
   id: string;
 
@@ -24,22 +33,22 @@ export class Group extends Audit {
   name: string;
 
   @Column({
-    nullable: true,
+    nullable: true
   })
   @Expose()
   description: string;
 
   @ManyToMany<Scope>(
     () => Scope,
-    (scope: Scope) => scope.groups,
+    (scope: Scope) => scope.groups
   )
-  @JoinTable()
+  @JoinTable({name: "group_scopes"})
   @Expose()
   scopes: Scope[];
 
   @ManyToMany<User>(
     () => User,
-    (user: User) => user.groups,
+    (user: User) => user.groups
   )
   @Expose()
   users: User[];

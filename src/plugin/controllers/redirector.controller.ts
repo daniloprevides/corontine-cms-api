@@ -6,13 +6,15 @@ import Request = require("request");
 import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Redirector")
-@Controller()
+@Controller("/info")
 export class RedirectorController {
-  constructor(private readonly service: RedirectorService) {}
+  constructor(
+    private readonly service: RedirectorService,
+    ) {}
 
   @Get()
   async getHello(@Req() req: Request): Promise<GlobalInfoDto> {
     const url = req.protocol + "://" + req.get("host") + req.originalUrl;
-    return await this.service.getInfo(url);
+    return this.service.getPublicInfo(url);
   }
 }

@@ -1,4 +1,5 @@
-import { FindParamsDto } from './../../commons/dto/find-params.dto';
+import { AuthenticationService } from "./../../commons/services/authentication-service";
+import { FindParamsDto } from "./../../commons/dto/find-params.dto";
 import { SecurityGuard } from "./../../commons/guard/security.guard";
 import { NeedScope } from "./../../commons/guard/scope-metadata.guard";
 import { Constants } from "./../../commons/constants";
@@ -13,7 +14,9 @@ import {
   ApiBody,
   ApiNotFoundResponse,
   ApiParam,
-  ApiQuery
+  ApiQuery,
+  ApiBearerAuth,
+  ApiHeader
 } from "@nestjs/swagger";
 import {
   Controller,
@@ -37,9 +40,15 @@ import { PluginMapper } from "../mapper/plugin.mapper";
 import { PluginService } from "../services/plugin.service";
 import { GenericController } from "../../commons/controller/generic.controller";
 import { ScopeEnum } from "../enum/scope.enum";
-import Request = require('request');
+import Request = require("request");
 
 @ApiTags("Plugin")
+@ApiBearerAuth()
+@ApiHeader({
+  name: "authorization",
+  allowEmptyValue: false,
+  description: "Bearer Authorization token"
+})
 @Controller(
   `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PluginConstants.PLUGIN_ENDPOINT}`
 )
@@ -51,8 +60,12 @@ export class PluginController extends GenericController<
   PluginMapper,
   PluginService
 > {
-  constructor(service: PluginService, mapper: PluginMapper) {
-    super(service, mapper, "Plugin");
+  constructor(
+    service: PluginService,
+    mapper: PluginMapper,
+    authenticationService: AuthenticationService
+  ) {
+    super(service, mapper, authenticationService, "Plugin");
   }
 
   @Get()
@@ -76,8 +89,11 @@ export class PluginController extends GenericController<
   })
   @NeedScope(ScopeEnum.PLUGIN_READ)
   @UseGuards(SecurityGuard)
-  public async getAll(@Query() queryParams:FindParamsDto, @Req() req: Request): Promise<PluginDto[]> {
-    return super.getAll(queryParams,req);
+  public async getAll(
+    @Query() queryParams: FindParamsDto,
+    @Req() req: Request
+  ): Promise<PluginDto[]> {
+    return super.getAll(queryParams, req);
   }
 
   @Get(":id")
@@ -97,8 +113,11 @@ export class PluginController extends GenericController<
   })
   @NeedScope(ScopeEnum.PLUGIN_READ)
   @UseGuards(SecurityGuard)
-  public async getById(@Param("id") id: Plugin["id"]): Promise<PluginDto> {
-    return super.getById(id);
+  public async getById(
+    @Param("id") id: Plugin["id"],
+    @Req() req: Request
+  ): Promise<PluginDto> {
+    return await super.getById(id, req);
   }
 
   @Post()
@@ -118,17 +137,11 @@ export class PluginController extends GenericController<
   })
   @NeedScope(ScopeEnum.PLUGIN_CREATE)
   @UseGuards(SecurityGuard)
-  async addItem(
+  async add(
     @Body() newItem: NewPluginDto,
-    @Headers("authorization") authorizationHeader: string,
     @Req() req: Request
   ): Promise<PluginDto> {
-    if (!authorizationHeader) {
-      throw new UnauthorizedException();
-    }
-    const url = req.protocol + '://' + req.get('host');
-    let item = await this.service.addItem(newItem, authorizationHeader, url);
-    return this.mapper.toDto(item);
+    return await super.add(newItem, req);
   }
 
   @Put(":id")
@@ -147,9 +160,10 @@ export class PluginController extends GenericController<
   @UseGuards(SecurityGuard)
   public async update(
     @Param("id") id: Plugin["id"],
-    @Body() updateInfo: UpdatePluginDto
+    @Body() updateInfo: UpdatePluginDto,
+    @Req() req: Request
   ): Promise<PluginDto> {
-    return super.update(id, updateInfo);
+    return await super.update(id, updateInfo, req);
   }
 
   @Delete(":id")
@@ -171,7 +185,10 @@ export class PluginController extends GenericController<
   })
   @NeedScope(ScopeEnum.PLUGIN_DELETE)
   @UseGuards(SecurityGuard)
-  public async delete(@Param("id") id: Plugin["id"]): Promise<void> {
-    return super.delete(id);
+  public async delete(
+    @Param("id") id: Plugin["id"],
+    @Req() req: Request
+  ): Promise<void> {
+    return await super.delete(id, req);
   }
 }

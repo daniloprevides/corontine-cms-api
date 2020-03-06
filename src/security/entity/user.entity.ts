@@ -1,26 +1,34 @@
-import { Group } from './group.entity';
-import * as crypto from 'crypto';
+import { ScopeEnum } from "./../enum/scope.enum";
+import { Group } from "./group.entity";
+import * as crypto from "crypto";
 import {
   Column,
   Entity,
   ManyToMany,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  JoinTable,
-} from 'typeorm';
-import { Audit } from '../../commons';
-import { ChangePassword } from './change-password.entity';
-import { Expose } from 'class-transformer';
+  JoinTable
+} from "typeorm";
+import { Audit } from "../../commons";
+import { ChangePassword } from "./change-password.entity";
+import { Expose } from "class-transformer";
 
-@Entity()
+import { RequiredScopes } from "../../commons/annotations/entity-scope.decorator";
+@RequiredScopes(
+  "user",
+  ScopeEnum.USER_CREATE,
+  [ScopeEnum.USER_READ,ScopeEnum.USER_ME_READ],
+  [ScopeEnum.USER_UPDATE, ScopeEnum.USER_ME_UPDATE, ScopeEnum.USER_CHANGE_PASSWORD],
+  [ScopeEnum.USER_DELETE]
+)
+@Entity({ name: "user" })
 export class User extends Audit {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   @Expose()
   id: string;
 
   @Column({
-    nullable: false,
+    nullable: false
   })
   @Expose()
   name: string;
@@ -33,39 +41,53 @@ export class User extends Audit {
   @Expose()
   password: string;
 
-  @Column({ name: 'url_facebook', nullable: true })
+  @Column({ name: "url_facebook", nullable: true })
   @Expose()
   urlFacebook: string;
 
-  @Column({ name: 'url_instagram', nullable: true })
+  @Column({ name: "url_instagram", nullable: true })
   @Expose()
   urlInstagram: string;
 
   @Column({
-    default: '',
+    default: ""
   })
   @Expose()
   salt: string;
 
-  @Column({ name: 'facebook_id', nullable: true })
+  @Column({
+    default: false,
+    name: "must_change_password"
+  })
+  @Expose()
+  mustChangePassword: boolean;
+
+  @Column({ name: "facebook_id", nullable: true })
   @Expose()
   facebookId: string;
 
-  @Column({ name: 'google_sub', nullable: true })
+  @Column({ name: "google_sub", nullable: true })
   @Expose()
   googleSub: string;
 
   @ManyToMany<Group>(
     () => Group,
-    (group: Group) => group.users,
+    (group: Group) => group.users
   )
-  @JoinTable()
+  @JoinTable({ name: "user_groups" })
   @Expose()
+  @RequiredScopes(
+    "user_groups",
+    ScopeEnum.GROUP_CREATE,
+    ScopeEnum.GROUP_READ,
+    ScopeEnum.GROUP_UPDATE,
+    ScopeEnum.GROUP_DELETE
+  )
   groups: Group[];
 
   @OneToMany<ChangePassword>(
     () => ChangePassword,
-    (changePassword: ChangePassword) => changePassword.user,
+    (changePassword: ChangePassword) => changePassword.user
   )
   @Expose()
   changePasswordRequests: ChangePassword[];

@@ -5395,6 +5395,11 @@ node-pre-gyp@^0.11.0:
     semver "^5.3.0"
     tar "^4"
 
+node-request-context@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/node-request-context/-/node-request-context-1.0.5.tgz#48c91806b18e7201ff0559c4ead89b3e390574cc"
+  integrity sha512-y7xXgz0ySpYIXdQEWNmh85n8d3fmoG8YYW2hU6C7SC/Y83jCXk2ffzpJbVVpcgNE1FwqgVuw40MCTa+Sl6zV8A==
+
 nodemailer@^6.0.0:
   version "6.4.2"
   resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.4.2.tgz#7147550e32cdc37453380ab78d2074533966090a"

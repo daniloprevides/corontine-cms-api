@@ -1,6 +1,10 @@
+import { ParserService } from './services/parser.service';
+import { EventsMapper } from './mapper/events.mapper';
+import { EventsService } from './services/events.service';
+import { EventsController } from './controllers/events.controller';
+import { EventsRepository } from './repository/events.repository';
+import { Events } from './entity/events.entity';
 import { AuthenticationService } from "./../commons/services/authentication-service";
-import { ConfigService } from "@nestjs/config";
-import { Reflector } from "@nestjs/core";
 import { RedirectorService } from "./services/redirector.service";
 import { RedirectorController } from "./controllers/redirector.controller";
 import { PluginMapper } from "./mapper/plugin.mapper";
@@ -33,10 +37,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       Components,
       Fields,
       Attributes,
+      Events,
       PluginRepository,
       ComponentsRepository,
       FieldsRepository,
-      AttributesRepository
+      AttributesRepository,
+      EventsRepository
     ]),
     HttpModule
   ],
@@ -45,7 +51,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
     ComponentsController,
     FieldsController,
     PluginController,
-    RedirectorController
+    RedirectorController,
+    EventsController
   ],
   providers: [
     AttributeService,
@@ -53,18 +60,22 @@ import { TypeOrmModule } from "@nestjs/typeorm";
     FieldsService,
     PluginService,
     RedirectorService,
+    EventsService,
     AttributesMapper,
     ComponentsMapper,
     FieldsMapper,
     PluginMapper,
-    AuthenticationService
+    EventsMapper,
+    AuthenticationService,
+    ParserService
   ],
   exports: [
     AttributeService,
     ComponentsService,
     FieldsService,
     PluginService,
-    RedirectorService
+    EventsService,
+    RedirectorService,
   ]
 })
 export class PluginModule {}

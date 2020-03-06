@@ -1,8 +1,11 @@
+import { RequestContextMiddleware } from '../src/middlewares/request-context-middleware';
 import { FindParamsDto } from './../src/commons/dto/find-params.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Plugin } from './../src/plugin/entity/plugin.entity';
 import { PluginDto } from './../src/plugin/dto/plugin.dto';
 import { ScopeEnum } from "./../src/security/enum/scope.enum";
+import { ScopeEnum as PluginScopeEnum} from "./../src/plugin/enum/scope.enum";
+
 import { Scope } from "./../src/security/entity/scope.entity";
 import { HttpExceptionFilter } from "./../src/commons/filters/http-exception.filter";
 import { PluginTypeEnum } from "../src/commons/enum/plugin-type.enum";
@@ -92,6 +95,24 @@ describe("Plugin (e2e)", () => {
     adminCredential = await clientCredentialRepository.save(adminCredential);
   };
 
+  const createCredentialWithPermissions = async (credentialName:string, credentialSecret:string,scopeNames: string[]) : Promise<ClientCredentials> => {
+    const clientCredentialRepository: Repository<ClientCredentials> = moduleFixture.get<Repository<ClientCredentials>>(getRepositoryToken(ClientCredentials));
+    const scopeRepository:Repository<Scope> = moduleFixture.get<Repository<Scope>>(getRepositoryToken(Scope));
+
+    let scopes:Scope[] = [];
+    for (let scopeName of scopeNames){
+      scopes.push(await scopeRepository.findOne({name: scopeName}));
+    }
+
+    let userCredential = new ClientCredentials();
+    userCredential.name = credentialName;
+    userCredential.secret = credentialSecret;
+    userCredential.scopes = scopes;
+
+    return clientCredentialRepository.save(userCredential);
+
+  }
+
   const defaultGrantRequest = (auth?: string) => {
     return request(server)
       .post("/oauth/token")
@@ -156,6 +177,8 @@ describe("Plugin (e2e)", () => {
         })
       );
       app.useGlobalFilters(new HttpExceptionFilter());
+      app.use(RequestContextMiddleware);
+
       await app.init();
 
       setTimeout(async () => {
@@ -165,7 +188,7 @@ describe("Plugin (e2e)", () => {
         );
         server = app.getHttpServer();
         resolve();
-      }, 1000);
+      }, 4000);
     });
   });
 
@@ -175,6 +198,8 @@ describe("Plugin (e2e)", () => {
       apiUrl: "http://localhost",
       environment: PluginEnvironmentEnum.STAGE,
       pluginType: PluginTypeEnum.CLIENT
+      ,componentsUrl: "abc"
+
     } as NewPluginDto;
     const userCredential = await getUserClientCredentials(
       ClientCredentialsEnum["ADMIN@APP"]
@@ -203,9 +228,11 @@ describe("Plugin (e2e)", () => {
       pluginType: PluginTypeEnum.CLIENT,
       components: [
         {
-          name: "component",          
+          name: "component",     
+          url: "abc"     
         } as NewComponentsDto
       ]
+      ,componentsUrl: "abc"
     } as NewPluginDto;
     const userCredential = await getUserClientCredentials(
       ClientCredentialsEnum["ADMIN@APP"]
@@ -221,7 +248,7 @@ describe("Plugin (e2e)", () => {
           expect(data.body.pluginType).toBe(plugin.pluginType);
           //checking if clientId has been filled with right information
           expect(data.body.clientId).toBe(rawClientCredential.id);
-          expect(data.body.components).toStrictEqual(plugin.components);
+          expect(data.body.components[0].name).toStrictEqual(plugin.components[0].name);
           done();
         });
     });
@@ -233,6 +260,7 @@ describe("Plugin (e2e)", () => {
       apiUrl: "http://localhost",
       environment: PluginEnvironmentEnum.STAGE,
       pluginType: PluginTypeEnum.CLIENT
+      ,componentsUrl: "abc"
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["USER@APP"])
@@ -251,6 +279,7 @@ describe("Plugin (e2e)", () => {
       apiUrl: "http://localhost",
       environment: PluginEnvironmentEnum.STAGE,
       pluginType: PluginTypeEnum.CLIENT
+      ,componentsUrl: "abc"
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -269,6 +298,7 @@ describe("Plugin (e2e)", () => {
       apiUrl: "http://localhost",
       environment: PluginEnvironmentEnum.STAGE,
       pluginType: PluginTypeEnum.CLIENT
+      ,componentsUrl: "abc"
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -287,6 +317,7 @@ describe("Plugin (e2e)", () => {
       apiUrl: "http://localhost",
       environment: PluginEnvironmentEnum.STAGE,
       pluginType: PluginTypeEnum.CLIENT,
+      componentsUrl: "abc"
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -312,6 +343,7 @@ describe("Plugin (e2e)", () => {
       apiUrl: "http://localhost",
       environment: PluginEnvironmentEnum.STAGE,
       pluginType: PluginTypeEnum.CLIENT     
+      ,componentsUrl: "abc"
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -323,14 +355,15 @@ describe("Plugin (e2e)", () => {
           item.name = "NewPluginForUpdateWithComponentsUpdated";
           item.components = [
             {
-              name: "component"
+              name: "component",
+              url: "abc"
             } as NewComponentsDto
           ]
           return updateRequest(item,res.body.accessToken,`${pluginUrl}/${item.id}`)
           .expect(200)
           .then(updateResponse => {
             expect(updateResponse.body.name).toBe(item.name);
-            expect(updateResponse.body.components).toStrictEqual(item.components);
+            expect(updateResponse.body.components[0].name).toStrictEqual(item.components[0].name);
             done();
           })
         });
@@ -342,7 +375,8 @@ describe("Plugin (e2e)", () => {
       name: "DeletePluginForUpdateWithComponents",
       apiUrl: "http://localhost",
       environment: PluginEnvironmentEnum.STAGE,
-      pluginType: PluginTypeEnum.CLIENT     
+      pluginType: PluginTypeEnum.CLIENT  
+      ,componentsUrl: "abc"   
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -369,9 +403,11 @@ describe("Plugin (e2e)", () => {
       pluginType: PluginTypeEnum.CLIENT,
       components : [
         {
-          name: "component"
+          name: "component",
+          url: "abc"
         } as NewComponentsDto
       ]     
+      ,componentsUrl: "abc"
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -397,9 +433,11 @@ describe("Plugin (e2e)", () => {
       pluginType: PluginTypeEnum.CLIENT,
       components : [
         {
-          name: "component"
+          name: "component",
+          url: "abc"
         } as NewComponentsDto
-      ]     
+      ]    
+      ,componentsUrl: "abc" 
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -426,9 +464,11 @@ describe("Plugin (e2e)", () => {
       pluginType: PluginTypeEnum.CLIENT,
       components : [
         {
-          name: "component"
+          name: "component",
+          url: "abc"
         } as NewComponentsDto
       ]     
+      ,componentsUrl: "abc"
     } as NewPluginDto;
     return defaultGrantRequest(
       await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"])
@@ -479,6 +519,66 @@ describe("Plugin (e2e)", () => {
       });
     });
   });
+
+  it("Should fail creating component inside plugin creation withou COMPONENT_CREATE permission", async done => {
+    let plugin = {
+      name: "NewPluginForDenyCreation",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT,
+      components: [
+        {
+          name: "MyNewCompForDeny",
+          url: "abc"
+        } as NewComponentsDto
+      ]
+      ,componentsUrl: "abc"
+    } as NewPluginDto;
+    return await createCredentialWithPermissions("plugin_perm_create","plugin_pass",[PluginScopeEnum.PLUGIN_CREATE, ScopeEnum.TOKEN_INFO] //Token info is necessary
+    ).then(async a => {
+      let credentialsHeader = await getUserClientCredentials("plugin_perm_create" as any);
+        return defaultGrantRequest(
+          credentialsHeader
+        ).then(res => {
+          return createRequest(plugin, res.body.accessToken, pluginUrl)
+          .expect(403)
+          .then(data => {
+            done();
+          });
+        });  
+    });
+  });
+
+  it("Should succeed creating component inside plugin creation with COMPONENT_CREATE permission", async done => {
+    let plugin = {
+      name: "NewPluginForDenyCreation2",
+      apiUrl: "http://localhost",
+      environment: PluginEnvironmentEnum.STAGE,
+      pluginType: PluginTypeEnum.CLIENT,
+      components: [
+        {
+          name: "MyNewCompForDeny2",
+          url: "abc"
+        } as NewComponentsDto
+      ]
+      ,componentsUrl: "abc"
+    } as NewPluginDto;
+    return await createCredentialWithPermissions("plugin_perm_create2","plugin_pass",[PluginScopeEnum.PLUGIN_CREATE,PluginScopeEnum.COMPONENTS_CREATE, ScopeEnum.TOKEN_INFO] //Token info is necessary
+    ).then(async a => {
+      let credentialsHeader = await getUserClientCredentials("plugin_perm_create2" as any);
+        return defaultGrantRequest(
+          credentialsHeader
+        ).then(res => {
+          return createRequest(plugin, res.body.accessToken, pluginUrl)
+          //.expect(201)
+          .then(data => {
+            expect(data.body.components[0].name).toBe(plugin.components[0].name);
+            done();
+          });
+        });  
+    });
+  });
+
 
 
   afterAll(async () => {

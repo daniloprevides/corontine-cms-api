@@ -1,5 +1,5 @@
-import { NewPluginDto } from './new-plugin.dto';
-import { NewFieldsDto } from './new-fields.dto';
+import { FieldsDto } from './fields.dto';
+import { PluginDto } from './plugin.dto';
 import { Components } from './../entity/components.entity';
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
@@ -28,13 +28,18 @@ export class ComponentsDto {
   @Expose()
   informationUrl: Components["informationUrl"];
 
-  @ApiProperty({ type: () => NewFieldsDto })
+  @ApiProperty()
+  @IsString()
   @Expose()
-  fields: NewFieldsDto[];
+  url: Components["url"];
 
-  @ApiProperty({ type: () => NewPluginDto })
+  @ApiProperty({ type: () => FieldsDto })
   @Expose()
-  plugin: NewPluginDto;
+  fields: FieldsDto[];
+
+  @ApiProperty({ type: () => PluginDto })
+  @Expose()
+  plugin: PluginDto;
 
 
 }

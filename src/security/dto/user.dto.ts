@@ -1,26 +1,32 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Type } from 'class-transformer';
-import { User } from '../entity/user.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Expose, Type } from "class-transformer";
+import { User } from "../entity/user.entity";
+import { IsBoolean, IsOptional } from "class-validator";
 
 export class UserDTO {
   @ApiProperty({ type: Number })
   @Expose()
-  id: User['id'];
+  id: User["id"];
 
   @ApiProperty({ type: String })
   @Expose()
-  name: User['name'];
+  name: User["name"];
+
+  @ApiProperty({ type: Boolean })
+  @IsBoolean()
+  @IsOptional()
+  @Expose()
+  mustChangePassword: User["mustChangePassword"];
 
   @ApiProperty({ type: String })
   @Expose()
-  email: User['email'];
+  email: User["email"];
 
   @ApiProperty({ type: String })
   @Expose()
-  urlFacebook: User['urlFacebook'];
+  urlFacebook: User["urlFacebook"];
 
   @ApiProperty({ type: String })
   @Expose()
-  urlInstagram: User['urlInstagram'];
-
+  urlInstagram: User["urlInstagram"];
 }

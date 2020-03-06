@@ -29,7 +29,8 @@ import {
   ApiTags,
   ApiOkResponse,
   ApiNotFoundResponse,
-  ApiParam
+  ApiParam,
+  ApiHeader
 } from "@nestjs/swagger";
 import { NeedScope } from "../../commons/guard/scope-metadata.guard";
 import { ScopeEnum } from "../enum/scope.enum";
@@ -39,6 +40,11 @@ import { SecurityConstants } from '../constants';
 
 @ApiTags("Group")
 @ApiBearerAuth()
+@ApiHeader({
+  name: "authorization",
+  allowEmptyValue: false,
+  description: "Bearer Authorization token"
+})
 @Controller(
   `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.GROUP_ENDPOINT}`
 )

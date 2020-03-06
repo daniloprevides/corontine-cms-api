@@ -24,11 +24,12 @@ export class PluginService extends GenericService<
     super(pluginRepository, "Plugin");
   }
 
+  setNeededFieldsOnChildren(clientId:string, item:Plugin){
+    item?.components?.forEach(f => f.clientId = clientId);
+  }
 
-  public async addItem(item: NewPluginDto, authorizationHeader:string, url:string): Promise<Plugin> {
-    let tokenData = await this.authenticationService.getTokenInfo(url,authorizationHeader);
-    item.clientId = tokenData.id;
-    return super.add(item);
+  public async validateParent(clientId:string, id:string): Promise<boolean>{
+    return true;
   }
 
   protected getRelations(): Array<string> {

@@ -23,6 +23,12 @@ export class PluginDto {
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
+  @Expose()
+  componentsUrl: Plugin["componentsUrl"];
+
+  @ApiProperty()
+  @IsString()
   @Expose()
   apiUrl: Plugin["apiUrl"];
 

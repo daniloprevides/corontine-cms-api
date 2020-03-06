@@ -1,5 +1,10 @@
+import { ClientCredentialsEnum } from './../security/enum/client-credentials.enum';
+import { ClientCredentials } from './../security/entity/client-credentials.entity';
+import { Constants } from './../commons/constants';
 import { Group } from './../security/entity/group.entity';
 import { ScopeEnum } from './../plugin/enum/scope.enum';
+import { ScopeEnum as SecurityScopeEnum} from './../security/enum/scope.enum';
+
 import { PluginEnvironmentEnum } from './../plugin/enum/environment.enum';
 import { PluginTypeEnum } from '../commons/enum/plugin-type.enum';
 import { Plugin } from './../plugin/entity/plugin.entity';
@@ -37,6 +42,13 @@ export class PluginsData1582890034060 implements MigrationInterface {
         await createScope(ScopeEnum.PLUGIN_DELETE, "Delete plugins");
         await createScope(ScopeEnum.PLUGIN_UPDATE, "Update plugins");
 
+        await createScope(ScopeEnum.EVENTS_CREATE, "Create events");
+        await createScope(ScopeEnum.EVENTS_READ, "Read events");
+        await createScope(ScopeEnum.EVENTS_DELETE, "Delete events");
+        await createScope(ScopeEnum.EVENTS_UPDATE, "Update events");
+
+        await createScope(ScopeEnum.CMS, "Scope needed for CMS screen tasks (Only for users)");
+
 
     }
 
@@ -49,17 +61,51 @@ export class PluginsData1582890034060 implements MigrationInterface {
         groupRepository.save(adminGroup); 
     }
 
+    private async createDefaultUserGroupWithPermissions(){
+        const scopeRepository = getRepository<Scope>("scope");
+        const groupRepository = getRepository<Group>("group");
+
+        const userGroup = new Group();
+        userGroup.name = "Default User";
+        userGroup.description = "Default Permissions for regular user";
+        userGroup.scopes = [
+            await scopeRepository.findOne({where: {name: ScopeEnum.CMS}}) , 
+            await scopeRepository.findOne({where: {name: SecurityScopeEnum.USER_ME_READ}}) , 
+            await scopeRepository.findOne({where: {name: SecurityScopeEnum.USER_ME_UPDATE}}) , 
+            await scopeRepository.findOne({where: {name: SecurityScopeEnum.TOKEN_INFO}}) ];
+        await groupRepository.save(userGroup);
+    }
+
     public async up(queryRunner: QueryRunner): Promise<any> {
+        const clientCredentialsRepository = getRepository<ClientCredentials>("client-credentials");
+        let clientCredentialsDefault = await clientCredentialsRepository.findOne({where: {name: ClientCredentialsEnum["USER_PERMISSIONS@APP"]}});
         const pluginRepository = getRepository<Plugin>("plugin");
+
         const authenticationPlugin = new Plugin();
-        authenticationPlugin.apiUrl = "http://localhost:3000/oauth/token";
+        authenticationPlugin.apiUrl = "http://localhost:3000";
         authenticationPlugin.pluginType = PluginTypeEnum.AUTH;
         authenticationPlugin.name = "authentication";
         authenticationPlugin.environment = PluginEnvironmentEnum.DEVELOPMENT;
+        authenticationPlugin.componentsUrl = "http://localhost:3000";
+        authenticationPlugin.clientId = clientCredentialsDefault.id;
+
+        const basePlugin = new Plugin();
+        basePlugin.apiUrl = `http://localhost:3000/${Constants.API_PREFIX}/${Constants.API_VERSION_1}`;
+        basePlugin.pluginType = PluginTypeEnum.BASE;
+        basePlugin.name = "base";
+        basePlugin.componentsUrl = "http://localhost:3000";
+        basePlugin.environment = PluginEnvironmentEnum.DEVELOPMENT;
+        basePlugin.clientId = clientCredentialsDefault.id;
+
+
         pluginRepository.save(authenticationPlugin);
+        pluginRepository.save(basePlugin);
 
         //Creating new Scopes
         await this.createScopes();
+
+        //Creating default group for user
+        await this.createDefaultUserGroupWithPermissions()
 
         //Adding scopes to admin groups
         await this.addScopesToAdminGroup();

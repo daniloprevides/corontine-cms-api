@@ -1,3 +1,4 @@
+import { AllEntitiesEventSubscriber } from './event-subscribers/all-entities-event-subscriber';
 import { Module, forwardRef } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,9 +9,10 @@ import { SecurityModule } from './security/security.module';
 import configuration from './config/configuration';
 import { MailerAsyncOptions } from '@nest-modules/mailer/dist/interfaces/mailer-async-options.interface';
 import { MailerModule } from '@nest-modules/mailer';
-import { getConnection, Connection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { initializeTransactionalContext } from 'typeorm-transactional-cls-hooked';
 import { PluginModule } from './plugin/plugin.module';
+import { MenuModule } from './menu/menu.module';
 
 const databaseModule: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -37,10 +39,11 @@ const mailerAsyncModule: MailerAsyncOptions = {
     MailerModule.forRootAsync(mailerAsyncModule),
     CommonsModule,
     forwardRef(() => SecurityModule),
-    forwardRef(() => PluginModule),                 
+    forwardRef(() => PluginModule),
+    MenuModule,                 
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AllEntitiesEventSubscriber],
 })
 export class AppModule {
   constructor(private readonly connection: Connection){

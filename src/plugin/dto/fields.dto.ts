@@ -1,4 +1,5 @@
-import { NewComponentsDto } from './new-components.dto';
+import { ComponentsDto } from './components.dto';
+import { AttributesDto } from './attributes.dto';
 import { NewAttributesDto } from './new-attributes.dto';
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
@@ -22,11 +23,12 @@ export class FieldsDto {
   @Expose()
   description: Fields["description"];
 
-  @ApiProperty({ type: () => NewAttributesDto })
+  @ApiProperty({ type: () => AttributesDto })
   @Expose()
-  attributes: NewAttributesDto[];
+  attributes: AttributesDto[];
 
-  @ApiProperty({ type: () => NewComponentsDto })
+  @ApiProperty({ type: () => ComponentsDto })
+  @IsOptional()
   @Expose()
-  component: NewComponentsDto;
+  component: ComponentsDto;
 }

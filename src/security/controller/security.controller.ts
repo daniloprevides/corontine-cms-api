@@ -14,6 +14,7 @@ import {
   Render,
   Query,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { Constants } from '../../commons';
 
@@ -30,7 +31,9 @@ import { RequestAuthorizationCodeDTO } from '../dto/request-authorization-code.d
 import { NeedScope } from '../../commons/guard/scope-metadata.guard';
 import { ScopeEnum } from '../enum/scope.enum';
 import { ScopeGuard } from '../guard/scope.guard';
-
+import { IsOptional } from 'class-validator';
+import { ApiParam, ApiHeader, ApiOAuth2 } from '@nestjs/swagger';
+const {Request} = require("request");
 @Controller(`/${SecurityConstants.OAUTH_ENDPOINT}`)
 export class SecurityController {
   private readonly logger = new Logger(SecurityController.name);
@@ -39,25 +42,35 @@ export class SecurityController {
 
   @UseInterceptors(FileInterceptor(''))
   @Post('/token')
+  @ApiHeader({
+    name: "authorization",
+    allowEmptyValue: true,
+    description: "Base64 authenticated string"
+  })
+  @ApiOAuth2(['pets:write'])
   @HttpCode(200)
   async authenticateUser(
     // eslint-disable-next-line @typescript-eslint/camelcase
     @Body() { grant_type, username, password, refresh_token , redirect_uri, code, client_id, client_secret}: AuthDTO,
-    @Headers('authorization') authorization: string,
+    @Req() request : Request,
   ): Promise<GeneratedTokenDTO> {
-    if (!authorization) {
-      throw new UnauthorizedException();
+    //Try to get authorization from request
+    let base64Login = null;
+    const authorization = (request?.headers as any)?.authorization;
+    if (authorization){
+      [, base64Login] = authorization.split(' ');      
     }
+    
+    if (grant_type != GrantTypeEnum.PASSWORD && (!base64Login && (!client_id || !client_secret))) throw new UnauthorizedException();
+    
     // eslint-disable-next-line @typescript-eslint/camelcase
     this.logger.log(`grant_type: ${grant_type}`);
-
     // Basic <base64login>
-    const [, base64Login]: string[] = authorization.split(' ');
+    
     switch(grant_type){
-      case GrantTypeEnum.CLIENT_CREDENTIALS: return this.service.validateClientCredentials(base64Login);
+      case GrantTypeEnum.CLIENT_CREDENTIALS: return this.service.validateClientCredentials(base64Login, client_id, client_secret);
       case GrantTypeEnum.AUTHORIZATION_CODE: return this.service.getTokenFromAuthorizationCode(redirect_uri,code,client_id,client_secret);
       case GrantTypeEnum.PASSWORD: return this.service.getClientCredentialLogin(
-        base64Login,
         username,
         password,
       );

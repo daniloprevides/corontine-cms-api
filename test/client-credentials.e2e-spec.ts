@@ -16,8 +16,9 @@ import { initializeTransactionalContext } from 'typeorm-transactional-cls-hooked
 import { ClientCredentials } from '../src/security/entity/client-credentials.entity';
 import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.enum';
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
-import { NewScopeDTO } from 'src/security/dto/new-scope.dto';
-import { UpdateClientCredentialsDTO } from 'src/security/dto/update-client-credentials.dto';
+import { NewScopeDTO } from '../src/security/dto/new-scope.dto';
+import { UpdateClientCredentialsDTO } from '../src/security/dto/update-client-credentials.dto';
+import { RequestContextMiddleware } from '../src/middlewares/request-context-middleware';
 
 
 const stringToBase64 = (string: string) => {
@@ -140,6 +141,8 @@ describe('ClientCredentials (e2e)', () => {
         disableErrorMessages: false
       }));
       app.useGlobalFilters(new HttpExceptionFilter());
+      app.use(RequestContextMiddleware);
+
       await app.init();
   
       setTimeout(async () => {
@@ -147,7 +150,7 @@ describe('ClientCredentials (e2e)', () => {
         authorization  = await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]);    
         server = app.getHttpServer();  
         resolve();
-      },1000);
+      },4000);
   
     });
     

@@ -15,6 +15,7 @@ import { ClientCredentials } from '../src/security/entity/client-credentials.ent
 import { NewUserDTO } from '../src/security/dto/new-user.dto';
 import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.enum';
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
+import { RequestContextMiddleware } from '../src/middlewares/request-context-middleware';
 
 
 const stringToBase64 = (string: string) => {
@@ -34,11 +35,17 @@ describe('SecurityController (e2e)', () => {
 
     let allScopes = await scopeRepository.find();
     let userReadPermission = allScopes.find(s => s.name == ScopeEnum.USER_READ);
+    let userCreatePermission = allScopes.find(s => s.name == ScopeEnum.USER_CREATE);
 
     let userCredential = new ClientCredentials();
     userCredential.name = ClientCredentialsEnum["USER@APP"].toString();
     userCredential.secret = "OIDAIDOAHPDADH3232";
     userCredential.scopes = [userReadPermission];
+
+    let userCreateCredential = new ClientCredentials();
+    userCreateCredential.name = "USER_CREATE";
+    userCreateCredential.secret = "sasasasasasasasasasas";
+    userCreateCredential.scopes = [userCreatePermission];
 
     let pluginCredential = new ClientCredentials();
     pluginCredential.name = ClientCredentialsEnum["PLUGIN@APP"].toString();
@@ -53,13 +60,34 @@ describe('SecurityController (e2e)', () => {
     userCredential = await clientCredentialRepository.save(userCredential);
     pluginCredential = await clientCredentialRepository.save(pluginCredential);
     adminCredential = await clientCredentialRepository.save(adminCredential);
+    userCreateCredential = await clientCredentialRepository.save(userCreateCredential);
+
   }
 
-  const getRawClientCredentials = async (credential:ClientCredentialsEnum) => {
+  const getRawClientCredentials = async (credential:ClientCredentialsEnum | string) => {
     const clientCredentialRepository: Repository<ClientCredentials> = moduleFixture.get<Repository<ClientCredentials>>(getRepositoryToken(ClientCredentials));
     const clientCredentials = await clientCredentialRepository.findOne({name: credential});
 
     return clientCredentials;
+  }
+
+
+  const createCredentialWithPermissions = async (credentialName:string, credentialSecret:string,scopeNames: string[]) : Promise<ClientCredentials> => {
+    const clientCredentialRepository: Repository<ClientCredentials> = moduleFixture.get<Repository<ClientCredentials>>(getRepositoryToken(ClientCredentials));
+    const scopeRepository:Repository<Scope> = moduleFixture.get<Repository<Scope>>(getRepositoryToken(Scope));
+
+    let scopes:Scope[] = [];
+    for (let scopeName of scopeNames){
+      scopes.push(await scopeRepository.findOne({name: scopeName}));
+    }
+
+    let userCredential = new ClientCredentials();
+    userCredential.name = credentialName;
+    userCredential.secret = credentialSecret;
+    userCredential.scopes = scopes;
+
+    return clientCredentialRepository.save(userCredential);
+
   }
 
   const getUserClientCredentials = async (credential:ClientCredentialsEnum) => {
@@ -136,6 +164,8 @@ describe('SecurityController (e2e)', () => {
         disableErrorMessages: false
       }));
       app.useGlobalFilters(new HttpExceptionFilter());
+      app.use(RequestContextMiddleware);
+
       await app.init();
   
       setTimeout(async () => {
@@ -143,7 +173,7 @@ describe('SecurityController (e2e)', () => {
         authorization  = await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]);    
         server = app.getHttpServer();  
         resolve();
-      },1000);
+      },4000);
   
     });
     
@@ -440,6 +470,27 @@ describe('SecurityController (e2e)', () => {
       });
     });
   },3000); 
+
+
+  it('should fail to add an user to group without group_create permissions', async done => {   
+    let user = {
+      email: 'add_user_with_group_without_group_add_permission@email.com',
+      password: 'password',
+      name: 'add_user_with_group_without_group_add_permission',
+      groups: ["admin"] //Group does not exist
+    } as NewUserDTO;
+    const credentialName = "UserCreationCredential";
+
+    return defaultGrantRequest(await getUserClientCredentials("USER_CREATE" as any))
+      .then(res => {
+        createUserRequest(user,res.body.accessToken)
+        .expect(403) //Forbidden
+        .then(data => {         
+          done();
+        })
+    });
+  },30000); 
+
 
 
   afterAll(async () => {

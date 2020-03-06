@@ -28,13 +28,18 @@ export class UpdateComponentsDto {
   @Expose()
   informationUrl: Components["informationUrl"];
 
+  @ApiProperty()
+  @IsString()
+  @Expose()
+  url: Components["url"];
+
   @ApiProperty({ type: () => NewFieldsDto })
+  @IsOptional()
   @Expose()
   fields: NewFieldsDto[];
 
-  @ApiProperty({ type: () => NewPluginDto })
+  @ApiProperty({ type: () => String })
   @Expose()
-  plugin: NewPluginDto;
-
+  plugin: String;
 
 }

@@ -1,13 +1,16 @@
-import { FindParamsDto } from './../../commons/dto/find-params.dto';
-import { Constants } from './../../commons/constants';
-import { FieldsService } from './../services/fields.service';
-import { FieldsMapper } from './../mapper/fields.mapper';
-import { FieldsDto } from './../dto/fields.dto';
-import { UpdateFieldsDto } from './../dto/update-fields.dto';
-import { NewFieldsDto } from './../dto/new-fields.dto';
-import { Fields } from './../entity/fields.entity';
+import { SecurityGuard } from './../../commons/guard/security.guard';
+import { NeedScope } from './../../commons/guard/scope-metadata.guard';
+import { AuthenticationService } from "./../../commons/services/authentication-service";
+import { FindParamsDto } from "./../../commons/dto/find-params.dto";
+import { Constants } from "./../../commons/constants";
+import { FieldsService } from "./../services/fields.service";
+import { FieldsMapper } from "./../mapper/fields.mapper";
+import { FieldsDto } from "./../dto/fields.dto";
+import { UpdateFieldsDto } from "./../dto/update-fields.dto";
+import { NewFieldsDto } from "./../dto/new-fields.dto";
+import { Fields } from "./../entity/fields.entity";
 import { PluginConstants } from "./../constants";
-import {GenericController} from "../../commons/controller/generic.controller";
+import { GenericController } from "../../commons/controller/generic.controller";
 import {
   ApiTags,
   ApiOperation,
@@ -17,7 +20,9 @@ import {
   ApiBody,
   ApiNotFoundResponse,
   ApiParam,
-  ApiQuery
+  ApiQuery,
+  ApiBearerAuth,
+  ApiHeader
 } from "@nestjs/swagger";
 import {
   Controller,
@@ -29,11 +34,19 @@ import {
   Put,
   Delete,
   Query,
-  Req
+  Req,
+  UseGuards
 } from "@nestjs/common";
-import Request = require('request');
+import Request = require("request");
+import { ScopeEnum } from "../enum/scope.enum";
 
 @ApiTags("Fields")
+@ApiBearerAuth()
+@ApiHeader({
+  name: "authorization",
+  allowEmptyValue: false,
+  description: "Bearer Authorization token"
+})
 @Controller(
   `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PluginConstants.FIELDS_ENDPOINT}`
 )
@@ -45,8 +58,16 @@ export class FieldsController extends GenericController<
   FieldsMapper,
   FieldsService
 > {
-  constructor(service: FieldsService, mapper: FieldsMapper) {
-    super(service, mapper, "Fields");
+  constructor(
+    service: FieldsService,
+    mapper: FieldsMapper,
+    authenticationService: AuthenticationService
+  ) {
+    super(service, mapper, authenticationService, "Fields");
+  }
+
+  public getParentFieldName(): string {
+    return "component";
   }
 
   @Get()
@@ -68,8 +89,13 @@ export class FieldsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async getAll(@Query() queryParams:FindParamsDto, @Req() req:Request): Promise<FieldsDto[]> {
-    return super.getAll(queryParams,req);
+  @NeedScope(ScopeEnum.FIELDS_READ)
+  @UseGuards(SecurityGuard)
+  public async getAll(
+    @Query() queryParams: FindParamsDto,
+    @Req() req: Request
+  ): Promise<FieldsDto[]> {
+    return super.getAll(queryParams, req);
   }
 
   @Get(":id")
@@ -87,10 +113,13 @@ export class FieldsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
+  @NeedScope(ScopeEnum.FIELDS_READ)
+  @UseGuards(SecurityGuard)
   public async getById(
-    @Param("id") id: Fields["id"]
+    @Param("id") id: Fields["id"],
+    @Req() req: Request
   ): Promise<FieldsDto> {
-    return super.getById(id);
+    return await super.getById(id, req);
   }
 
   @Post()
@@ -108,11 +137,14 @@ export class FieldsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have needed scopes"
   })
+  @NeedScope(ScopeEnum.FIELDS_CREATE)
+  @UseGuards(SecurityGuard)
   async add(
     // eslint-disable-next-line @typescript-eslint/camelcase
-    @Body() newItem: NewFieldsDto
+    @Body() newItem: NewFieldsDto,
+    @Req() req: Request
   ): Promise<FieldsDto> {
-    return super.add(newItem);
+    return await super.add(newItem, req);
   }
 
   @Put(":id")
@@ -127,11 +159,14 @@ export class FieldsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
+  @NeedScope(ScopeEnum.FIELDS_UPDATE)
+  @UseGuards(SecurityGuard)
   public async update(
     @Param("id") id: Fields["id"],
-    @Body() updateInfo: UpdateFieldsDto
+    @Body() updateInfo: UpdateFieldsDto,
+    @Req() req: Request
   ): Promise<FieldsDto> {
-    return super.update(id, updateInfo);
+    return await super.update(id, updateInfo, req);
   }
 
   @Delete(":id")
@@ -151,7 +186,12 @@ export class FieldsController extends GenericController<
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  public async delete(@Param("id") id: Fields["id"]): Promise<void> {
-    return super.delete(id);
+  @NeedScope(ScopeEnum.FIELDS_DELETE)
+  @UseGuards(SecurityGuard)
+  public async delete(
+    @Param("id") id: Fields["id"],
+    @Req() req: Request
+  ): Promise<void> {
+    return await super.delete(id, req);
   }
 }

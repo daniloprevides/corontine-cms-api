@@ -2,6 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 't
 import { Audit } from '../../commons';
 import { Scope } from './scope.entity';
 import { Expose } from 'class-transformer';
+import { RequiredScopes } from '../../commons/annotations/entity-scope.decorator';
 
 @Entity({ name: 'authorization-code' })
 export class AuthorizationCode extends Audit {
@@ -51,7 +52,7 @@ export class AuthorizationCode extends Audit {
     () => Scope,
     (scope: Scope) => scope.codes,
   )
-  @JoinTable()
+  @JoinTable({name: "authorization-code_scopes"})
   @Expose()
   scopes: Scope[];
 

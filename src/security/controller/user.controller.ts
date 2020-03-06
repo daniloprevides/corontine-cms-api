@@ -1,3 +1,4 @@
+import { UserNotFoundError } from './../exception/user-not-found.error';
 import { NeedScope } from '../../commons/guard/scope-metadata.guard';
 import { ScopeEnum } from './../enum/scope.enum';
 import { ScopeGuard } from '../guard/scope.guard';
@@ -15,6 +16,7 @@ import {
   Post,
   Put,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
 import { Constants} from '../../commons';
@@ -29,6 +31,7 @@ import {
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { SecurityService } from '../service/security.service';
 import { User } from '../entity/user.entity';
@@ -44,8 +47,14 @@ import { ChangePasswordRequestIdDTO } from '../dto/change-password-request-id.dt
 import { ForgotPasswordDTO } from '../dto/forgot-password';
 import { ChangePasswordForgotFlowDTO } from '../dto/change-password-forgot-flow.dto';
 import { SecurityConstants } from '../constants';
+const {Request} = require("request");
 @ApiTags('User')
 @ApiBearerAuth()
+@ApiHeader({
+  name: "authorization",
+  allowEmptyValue: true,
+  description: "Bearer Authorization token"
+})
 @Controller(
   `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.USER_ENDPOINT}`,
 )
@@ -69,6 +78,7 @@ export class UserController {
   })
   @NeedScope(ScopeEnum.USER_READ)
   @UseGuards(ScopeGuard)
+  @ApiBearerAuth()
   public async getAll(): Promise<UserDTO[]> {
     return this.mapper.toDtoList(await this.service.getAll());
   }
@@ -85,6 +95,8 @@ export class UserController {
     description:
       'thrown if there is not an authorization token or if authorization token does not have ADMIN or STUDENT role',
   })
+  @NeedScope(ScopeEnum.USER_ME_READ)
+  @UseGuards(ScopeGuard)
   public async findUserByJwtId(
     @Headers('authorization') authorization: string,
   ): Promise<UserDTO> {
@@ -107,6 +119,8 @@ export class UserController {
     description:
       'thrown if there is not an authorization token or if authorization token does not have ADMIN or STUDENT role',
   })
+  @NeedScope(ScopeEnum.USER_ME_UPDATE)
+  @UseGuards(ScopeGuard)
   public async updateUserByJwtId(
     @Headers('authorization') authorization: string,
     @Body() selfUpdatedInfo: SelfUpdateDTO,
@@ -133,15 +147,19 @@ export class UserController {
       'thrown if there is not an authorization token or if authorization token does not have STUDENT role',
   })
   public async changeUserPasswordByJwtId(
-    @Headers('authorization') authorization: string,
     @Body() changePassword: ChangePasswordDTO,
+    @Req() req: Request,
   ): Promise<UserDTO> {
-    const { id }: User = this.securityService.getUserFromToken(
-      authorization.split(' ')[1],
-    );
-    this.logger.log(`user id: ${id}`);
+    let user = await this.service.findByEmail(changePassword.username) ;
+    if (!user) throw new UserNotFoundError();
+    this.logger.log(`user id: ${user.id}`);
+
+    //Getting token with user permissions
+    let tokenDto = await this.securityService.getTokenDtoByUsernameAndPassword(changePassword.username, changePassword.password);
+    (req as any).user = tokenDto;
+
     return this.mapper.toDto(
-      await this.service.changePassword(id, changePassword),
+      await this.service.changePassword(user.id, changePassword),
     );
   }
 

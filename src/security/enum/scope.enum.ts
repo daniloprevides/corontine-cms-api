@@ -13,6 +13,10 @@ export enum ScopeEnum {
     GROUP_DELETE = 'group_delete',
     USER_CHANGE_PASSWORD = "user_change_password",
     USER_FORGOT_PASSWORD = "user_forgot_password",
+
+    USER_ME_READ= "user_me_read",
+    USER_ME_UPDATE= "user_me_update",
+
     TOKEN_INFO="token_info"
 }
   

@@ -45,6 +45,9 @@ export class ScopeGuard implements CanActivate {
       throw new InternalServerErrorException(e);
     }
 
+
+    request.user = tokenDto;
+
     if (
       !tokenDto ||
       !tokenDto.scope ||
