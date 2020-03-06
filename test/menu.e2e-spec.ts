@@ -3,25 +3,13 @@ import { MenuDto } from './../src/menu/dto/menu.dto';
 import { NewMenuDto } from './../src/menu/dto/new-menu.dto';
 import { MenuScopeEnum } from './../src/menu/enum/menu-scope.enum';
 import { MenuConstants } from './../src/menu/constants';
-import { Attributes } from "./../src/plugin/entity/attributes.entity";
-import { Fields } from "./../src/plugin/entity/fields.entity";
-import { AttributesDto } from "./../src/plugin/dto/attributes.dto";
-import { NewAttributesDto } from "./../src/plugin/dto/new-attributes.dto";
-import { FieldsDto } from "./../src/plugin/dto/fields.dto";
-import { ComponentsDto } from "./../src/plugin/dto/components.dto";
-import { NewFieldsDto } from "./../src/plugin/dto/new-fields.dto";
 import { RequestContextMiddleware } from "../src/middlewares/request-context-middleware";
 import { Pagination } from "nestjs-typeorm-paginate";
-import { PluginDto } from "./../src/plugin/dto/plugin.dto";
 import { ScopeEnum } from "./../src/security/enum/scope.enum";
 import { ScopeEnum as PluginScopeEnum } from "./../src/plugin/enum/scope.enum";
 
 import { Scope } from "./../src/security/entity/scope.entity";
 import { HttpExceptionFilter } from "./../src/commons/filters/http-exception.filter";
-import { PluginTypeEnum } from "../src/commons/enum/plugin-type.enum";
-import { NewComponentsDto } from "./../src/plugin/dto/new-components.dto";
-import { NewPluginDto } from "./../src/plugin/dto/new-plugin.dto";
-import { PluginConstants } from "./../src/plugin/constants";
 import { AppModule } from "./../src/app.module";
 import request = require("supertest");
 import { Test, TestingModule } from "@nestjs/testing";
@@ -34,9 +22,7 @@ import { initializeTransactionalContext } from "typeorm-transactional-cls-hooked
 import { ClientCredentials } from "../src/security/entity/client-credentials.entity";
 import { ClientCredentialsEnum } from "../src/security/enum/client-credentials.enum";
 import { GrantTypeEnum } from "../src/security/enum/grant-type.enum";
-import { PluginEnvironmentEnum } from "../src/plugin/enum/environment.enum";
 import { v4 as uuidv4 } from "uuid";
-import { FieldTypeEnum } from "../src/plugin/enum/field-type.enum";
 
 const stringToBase64 = (string: string) => {
   return Buffer.from(string).toString("base64");
