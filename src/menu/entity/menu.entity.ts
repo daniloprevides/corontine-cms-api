@@ -1,12 +1,8 @@
 import { BasicEntity } from "./../../commons/entity/basic.entity";
-import {
-  Column,
-  Entity,
-  OneToOne,
-  JoinColumn
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { RequiredScopes } from "../../commons/annotations/entity-scope.decorator";
 import { MenuScopeEnum } from "../enum/menu-scope.enum";
+import { Expose } from "class-transformer";
 
 @RequiredScopes(
   "menu",
@@ -18,33 +14,47 @@ import { MenuScopeEnum } from "../enum/menu-scope.enum";
 @Entity({ name: "menu" })
 export class Menu extends BasicEntity {
   @Column({ nullable: false })
+  @Expose()
   name: string;
 
   @Column({ nullable: false })
+  @Expose()
   label: string;
 
   @Column({ nullable: true })
+  @Expose()
   description?: string;
 
-  @Column({ nullable: false })
-  link: string;
+  @Column({ nullable: true })
+  @Expose()
+  link?: string;
+
+  @Column({ nullable: true, default: 1 })
+  @Expose()
+  order: number;
 
   @Column({ nullable: false, name: "required_permission" })
+  @Expose()
   requiredPermission: string;
 
-  @OneToOne(
+  @ManyToOne(
     type => Menu,
-    menu => menu.menu,
+    menu => menu.children
+  )
+  @JoinColumn()
+  @Expose()
+  parent: Menu;
+  
+
+  @OneToMany(
+    type => Menu,
+    menu => menu.parent,
     {
-      cascade: true
+      cascade: true,
+      onDelete: "CASCADE"
     }
   )
   @JoinColumn()
-  parent: Menu;
-
-  @OneToOne(
-    type => Menu,
-    menu => menu.parent,    
-  )
-  menu: Menu;
+  @Expose()
+  children: Menu[];
 }

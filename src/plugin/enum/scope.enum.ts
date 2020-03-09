@@ -26,6 +26,5 @@ export enum ScopeEnum {
 
     CMS="cms"
 
-
 }
   

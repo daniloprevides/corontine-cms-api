@@ -119,6 +119,7 @@ export class UserService {
   public async forgotPassword(
     forgotPasswordDTO: ForgotPasswordDTO
   ): Promise<string> {
+
     const user: User = await this.findByEmail(forgotPasswordDTO.email);
     const changePassword: ChangePassword = await this.changePasswordService.createChangePasswordRequest(
       user
@@ -207,7 +208,6 @@ export class UserService {
     return await this.repository.save(user);
   }
 
-  @Transactional()
   public async changePassword(
     id: string,
     changePasswordDTO: ChangePasswordDTO
@@ -246,6 +246,11 @@ export class UserService {
     ) {
       throw new BadRequestException("passwords does not match");
     }
+
+    //Adding scopes to context
+    EntityMetadataService.Instance.addTableScope("change-password", EntityActionEnum.CREATE, [ScopeEnum.USER_CHANGE_PASSWORD])
+    EntityMetadataService.Instance.addTableScope("user", EntityActionEnum.UPDATE, [ScopeEnum.USER_CHANGE_PASSWORD])
+
     const { user }: ChangePassword = await this.changePasswordService.findById(
       changePasswordRequestId
     );
@@ -272,21 +277,22 @@ export class UserService {
     changePasswordRequestId: string
   ): Promise<void> {
     try {
-      await this.mailerService.sendMail({
+      const url = `${this.configService.get("emailRequestUrl")}/${changePasswordRequestId}`;
+
+      console.debug("Url",url);
+      const message = await this.mailerService.sendMail({
         to: user.email,
         from: this.configService.get("mail").from,
         subject: "Password Change Request",
         template: "change-password",
         context: {
           name: user.name,
-          urlTrocaSenha: `${this.configService.get("serverUrl")}/${
-            Constants.API_PREFIX
-          }/${Constants.API_VERSION_1}/${
-            SecurityConstants.USER_ENDPOINT
-          }/forgot-password/${changePasswordRequestId}`
+          urlChangePassword: url
         }
       });
+      
     } catch (e) {
+      console.error(e);
       throw new InternalServerErrorException(e);
     }
   }

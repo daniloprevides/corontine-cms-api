@@ -1,6 +1,5 @@
 import path = require("path");
 import { HandlebarsAdapter } from '@nest-modules/mailer';
-
 export default () => ({
     port: parseInt(process.env.PORT, 10) || 3000,
     env: process.env.ENV || "DEVELOPMENT",
@@ -18,29 +17,39 @@ export default () => ({
         refreshExpiration: process.env.JWT_EXPIRES_REFRESH
     },
     serverUrl: process.env.SERVER_URL,
+    emailRequestUrl: process.env.EMAIL_VALIDATE_URL,
     mail: {
         from: process.env.SMTP_FROM,
+        debug: true,
+        log: true,
+        logging: true,
         transport: {
             host: process.env.SMTP_HOST || "localhost",
             port: process.env.SMTP_PORT || 25,
-            secure: process.env.SMTP_SECURE != null ? process.env.SMTP_SECURE : false || "ssl",
-            requireTLS: process.env.SMTP_REQUIRE_TLS === 'true' ? true : false || true,
+            secure: false,
+            // requireTLS: process.env.SMTP_REQUIRE_TLS === 'true' ? true : false || true,
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASSWORD,
+            },
             tls: {
-              rejectUnauthorized: false
+              ciphers: 'SSLv3'
             },
-            // auth: {
-            //   type: "login",
-            //   user: process.env.SMPT_USER ,
-            //   pass: process.env.SMTP_PASSWORD,
-            // },
+            template: {
+              dir: path.resolve(path.join(__dirname, '..', '..')) + '/templates',
+              adapter: new HandlebarsAdapter(), // or new PugAdapter()
+              options: {
+                strict: true,
+              },
+            }
+        },
+        template: {
+          dir: path.resolve(path.join(__dirname, '..', '..')) + '/templates',
+          adapter: new HandlebarsAdapter(), // or new PugAdapter()
+          options: {
+            strict: true,
           },
-          template: {
-            dir: path.resolve(path.join(__dirname, '..', '..')) + '/templates',
-            adapter: new HandlebarsAdapter(), // or new PugAdapter()
-            options: {
-              strict: true,
-            },
-          },
+        }
     },
     database: {
         type: process.env.DB_TYPE || "mysql",

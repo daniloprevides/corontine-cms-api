@@ -15,10 +15,13 @@
     "rollup-plugin-livereload": "^1.0.0",
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^5.1.2",
-    "svelte": "^3.19.1",
+    "svelte": "^3.19.2",
     "svelte-i18n": "^3.0.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.12.1",
+    "@vaadin/vaadin-login": "^1.0.1",
+    "@vaadin/vaadin-menu-bar": "^1.0.5",
     "sirv-cli": "^0.4.4"
   }
 }

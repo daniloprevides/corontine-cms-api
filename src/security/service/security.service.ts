@@ -1,3 +1,4 @@
+import { ChangePasswordService } from './change-password.service';
 import { UserNotFoundError } from './../exception/user-not-found.error';
 import { TokenDto } from '../../commons/dto/token.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -27,6 +28,7 @@ import { ClientCredentialsEnum } from '../enum/client-credentials.enum';
 import { InvalidClientCredentialsError } from '../exception/invalid-client-credentials.error';
 import { AuthorizationCodeRepository } from '../repository/authorization-code.repository';
 import { UserMustChangePasswordError } from '../exception/user-must-change-password.error';
+import { ChangePassword } from '../entity/change-password.entity';
 
 @Injectable()
 export class SecurityService {
@@ -41,6 +43,8 @@ export class SecurityService {
     private readonly appConfigService: ConfigService,
     @Inject(forwardRef(() => AuthorizationCodeRepository))
     private readonly authorizationCodeRepository: AuthorizationCodeRepository,
+    @Inject(forwardRef(() => ChangePasswordService))
+    private readonly changePasswordService: ChangePasswordService,
   ) {}
 
   @Transactional()
@@ -98,6 +102,34 @@ export class SecurityService {
       secret: user.password,
       type: "user",
       scope: (await this.userService.getAllUserScopes(user.id)).map(s => s.name).join(" ")
+    } as TokenDto;
+
+  }
+
+  public async getTokenByForgotPasswordRequestId(changePasswordRequestId: string, scopes:string[]) : Promise<TokenDto>{
+    const { user }: ChangePassword = await this.changePasswordService.findById(
+      changePasswordRequestId
+    );
+
+    return this.getTokenDtoByUsername(user.email, scopes);
+    
+  }
+
+  public async getTokenDtoByUsername(username: string, scopes:string[]) : Promise<TokenDto>{
+    const user: User = await this.userService.findByEmail(
+      username
+    );
+
+    if (!user){
+      throw new UserNotFoundError();
+    }
+
+    return {
+      id: user.id,
+      username: user.name,
+      secret: user.password,
+      type: "user",
+      scope: scopes.join(" ")
     } as TokenDto;
 
   }

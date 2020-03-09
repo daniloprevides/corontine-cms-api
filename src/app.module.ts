@@ -43,7 +43,7 @@ const mailerAsyncModule: MailerAsyncOptions = {
     MenuModule,                 
   ],
   controllers: [AppController],
-  providers: [AppService, AllEntitiesEventSubscriber],
+  providers: [AppService],
 })
 export class AppModule {
   constructor(private readonly connection: Connection){

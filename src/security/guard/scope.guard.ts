@@ -40,7 +40,10 @@ export class ScopeGuard implements CanActivate {
       tokenDto = this.jwtService.verify<TokenDto>(token);
     } catch (e) {
       if (e.name === "TokenExpiredError") {
-        throw new UnauthorizedException(e.message);
+        throw new UnauthorizedException({
+          code: "token_expired",
+          message: `Token expired at ${e.expiredAt}`
+        });
       }
       throw new InternalServerErrorException(e);
     }

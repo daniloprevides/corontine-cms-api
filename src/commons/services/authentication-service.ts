@@ -1,3 +1,4 @@
+import { TokenExpiredError } from 'jsonwebtoken';
 import {
   Injectable,
   HttpService,
@@ -54,6 +55,10 @@ export class AuthenticationService {
         .toPromise();
       tokenDto = tokenDetailsResponse.data as TokenDto;
     } catch (ex) {
+      if (ex.response?.data?.error?.code === "token_expired"){
+        throw new UnauthorizedException(ex.response?.data?.error);
+      }
+
       throw new UnauthorizedException(ex.message);
     }
 

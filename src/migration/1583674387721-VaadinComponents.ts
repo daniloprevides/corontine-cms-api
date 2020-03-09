@@ -1,0 +1,389 @@
+import { Events } from './../plugin/entity/events.entity';
+import { Attributes } from './../plugin/entity/attributes.entity';
+import { Fields } from './../plugin/entity/fields.entity';
+import { Plugin } from './../plugin/entity/plugin.entity';
+import {MigrationInterface, QueryRunner, getRepository} from "typeorm";
+import { Components } from "../plugin/entity/components.entity";
+import { PluginTypeEnum } from "../commons/enum/plugin-type.enum";
+import { FieldTypeEnum } from '../plugin/enum/field-type.enum';
+
+export class VaadinComponents1583674387721 implements MigrationInterface {
+
+    public async up(queryRunner: QueryRunner): Promise<any> {
+        const pluginRepository = getRepository<Plugin>("plugin");
+        const componentsRepository = getRepository<Components>("components");
+    
+        //Finding default plugin data
+        const pluginBase = await pluginRepository.findOne({
+          where: { pluginType: PluginTypeEnum.BASE }
+        });
+    
+        //Creating the components
+        const vaadinComponents = new Components();
+        vaadinComponents.clientId = pluginBase?.clientId;
+        vaadinComponents.description = "Vaadin Components wrapper";
+        vaadinComponents.name = "vaadin_component";
+        vaadinComponents.plugin = pluginBase;
+        vaadinComponents.url = `{plugin('pluginType','${PluginTypeEnum.BASE}').componentsUrl}/components/components.js`;
+        vaadinComponents.fields = [
+            this.createField(pluginBase?.clientId,"vaadin-login-form", "Login Page", 
+            [
+                this.createAttribute(pluginBase?.clientId,"disabled","Field disabled", FieldTypeEnum.BOOLEAN),
+                this.createAttribute(pluginBase?.clientId,"error","error", FieldTypeEnum.BOOLEAN,false,null,true),
+                this.createAttribute(pluginBase?.clientId,"i18n","i18n", FieldTypeEnum.ANY,false,{"form":{"title":"Log in","username":"Username","password":"Password","submit":"Log in","forgotPassword":"Forgot password"},"errorMessage":{"title":"Incorrect username or password","message":"Check that you have entered the correct username and password and try again."}}),
+                this.createAttribute(pluginBase?.clientId,"noForgotPassword","Dont show forgot password",FieldTypeEnum.BOOLEAN,false,null,true),
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"login","Fired when an user submits the login. The event contains username and password values in the detail property."
+                    ,FieldTypeEnum.ANY
+                    ,{
+                        username: FieldTypeEnum.STRING,
+                        password: FieldTypeEnum.STRING
+                    }),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"forgot-password","Fired when user clicks on the \"Forgot password\" button."
+                    ,FieldTypeEnum.ANY
+                    ,{
+                        username: FieldTypeEnum.STRING,
+                    })                    
+            ]        
+        ),
+        this.createField(pluginBase?.clientId,"vaadin-text-field", "Text Field", 
+            [
+                ...this.createVaadinTextDefaultAttributes(pluginBase?.clientId)
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"change","Fired when the user commits a value change."
+                    ,FieldTypeEnum.STRING),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"input","Fired when the value is changed by the user: on every typing keystroke, and the value is cleared using the clear button."
+                    ,FieldTypeEnum.STRING),
+                ]        
+        )    ,
+        this.createField(pluginBase?.clientId,"vaadin-email-field", "Email Field", 
+            [
+                ...this.createVaadinTextDefaultAttributes(pluginBase?.clientId)
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"change","Fired when the user commits a value change."
+                    ,FieldTypeEnum.STRING),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"input","Fired when the value is changed by the user: on every typing keystroke, and the value is cleared using the clear button."
+                    ,FieldTypeEnum.STRING),
+                ]        
+        ),
+        this.createField(pluginBase?.clientId,"vaadin-number-field", "Number Field", 
+            [
+                ...this.createVaadinTextDefaultAttributes(pluginBase?.clientId)
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"change","Fired when the user commits a value change."
+                    ,FieldTypeEnum.STRING),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"input","Fired when the value is changed by the user: on every typing keystroke, and the value is cleared using the clear button."
+                    ,FieldTypeEnum.STRING),
+                ]        
+        )  ,
+        this.createField(pluginBase?.clientId,"vaadin-password-field", "Password Field", 
+            [
+                ...this.createVaadinTextDefaultAttributes(pluginBase?.clientId)
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"change","Fired when the user commits a value change."
+                    ,FieldTypeEnum.STRING),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"input","Fired when the value is changed by the user: on every typing keystroke, and the value is cleared using the clear button."
+                    ,FieldTypeEnum.STRING),
+            ]        
+        ),       
+        this.createField(pluginBase?.clientId,"vaadin-text-area", "Text Area Field", 
+            [
+                ...this.createVaadinTextDefaultAttributes(pluginBase?.clientId)
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"change","Fired when the user commits a value change."
+                    ,FieldTypeEnum.STRING),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"input","Fired when the value is changed by the user: on every typing keystroke, and the value is cleared using the clear button."
+                    ,FieldTypeEnum.STRING),
+            ]        
+        ),
+        this.createField(pluginBase?.clientId,"vaadin-select", "Vaadin Select Component", 
+            [
+                ...this.createVaadinSelectComponent(pluginBase?.clientId)
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"change","Fired when the user commits a value change."
+                    ,FieldTypeEnum.STRING),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"invalid-changed","Fired when the invalid property changes."
+                    ,FieldTypeEnum.STRING),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"opened-changed","Fired when the opened property changes."
+                    ,FieldTypeEnum.STRING),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"value-changed","Fired when the value property changes."
+                    ,FieldTypeEnum.STRING),
+            ]        
+        ),
+        this.createField(pluginBase?.clientId,"vaadin-checkbox", "Vaadin Checkbox Component", 
+            [
+                ...this.createVaadinCheckboxComponent(pluginBase?.clientId)
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"change","Fired when the user commits a value change."
+                    ,FieldTypeEnum.BOOLEAN),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"checked-changed","Fired when the checked property changes."
+                    ,FieldTypeEnum.BOOLEAN),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"indeterminate-changed","Fired when the indeterminate property changes."
+                    ,FieldTypeEnum.BOOLEAN),
+            ]        
+        ),
+        this.createField(pluginBase?.clientId,"vaadin-date-picker", "Vaadin DatePicker Component", 
+            [
+                ...this.createVaadinDatePickerComponent(pluginBase?.clientId)
+            ],
+            [
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"change","Fired when the user commits a value change."
+                    ,FieldTypeEnum.BOOLEAN),
+                this.createEvent(
+                    pluginBase?.clientId
+                    ,"invalid-changed","Fired when the invalid property changes."
+                    ,FieldTypeEnum.BOOLEAN),
+            ]
+        ),
+    ];
+
+    await componentsRepository.save(vaadinComponents);
+        
+        
+    }
+
+    private createField(clientId:string, name:string,description: string, attributes:Array<Attributes>, events:Array<Events>){
+
+        return {
+            clientId: clientId,
+            name: name,
+            description: description,
+            attributes: attributes,
+            events: events
+
+        } as Fields;
+
+
+    }
+
+    private createEvent(clientId:string,name:string,description: string, outputType: FieldTypeEnum, outputDefinition?: any){
+        return {
+              clientId: clientId,
+              name: name,
+              description: description,
+              outputObjectDefinition: outputDefinition,
+              outputType: outputType
+            } as Events
+    }
+
+
+    private createAttribute(clientId:string, name:string,description:string = null ,type:FieldTypeEnum, required=false, definition:any = null, defaultValue=null){
+
+        return {
+            clientId: clientId,
+            name: name,
+            defaultValue: defaultValue,
+            required: required,
+            type: type,
+            value: definition,
+            description: description
+
+        } as Attributes;
+
+
+    }
+
+    private createVaadinTextDefaultAttributes(clientId:string){
+
+        return [
+            this.createAttribute(clientId,"autocapitalize","This is a property supported by Safari and Chrome that is used to control whether autocapitalization should be enabled when the user is entering/editing the text. Possible values are: characters: Characters capitalization. words: Words capitalization. sentences: Sentences capitalization. none: No capitalization.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"autocomplete","Whether the value of the control can be automatically completed by the browser. List of available options at: https://developer.mozilla.org/en/docs/Web/HTML/Element/input#attr-autocomplete",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"autocorrect","This is a property supported by Safari that is used to control whether autocorrection should be enabled when the user is entering/editing the text. Possible values are: on: Enable autocorrection. off: Disable autocorrection.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"autofocus","Specify that this control should have input focus when the page loads.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"autoselect","Specify that the value should be automatically selected when the field gains focus.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"clearButtonVisible","Set to true to display the clear icon which clears the input.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"disabled","If true, the user cannot interact with this element.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"errorMessage","Error to show when the input value is invalid.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"focusElement","focus the element",FieldTypeEnum.ANY),
+            this.createAttribute(clientId,"i18n","Object with translated strings used for localization. ",FieldTypeEnum.ANY,false,{"clear":"Clear"}),
+            this.createAttribute(clientId,"invalid","This property is set to true when the control value is invalid.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"hasValue","Specifies that the text field has value.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING),            
+            this.createAttribute(clientId,"list","Identifies a list of pre-defined options to suggest to the user. The value must be the id of a <datalist> element in the same document.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"maxlength","Maximum number of characters (in Unicode code points) that the user can enter.",FieldTypeEnum.NUMBER),
+            this.createAttribute(clientId,"minlength","Minimum number of characters (in Unicode code points) that the user can enter.",FieldTypeEnum.NUMBER),
+            this.createAttribute(clientId,"name","The name of the control, which is submitted with the form data.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"pattern","A regular expression that the value is checked against. The pattern must match the entire value, not just some subset.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"placeholder","A hint to the user of what can be entered in the control.",FieldTypeEnum.NUMBER),
+            this.createAttribute(clientId,"preventInvalidInput","When set to true, user is prevented from typing a value that conflicts with the given pattern.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"readonly","This attribute indicates that the user cannot modify the value of the control.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"required","Specifies that the user must fill in a value.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"title","The text usually displayed in a tooltip popup when the mouse is over the field.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"value","The initial value of the control. It can be used for two-way data binding.",FieldTypeEnum.STRING),
+        ]
+
+
+    }
+
+    private createVaadinSelectComponent(clientId:string){
+
+        return [
+            this.createAttribute(clientId,"autofocus","Specify that this control should have input focus when the page loads.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"disabled","If true, the user cannot interact with this element.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"errorMessage","Error to show when the input value is invalid.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"invalid","This property is set to true when the control value is invalid.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING),            
+            this.createAttribute(clientId,"name","The name of the control, which is submitted with the form data.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"opened","Set when the select is open",FieldTypeEnum.BOOLEAN),
+            this.createAttribute(clientId,"placeholder","A hint to the user of what can be entered in the control. The placeholder will be displayed in the case that there is no item selected, or the selected item has an empty string label, or the selected item has no label and it's DOM content is empty.",FieldTypeEnum.NUMBER),
+            this.createAttribute(clientId,"readonly","This attribute indicates that the user cannot modify the value of the control.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"required","Specifies that the user must fill in a value.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"title","The text usually displayed in a tooltip popup when the mouse is over the field.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"value","It stores the the value property of the selected item, providing the value for iron-form. When there’s an item selected, it's the value of that item, otherwise it's an empty string. On change or initialization, the component finds the item which matches the value and displays it. If no value is provided to the component, it selects the first item without value or empty value. Hint: If you do not want to select any item by default, you can either set all the values of inner vaadin-items, or set the vaadin-select value to an inexistent value in the items list.",FieldTypeEnum.STRING),
+        ]
+    }
+
+    private createVaadinCheckboxComponent(clientId:string){
+
+        return [
+            this.createAttribute(clientId,"autofocus","Specify that this control should have input focus when the page loads.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"checked","True if the checkbox is checked.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"checked","True if the checkbox is checked.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"disabled","If true, the user cannot interact with this element.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"name","The name of the control, which is submitted with the form data.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"value","The value given to the data submitted with the checkbox's name to the server when the control is inside a form.",FieldTypeEnum.STRING),
+        ]
+    }
+
+
+    private createVaadinDatePickerComponent(clientId:string){
+
+        return [
+            this.createAttribute(clientId,"autofocus","Specify that this control should have input focus when the page loads.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"clearButtonVisible","Set to true to display the clear icon which clears the input.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"disabled","If true, the user cannot interact with this element.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"errorMessage","Error to show when the input value is invalid.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"focusElement","focus the element",FieldTypeEnum.ANY),
+            this.createAttribute(clientId,"i18n","Object with translated strings used for localization. ",FieldTypeEnum.ANY,false,   {
+                // An array with the full names of months starting
+                // with January.
+                monthNames: [
+                  'January', 'February', 'March', 'April', 'May',
+                  'June', 'July', 'August', 'September',
+                  'October', 'November', 'December'
+                ],
+      
+                // An array of weekday names starting with Sunday. Used
+                // in screen reader announcements.
+                weekdays: [
+                  'Sunday', 'Monday', 'Tuesday', 'Wednesday',
+                  'Thursday', 'Friday', 'Saturday'
+                ],
+      
+                // An array of short weekday names starting with Sunday.
+                // Displayed in the calendar.
+                weekdaysShort: [
+                  'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+                ],
+      
+                // An integer indicating the first day of the week
+                // (0 = Sunday, 1 = Monday, etc.).
+                firstDayOfWeek: 0,
+      
+                // Used in screen reader announcements along with week
+                // numbers, if they are displayed.
+                week: 'Week',
+      
+                // Translation of the Calendar icon button title.
+                calendar: 'Calendar',
+      
+                // Translation of the Clear icon button title.
+                clear: 'Clear',
+      
+                // Translation of the Today shortcut button text.
+                today: 'Today',
+      
+                // Translation of the Cancel button text.
+                cancel: 'Cancel',
+      
+                // A function to format given `Object` as
+                // date string. Object is in the format `{ day: ..., month: ..., year: ... }`
+                // Note: The argument month is 0-based. This means that January = 0 and December = 11.
+                formatDate: d => {
+                  // returns a string representation of the given
+                  // object in 'MM/DD/YYYY' -format
+                },
+      
+                // A function to parse the given text to an `Object` in the format `{ day: ..., month: ..., year: ... }`.
+                // Must properly parse (at least) text formatted by `formatDate`.
+                // Setting the property to null will disable keyboard input feature.
+                // Note: The argument month is 0-based. This means that January = 0 and December = 11.
+                parseDate: text => {
+                  // Parses a string in 'MM/DD/YY', 'MM/DD' or 'DD' -format to
+                  // an `Object` in the format `{ day: ..., month: ..., year: ... }`.
+                },
+      
+                // A function to format given `monthName` and
+                // `fullYear` integer as calendar title string.
+                formatTitle: (monthName, fullYear) => {
+                  return monthName + ' ' + fullYear;
+                }
+              }),
+
+            this.createAttribute(clientId,"initialPosition","Date which should be visible when there is no value selected.The same date formats as for the value property are supported.",FieldTypeEnum.STRING),  
+            this.createAttribute(clientId,"invalid","This property is set to true when the control value is invalid.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING),            
+            this.createAttribute(clientId,"max","The latest date that can be selected. All later dates will be disabled.Supported date formats:ISO 8601 \"YYYY-MM-DD\" (default) 6-digit extended ISO 8601 \"+YYYYYY-MM-DD\", \"-YYYYYY-MM-DD",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"min","The earliest date that can be selected. All earlier dates will be disabled.Supported date formats:ISO 8601 \"YYYY-MM-DD\" (default) 6-digit extended ISO 8601 \"+YYYYYY-MM-DD\", \"-YYYYYY-MM-DD\"",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"name","The name of the control, which is submitted with the form data.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"opened","Set true to open the date selector overlay.",FieldTypeEnum.BOOLEAN),
+            this.createAttribute(clientId,"placeholder","A hint to the user of what can be entered in the control.",FieldTypeEnum.NUMBER),
+            this.createAttribute(clientId,"readonly","This attribute indicates that the user cannot modify the value of the control.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"required","Specifies that the user must fill in a value.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"showWeekNumbers","Set true to display ISO-8601 week numbers in the calendar. Notice that displaying week numbers is only supported when i18n.firstDayOfWeek is 1 (Monday).",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"value","The value for this element.Supported date formats:ISO 8601 \"YYYY-MM-DD\" (default) 6-digit extended ISO 8601 \"+YYYYYY-MM-DD\", \"-YYYYYY-MM-DD\"",FieldTypeEnum.STRING),
+        ]
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<any> {
+    }
+
+}

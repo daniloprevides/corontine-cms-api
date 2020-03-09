@@ -266,7 +266,7 @@ describe('UserController', () => {
             done();
         });
       });
-  },1000);  
+  });  
 
   it('should find user by id', async done => {
     let user = {
@@ -288,7 +288,7 @@ describe('UserController', () => {
             })
         });
       });
-  },1000);  
+  });  
 
   it('should fail finding user by wrong id', async done => {
     let user = {
@@ -309,7 +309,7 @@ describe('UserController', () => {
             })
         });
       });
-  },1000);  
+  });  
 
   it('should find all users', async done => {
     let user = {
@@ -329,7 +329,7 @@ describe('UserController', () => {
               done();
             });
         });
-  },1000);  
+  });  
 
   it('should delete user', async done => {
     let user = {
@@ -350,7 +350,7 @@ describe('UserController', () => {
             })
         });
       });
-  },1000);  
+  });  
 
   it('should fail deleting user by wrong id', async done => {
     let user = {
@@ -371,7 +371,7 @@ describe('UserController', () => {
             })
         });
       });
-  },1000);  
+  });  
 
   it('should fail getting user from token using client credential token', async done => {   
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
@@ -382,7 +382,7 @@ describe('UserController', () => {
             done();
           })
       });
-  },1000);  
+  });  
 
   it('should get user from token (logged user)', async done => {   
     let user = {
@@ -475,7 +475,7 @@ describe('UserController', () => {
         })
       });
     });
-  },1000);  
+  });  
 
   it('should throw error on password change (differente passwords)', async done => {   
     let user = {
@@ -504,11 +504,11 @@ describe('UserController', () => {
         })
       });
     });
-  },1000); 
+  }); 
 
   it('should create forgot password request', async done => {   
     let user = {
-      email: 'danilo@sysplan.com.br',
+      email: 'testforemailcms@gmail.com',
       password: 'password',
       name: 'myname',
       groups: ['admin']

@@ -22,6 +22,13 @@ export class Attributes extends BasicEntity {
   @Expose()
   name: string;
 
+  @Column({
+    nullable: true,
+    length: 5000
+  })
+  @Expose()
+  description: string;
+
   @Column("simple-json", { nullable: true })
   @Expose()
   value: any;

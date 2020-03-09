@@ -7,7 +7,7 @@ import { PluginTypeEnum } from "./../commons/enum/plugin-type.enum";
 import { Plugin } from "./../plugin/entity/plugin.entity";
 import { MigrationInterface, QueryRunner, getRepository } from "typeorm";
 
-export class LoginComponents1583311713506 implements MigrationInterface {
+export class InitialComponents1583311713506 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     const pluginRepository = getRepository<Plugin>("plugin");
     const componentsRepository = getRepository<Components>("components");

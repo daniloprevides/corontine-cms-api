@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional } from "class-validator";
+import { IsString, IsOptional, IsNumber } from "class-validator";
 import { Menu } from "../entity/menu.entity";
 
 export class UpdateMenuDto {
@@ -31,15 +31,24 @@ export class UpdateMenuDto {
   description?: Menu["description"];
 
   @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  @Expose()
+  order?: Menu["order"];
+
+  @ApiProperty()
   @IsString()
+  @IsOptional()
   @Expose()
   link: Menu["link"];
 
   @ApiProperty({ type: () => Menu })
+  @IsOptional()
   @Expose()
-  menu: Menu["menu"];
+  children: Menu["children"];
 
   @ApiProperty({ type: () => Menu })
+  @IsOptional()
   @Expose()
-  parent: Menu["menu"];
+  parent: Menu["parent"];
 }

@@ -97,6 +97,27 @@ export class MenuController extends GenericController<
     return super.getAll(queryParams,req);
   }
 
+  @Get("/my-menu")
+  @HttpCode(200)
+  @ApiOperation({
+    summary: "Get My Menu",
+    description: "Get My Menu"
+  })
+  @ApiOkResponse({
+    type: MenuDto,
+    isArray: true,
+    description: "My Menu"
+  })
+  @ApiUnauthorizedResponse({
+    description:
+      "thrown if there is not an authorization token or if authorization token does not have enough privileges"
+  })
+  @NeedScope(MenuScopeEnum.MENU_READ)
+  @UseGuards(SecurityGuard)
+  public async getMyMenu(@Req() req:Request): Promise<MenuDto[]> {
+    return this.service.getMyMenu(req);
+  }
+
   @Get(":id")
   @HttpCode(200)
   @ApiOperation({

@@ -1,10 +1,10 @@
+import { CommonsModule } from './../commons/commons.module';
 import { ParserService } from './services/parser.service';
 import { EventsMapper } from './mapper/events.mapper';
 import { EventsService } from './services/events.service';
 import { EventsController } from './controllers/events.controller';
 import { EventsRepository } from './repository/events.repository';
 import { Events } from './entity/events.entity';
-import { AuthenticationService } from "./../commons/services/authentication-service";
 import { RedirectorService } from "./services/redirector.service";
 import { RedirectorController } from "./controllers/redirector.controller";
 import { PluginMapper } from "./mapper/plugin.mapper";
@@ -44,7 +44,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       AttributesRepository,
       EventsRepository
     ]),
-    HttpModule
+    CommonsModule
   ],
   controllers: [
     AttributesController,
@@ -66,7 +66,6 @@ import { TypeOrmModule } from "@nestjs/typeorm";
     FieldsMapper,
     PluginMapper,
     EventsMapper,
-    AuthenticationService,
     ParserService
   ],
   exports: [

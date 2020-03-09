@@ -1,3 +1,4 @@
+import { ForbiddenException } from '@nestjs/common';
 import { UserNotFoundError } from './../exception/user-not-found.error';
 import { NeedScope } from '../../commons/guard/scope-metadata.guard';
 import { ScopeEnum } from './../enum/scope.enum';
@@ -146,7 +147,7 @@ export class UserController {
     description:
       'thrown if there is not an authorization token or if authorization token does not have STUDENT role',
   })
-  public async changeUserPasswordByJwtId(
+  public async changeUserPasswordByUsernameAndPassword(
     @Body() changePassword: ChangePasswordDTO,
     @Req() req: Request,
   ): Promise<UserDTO> {
@@ -156,6 +157,7 @@ export class UserController {
 
     //Getting token with user permissions
     let tokenDto = await this.securityService.getTokenDtoByUsernameAndPassword(changePassword.username, changePassword.password);
+    if (tokenDto.scope.split(" ").indexOf(ScopeEnum.USER_CHANGE_PASSWORD) < 0) throw new ForbiddenException();
     (req as any).user = tokenDto;
 
     return this.mapper.toDto(
@@ -264,15 +266,21 @@ export class UserController {
     description:
       'thrown if there is not an authorization token or if authorization token does not have EXTERNAL role',
   })
-  @NeedScope(ScopeEnum.USER_FORGOT_PASSWORD)
-  @UseGuards(ScopeGuard)
   public async forgotPassword(
     @Body() forgotPasswordDTO: ForgotPasswordDTO,
+    @Req() req: Request,
   ): Promise<ChangePasswordRequestIdDTO> {
     this.logger.log(`forgot password: ${forgotPasswordDTO}`);
+
+
+    //Getting token with user permissions
+    let tokenDto = await this.securityService.getTokenDtoByUsername(forgotPasswordDTO.email, [ScopeEnum.USER_FORGOT_PASSWORD]);
+    (req as any).user = tokenDto;
+
     const forgotPasswordRequestId = await this.service.forgotPassword(
       forgotPasswordDTO,
     );
+
     const changePasswordRequestIdDTO = new ChangePasswordRequestIdDTO();
     changePasswordRequestIdDTO.id = forgotPasswordRequestId;
     return changePasswordRequestIdDTO;
@@ -295,8 +303,6 @@ export class UserController {
     description:
       'thrown if there is not an authorization token or if authorization token does not have EXTERNAL role',
   })
-  @NeedScope(ScopeEnum.USER_CHANGE_PASSWORD)
-  @UseGuards(ScopeGuard)
   public async validateChangePasswordExpirationTime(
     @Param('changePasswordRequestId') changePasswordRequestId: string,
   ) {
@@ -316,15 +322,18 @@ export class UserController {
     description:
       'thrown if there is not an authorization token or if authorization token does not have EXTERNAL role',
   })
-  @NeedScope(ScopeEnum.USER_FORGOT_PASSWORD)
-  @UseGuards(ScopeGuard)  
   public async changePassword(
     @Param('changePasswordRequestId') changePasswordRequestId: string,
     @Body() changePasswordDTO: ChangePasswordForgotFlowDTO,
+    @Req() req: Request,
   ): Promise<void> {
     this.logger.log(
       `change password request id: ${changePasswordRequestId}, change password information: ${changePasswordDTO}`,
     );
+    //Getting token with user permissions
+    let tokenDto = await this.securityService.getTokenByForgotPasswordRequestId(changePasswordRequestId, [ScopeEnum.USER_CHANGE_PASSWORD]);
+    (req as any).user = tokenDto;
+
     await this.service.changePasswordForgotPasswordFlow(
       changePasswordRequestId,
       changePasswordDTO,

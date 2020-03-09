@@ -120,7 +120,7 @@ export class SecurityData1581605239948 implements MigrationInterface {
 
     //Creating default user
     let defaultUser = new User();
-    defaultUser.email = "admin@cms";
+    defaultUser.email = "daniloprevides@gmail.com";
     defaultUser.name = "admin";
     defaultUser.mustChangePassword = true;
     defaultUser.salt = crypto.randomBytes(16).toString("hex");

@@ -2,5 +2,6 @@ export enum PluginTypeEnum{
     AUTH="AUTH",
     BASE="BASE",
     CLIENT="CLIENT",
-    CUSTOM="CUSTOM"
+    CUSTOM="CUSTOM",
+    MENU="MENU"
 }

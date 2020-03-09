@@ -17,6 +17,12 @@ export class AttributesDto {
   name: Attributes["name"];
 
   @ApiProperty()
+  @IsString()
+  @IsOptional()
+  @Expose()
+  description?: Attributes["description"];
+
+  @ApiProperty()
   @Expose()
   value: Attributes["value"];
 
