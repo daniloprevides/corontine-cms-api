@@ -15,6 +15,7 @@ import {
 import Request = require("request");
 import { TokenDto } from "../dto/token.dto";
 import { AuthenticationService } from "../services/authentication-service";
+import { FieldNamesDto } from "../dto/field-names-dto";
 export abstract class GenericController<
   E extends BasicEntity,
   NEWDTO,
@@ -37,6 +38,11 @@ export abstract class GenericController<
   protected isCmsCall(tokenDto: TokenDto): boolean {
     const scopes = tokenDto.scope.split(" ");
     return scopes.indexOf(ScopeEnum.CMS) >= 0;
+  }
+
+
+  public async getFieldNames(newItem:any, updateItem:any, listItem:any) : Promise<FieldNamesDto>{
+    return this.service.getFieldNames(newItem,updateItem,listItem);
   }
 
   public getParentFieldName() { return null; };

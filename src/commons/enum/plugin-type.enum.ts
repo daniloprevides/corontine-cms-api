@@ -3,5 +3,7 @@ export enum PluginTypeEnum{
     BASE="BASE",
     CLIENT="CLIENT",
     CUSTOM="CUSTOM",
-    MENU="MENU"
+    MENU="MENU",
+    PAGES="PAGES",
+    API="API",
 }

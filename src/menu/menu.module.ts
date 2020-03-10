@@ -1,3 +1,4 @@
+import { CommonsModule } from './../commons/commons.module';
 import { MenuMapper } from './mapper/menu.mapper';
 import { MenuService } from './services/menu.service';
 import { MenuController } from './controllers/menu.controller';
@@ -13,7 +14,7 @@ import { AuthenticationService } from '../commons/services/authentication-servic
             Menu,
             MenuRepository
         ]),
-        HttpModule
+        CommonsModule
       ],
       controllers: [
           MenuController       
@@ -21,7 +22,6 @@ import { AuthenticationService } from '../commons/services/authentication-servic
       providers: [
         MenuService,
         MenuMapper,
-        AuthenticationService
       ],
       exports: [
         MenuService

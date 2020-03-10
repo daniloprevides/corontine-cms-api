@@ -6,6 +6,7 @@ import { Audit } from "../../commons";
 import { Expose } from "class-transformer";
 import { RequiredScopes } from "../../commons/annotations/entity-scope.decorator";
 import { ScopeEnum } from "../enum/scope.enum";
+import { AttributeTypeEnum } from "../enum/attribute-type.enum";
 
 @RequiredScopes(
   "attributes",
@@ -44,6 +45,10 @@ export class Attributes extends BasicEntity {
   @Column({ default: FieldTypeEnum.STRING, nullable: false })
   @Expose()
   type: FieldTypeEnum;
+
+  @Column({ default: AttributeTypeEnum.ATTRIBUTE, nullable: false , name: "attribute_type"})
+  @Expose()
+  attributeType: AttributeTypeEnum;
 
   @ManyToOne(
     () => Fields,

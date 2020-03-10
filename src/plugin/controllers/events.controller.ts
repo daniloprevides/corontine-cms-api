@@ -1,3 +1,4 @@
+import { FieldNamesDto } from './../../commons/dto/field-names-dto';
 import { EventsDto } from './../dto/events.dto';
 import { UpdateEventsDto } from './../dto/update-events.dto';
 import { NewEventsDto } from './../dto/new-events.dto';
@@ -7,12 +8,6 @@ import { NeedScope } from './../../commons/guard/scope-metadata.guard';
 import { AuthenticationService } from './../../commons/services/authentication-service';
 import { FindParamsDto } from './../../commons/dto/find-params.dto';
 import { Constants } from './../../commons/constants';
-import { AttributeService } from "./../services/attributes.service";
-import { AttributesMapper } from "./../mapper/attributes.mapper";
-import { AttributesDto } from "./../dto/attributes.dto";
-import { UpdateAttributesDto } from "./../dto/update-attributes.dto";
-import { NewAttributesDto } from "./../dto/new-attributes.dto";
-import { Attributes } from "./../entity/attributes.entity";
 import { PluginConstants } from "./../constants";
 import {
   ApiTags,
@@ -196,4 +191,15 @@ export class EventsController extends GenericController<
   public async delete(@Param("id") id: Events["id"], @Req() req: Request): Promise<void> {
     return await super.delete(id, req);
   }
+
+  @Get("/field/names")
+  @HttpCode(200)
+  @ApiOperation({
+    summary: "Get Field Names",
+    description: "Get Field Names"
+  })
+  public async getFieldNames(object:any): Promise<FieldNamesDto> {
+    return await super.getFieldNames(new NewEventsDto(), new UpdateEventsDto(), new EventsDto());
+  }
+
 }

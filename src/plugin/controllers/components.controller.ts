@@ -1,3 +1,4 @@
+import { FieldNamesDto } from './../../commons/dto/field-names-dto';
 import { AuthenticationService } from "./../../commons/services/authentication-service";
 import { SecurityGuard } from "./../../commons/guard/security.guard";
 import { NeedScope } from "./../../commons/guard/scope-metadata.guard";
@@ -195,4 +196,15 @@ export class ComponentsController extends GenericController<
   ): Promise<void> {
     return await super.delete(id, req);
   }
+
+  @Get("/field/names")
+  @HttpCode(200)
+  @ApiOperation({
+    summary: "Get Field Names",
+    description: "Get Field Names"
+  })
+  public async getFieldNames(object:any): Promise<FieldNamesDto> {
+    return await super.getFieldNames(new NewComponentsDto(), new UpdateComponentsDto(), new ComponentsDto());
+  }
+
 }

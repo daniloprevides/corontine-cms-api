@@ -1,5 +1,4 @@
 import { CommonsModule } from './../commons/commons.module';
-import { ParserService } from './services/parser.service';
 import { EventsMapper } from './mapper/events.mapper';
 import { EventsService } from './services/events.service';
 import { EventsController } from './controllers/events.controller';
@@ -65,8 +64,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
     ComponentsMapper,
     FieldsMapper,
     PluginMapper,
-    EventsMapper,
-    ParserService
+    EventsMapper
   ],
   exports: [
     AttributeService,

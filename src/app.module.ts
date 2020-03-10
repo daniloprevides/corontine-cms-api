@@ -13,6 +13,7 @@ import { Connection } from 'typeorm';
 import { initializeTransactionalContext } from 'typeorm-transactional-cls-hooked';
 import { PluginModule } from './plugin/plugin.module';
 import { MenuModule } from './menu/menu.module';
+import { PageCreatorModule } from './page-creator/page-creator.module';
 
 const databaseModule: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -40,7 +41,8 @@ const mailerAsyncModule: MailerAsyncOptions = {
     CommonsModule,
     forwardRef(() => SecurityModule),
     forwardRef(() => PluginModule),
-    MenuModule,                 
+    MenuModule,
+    PageCreatorModule,                 
   ],
   controllers: [AppController],
   providers: [AppService],

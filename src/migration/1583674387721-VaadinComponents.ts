@@ -1,3 +1,4 @@
+import { AttributeTypeEnum } from './../plugin/enum/attribute-type.enum';
 import { Events } from './../plugin/entity/events.entity';
 import { Attributes } from './../plugin/entity/attributes.entity';
 import { Fields } from './../plugin/entity/fields.entity';
@@ -30,7 +31,7 @@ export class VaadinComponents1583674387721 implements MigrationInterface {
             [
                 this.createAttribute(pluginBase?.clientId,"disabled","Field disabled", FieldTypeEnum.BOOLEAN),
                 this.createAttribute(pluginBase?.clientId,"error","error", FieldTypeEnum.BOOLEAN,false,null,true),
-                this.createAttribute(pluginBase?.clientId,"i18n","i18n", FieldTypeEnum.ANY,false,{"form":{"title":"Log in","username":"Username","password":"Password","submit":"Log in","forgotPassword":"Forgot password"},"errorMessage":{"title":"Incorrect username or password","message":"Check that you have entered the correct username and password and try again."}}),
+                this.createAttribute(pluginBase?.clientId,"i18n","i18n", FieldTypeEnum.ANY,false,{"form":{"title":"String","username":"String","password":"String","submit":"String","forgotPassword":"String"},"errorMessage":{"title":"String","message":"String"}},{"form":{"title":"Log in","username":"Username","password":"Password","submit":"Log in","forgotPassword":"Forgot password"},"errorMessage":{"title":"Incorrect username or password","message":"Check that you have entered the correct username and password and try again."}},AttributeTypeEnum.PROPERTY),
                 this.createAttribute(pluginBase?.clientId,"noForgotPassword","Dont show forgot password",FieldTypeEnum.BOOLEAN,false,null,true),
             ],
             [
@@ -215,7 +216,7 @@ export class VaadinComponents1583674387721 implements MigrationInterface {
     }
 
 
-    private createAttribute(clientId:string, name:string,description:string = null ,type:FieldTypeEnum, required=false, definition:any = null, defaultValue=null){
+    private createAttribute(clientId:string, name:string,description:string = null ,type:FieldTypeEnum, required=false, definition:any = null, defaultValue=null, attributeType=AttributeTypeEnum.ATTRIBUTE){
 
         return {
             clientId: clientId,
@@ -224,7 +225,8 @@ export class VaadinComponents1583674387721 implements MigrationInterface {
             required: required,
             type: type,
             value: definition,
-            description: description
+            description: description,
+            attributeType: attributeType
 
         } as Attributes;
 
@@ -234,29 +236,29 @@ export class VaadinComponents1583674387721 implements MigrationInterface {
     private createVaadinTextDefaultAttributes(clientId:string){
 
         return [
-            this.createAttribute(clientId,"autocapitalize","This is a property supported by Safari and Chrome that is used to control whether autocapitalization should be enabled when the user is entering/editing the text. Possible values are: characters: Characters capitalization. words: Words capitalization. sentences: Sentences capitalization. none: No capitalization.",FieldTypeEnum.STRING),
-            this.createAttribute(clientId,"autocomplete","Whether the value of the control can be automatically completed by the browser. List of available options at: https://developer.mozilla.org/en/docs/Web/HTML/Element/input#attr-autocomplete",FieldTypeEnum.STRING),
-            this.createAttribute(clientId,"autocorrect","This is a property supported by Safari that is used to control whether autocorrection should be enabled when the user is entering/editing the text. Possible values are: on: Enable autocorrection. off: Disable autocorrection.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"autocapitalize","This is a property supported by Safari and Chrome that is used to control whether autocapitalization should be enabled when the user is entering/editing the text. Possible values are: characters: Characters capitalization. words: Words capitalization. sentences: Sentences capitalization. none: No capitalization.",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"autocomplete","Whether the value of the control can be automatically completed by the browser. List of available options at: https://developer.mozilla.org/en/docs/Web/HTML/Element/input#attr-autocomplete",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"autocorrect","This is a property supported by Safari that is used to control whether autocorrection should be enabled when the user is entering/editing the text. Possible values are: on: Enable autocorrection. off: Disable autocorrection.",FieldTypeEnum.BOOLEAN,false,null,false),
             this.createAttribute(clientId,"autofocus","Specify that this control should have input focus when the page loads.",FieldTypeEnum.BOOLEAN,false,null,true),
             this.createAttribute(clientId,"autoselect","Specify that the value should be automatically selected when the field gains focus.",FieldTypeEnum.BOOLEAN,false,null,true),
             this.createAttribute(clientId,"clearButtonVisible","Set to true to display the clear icon which clears the input.",FieldTypeEnum.BOOLEAN,false,null,true),
             this.createAttribute(clientId,"disabled","If true, the user cannot interact with this element.",FieldTypeEnum.BOOLEAN,false,null,false),
             this.createAttribute(clientId,"errorMessage","Error to show when the input value is invalid.",FieldTypeEnum.STRING),
-            this.createAttribute(clientId,"focusElement","focus the element",FieldTypeEnum.ANY),
-            this.createAttribute(clientId,"i18n","Object with translated strings used for localization. ",FieldTypeEnum.ANY,false,{"clear":"Clear"}),
-            this.createAttribute(clientId,"invalid","This property is set to true when the control value is invalid.",FieldTypeEnum.BOOLEAN,false,null,false),
-            this.createAttribute(clientId,"hasValue","Specifies that the text field has value.",FieldTypeEnum.BOOLEAN,false,null,true),
-            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING),            
+            this.createAttribute(clientId,"focusElement","focus the element",FieldTypeEnum.BOOLEAN,false,null,false),
+            this.createAttribute(clientId,"i18n","Object with translated strings used for localization. ",FieldTypeEnum.ANY,false,{"clear":"String"},{"clear":"Clear"},AttributeTypeEnum.PROPERTY),
+            this.createAttribute(clientId,"invalid","This property is set to true when the control value is invalid.",FieldTypeEnum.BOOLEAN,false,null,false,AttributeTypeEnum.PROPERTY),
+            this.createAttribute(clientId,"hasValue","Specifies that the text field has value.",FieldTypeEnum.BOOLEAN,false,null,true,AttributeTypeEnum.PROPERTY),
+            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING,false,null,"Label"),            
             this.createAttribute(clientId,"list","Identifies a list of pre-defined options to suggest to the user. The value must be the id of a <datalist> element in the same document.",FieldTypeEnum.STRING),
             this.createAttribute(clientId,"maxlength","Maximum number of characters (in Unicode code points) that the user can enter.",FieldTypeEnum.NUMBER),
             this.createAttribute(clientId,"minlength","Minimum number of characters (in Unicode code points) that the user can enter.",FieldTypeEnum.NUMBER),
             this.createAttribute(clientId,"name","The name of the control, which is submitted with the form data.",FieldTypeEnum.STRING),
             this.createAttribute(clientId,"pattern","A regular expression that the value is checked against. The pattern must match the entire value, not just some subset.",FieldTypeEnum.STRING),
-            this.createAttribute(clientId,"placeholder","A hint to the user of what can be entered in the control.",FieldTypeEnum.NUMBER),
-            this.createAttribute(clientId,"preventInvalidInput","When set to true, user is prevented from typing a value that conflicts with the given pattern.",FieldTypeEnum.BOOLEAN,false,null,true),
+            this.createAttribute(clientId,"placeholder","A hint to the user of what can be entered in the control.",FieldTypeEnum.NUMBER,false,null,"Placeholder"),
+            this.createAttribute(clientId,"preventInvalidInput","When set to true, user is prevented from typing a value that conflicts with the given pattern.",FieldTypeEnum.BOOLEAN,false,null,true,AttributeTypeEnum.PROPERTY),
             this.createAttribute(clientId,"readonly","This attribute indicates that the user cannot modify the value of the control.",FieldTypeEnum.BOOLEAN,false,null,false),
             this.createAttribute(clientId,"required","Specifies that the user must fill in a value.",FieldTypeEnum.BOOLEAN,false,null,true),
-            this.createAttribute(clientId,"title","The text usually displayed in a tooltip popup when the mouse is over the field.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"title","The text usually displayed in a tooltip popup when the mouse is over the field.",FieldTypeEnum.STRING,false,null,"Tooltip Text"),
             this.createAttribute(clientId,"value","The initial value of the control. It can be used for two-way data binding.",FieldTypeEnum.STRING),
         ]
 
@@ -270,14 +272,14 @@ export class VaadinComponents1583674387721 implements MigrationInterface {
             this.createAttribute(clientId,"disabled","If true, the user cannot interact with this element.",FieldTypeEnum.BOOLEAN,false,null,false),
             this.createAttribute(clientId,"errorMessage","Error to show when the input value is invalid.",FieldTypeEnum.STRING),
             this.createAttribute(clientId,"invalid","This property is set to true when the control value is invalid.",FieldTypeEnum.BOOLEAN,false,null,false),
-            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING),            
+            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING,false,null,"Label"),            
             this.createAttribute(clientId,"name","The name of the control, which is submitted with the form data.",FieldTypeEnum.STRING),
             this.createAttribute(clientId,"opened","Set when the select is open",FieldTypeEnum.BOOLEAN),
             this.createAttribute(clientId,"placeholder","A hint to the user of what can be entered in the control. The placeholder will be displayed in the case that there is no item selected, or the selected item has an empty string label, or the selected item has no label and it's DOM content is empty.",FieldTypeEnum.NUMBER),
             this.createAttribute(clientId,"readonly","This attribute indicates that the user cannot modify the value of the control.",FieldTypeEnum.BOOLEAN,false,null,false),
             this.createAttribute(clientId,"required","Specifies that the user must fill in a value.",FieldTypeEnum.BOOLEAN,false,null,true),
-            this.createAttribute(clientId,"title","The text usually displayed in a tooltip popup when the mouse is over the field.",FieldTypeEnum.STRING),
-            this.createAttribute(clientId,"value","It stores the the value property of the selected item, providing the value for iron-form. When there’s an item selected, it's the value of that item, otherwise it's an empty string. On change or initialization, the component finds the item which matches the value and displays it. If no value is provided to the component, it selects the first item without value or empty value. Hint: If you do not want to select any item by default, you can either set all the values of inner vaadin-items, or set the vaadin-select value to an inexistent value in the items list.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"title","The text usually displayed in a tooltip popup when the mouse is over the field.",FieldTypeEnum.STRING,false,null,"Tooltip Text"),
+            this.createAttribute(clientId,"value","The initial value of the control. It can be used for two-way data binding.",FieldTypeEnum.STRING),
         ]
     }
 
@@ -286,10 +288,9 @@ export class VaadinComponents1583674387721 implements MigrationInterface {
         return [
             this.createAttribute(clientId,"autofocus","Specify that this control should have input focus when the page loads.",FieldTypeEnum.BOOLEAN,false,null,true),
             this.createAttribute(clientId,"checked","True if the checkbox is checked.",FieldTypeEnum.BOOLEAN,false,null,true),
-            this.createAttribute(clientId,"checked","True if the checkbox is checked.",FieldTypeEnum.BOOLEAN,false,null,true),
             this.createAttribute(clientId,"disabled","If true, the user cannot interact with this element.",FieldTypeEnum.BOOLEAN,false,null,false),
             this.createAttribute(clientId,"name","The name of the control, which is submitted with the form data.",FieldTypeEnum.STRING),
-            this.createAttribute(clientId,"value","The value given to the data submitted with the checkbox's name to the server when the control is inside a form.",FieldTypeEnum.STRING),
+            this.createAttribute(clientId,"value","The value given to the data submitted with the checkbox's name to the server when the control is inside a form.",FieldTypeEnum.BOOLEAN,true,null,true,AttributeTypeEnum.PROPERTY),
         ]
     }
 
@@ -370,7 +371,7 @@ export class VaadinComponents1583674387721 implements MigrationInterface {
 
             this.createAttribute(clientId,"initialPosition","Date which should be visible when there is no value selected.The same date formats as for the value property are supported.",FieldTypeEnum.STRING),  
             this.createAttribute(clientId,"invalid","This property is set to true when the control value is invalid.",FieldTypeEnum.BOOLEAN,false,null,false),
-            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING),            
+            this.createAttribute(clientId,"label","String used for the label element.",FieldTypeEnum.STRING,false,null,"Label"),            
             this.createAttribute(clientId,"max","The latest date that can be selected. All later dates will be disabled.Supported date formats:ISO 8601 \"YYYY-MM-DD\" (default) 6-digit extended ISO 8601 \"+YYYYYY-MM-DD\", \"-YYYYYY-MM-DD",FieldTypeEnum.STRING),
             this.createAttribute(clientId,"min","The earliest date that can be selected. All earlier dates will be disabled.Supported date formats:ISO 8601 \"YYYY-MM-DD\" (default) 6-digit extended ISO 8601 \"+YYYYYY-MM-DD\", \"-YYYYYY-MM-DD\"",FieldTypeEnum.STRING),
             this.createAttribute(clientId,"name","The name of the control, which is submitted with the form data.",FieldTypeEnum.STRING),

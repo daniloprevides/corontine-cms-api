@@ -64,7 +64,9 @@ export class ParserService {
     return value;
   }
 
-  public parse(value: string, context: any): String {
+  public parse(value: string, context: any): string {
+    if (!value) return value;
+
     if (value.indexOf("{") >= 0) {
       return this.parseVariables(this.getVariablesArray(value), context, value);
     }

@@ -14,7 +14,7 @@ export class RedirectorController {
 
   @Get()
   async getHello(@Req() req: Request): Promise<GlobalInfoDto> {
-    const url = req.protocol + "://" + req.get("host") + req.originalUrl;
+    const url = req.protocol + "://" + req.get("host");
     return this.service.getPublicInfo(url);
   }
 }

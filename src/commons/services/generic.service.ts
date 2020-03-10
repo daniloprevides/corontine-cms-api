@@ -1,3 +1,6 @@
+import { FieldNamesDto } from "./../dto/field-names-dto";
+import "reflect-metadata";
+import { IsString } from "class-validator";
 import { AuthenticationService } from "./authentication-service";
 import { GenericFilterService } from "./generic-filter.service";
 import { FindParamsDto } from "./../dto/find-params.dto";
@@ -16,6 +19,8 @@ import {
   ConflictException,
   InternalServerErrorException
 } from "@nestjs/common";
+import { classToPlain } from "class-transformer";
+import { EXPOSE_FIELD_NAMES_KEY } from "../annotations/expose-field-name.decorator";
 
 export abstract class GenericService<
   E extends BasicEntity,
@@ -88,6 +93,12 @@ export abstract class GenericService<
     return await paginate<E>(this.repository, paginationOptions, options);
   }
 
+  /**
+   *
+   * @param id Returns data by id
+   * @param clientId
+   * @param relations
+   */
   @Transactional()
   public async findById(
     id: E["id"],
@@ -154,5 +165,22 @@ export abstract class GenericService<
     }
 
     return await this.repository.save(updateInfo);
+  }
+
+  private create<NEWDTO>(type: new () => NEWDTO): NEWDTO {
+    return new type();
+  }
+
+  @Transactional()
+  public async getFieldNames(
+    newItem: any,
+    updateItem: any,
+    listItem: any
+  ): Promise<FieldNamesDto> {
+    return new FieldNamesDto(
+      newItem[EXPOSE_FIELD_NAMES_KEY],
+      updateItem[EXPOSE_FIELD_NAMES_KEY],
+      listItem[EXPOSE_FIELD_NAMES_KEY]
+    );
   }
 }
