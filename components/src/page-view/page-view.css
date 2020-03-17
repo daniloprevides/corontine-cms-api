@@ -1,0 +1,7 @@
+.dynamic-element {
+  margin: var(--cms-dynamic-element-margin);
+}
+  
+.error {
+    border: 1px dotted var(--cms-validation-error-color);
+  }

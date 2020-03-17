@@ -1,4 +1,4 @@
-import { Mapper } from './../../commons/mapper/mapper';
+import { Mapper } from "./../../commons/mapper/mapper";
 import { AuthenticationService } from "./../../commons/services/authentication-service";
 import { FindParamsDto } from "./../../commons/dto/find-params.dto";
 import { MenuRepository } from "./../repository/menu.repository";
@@ -40,7 +40,7 @@ export class MenuService extends GenericService<
     super(MenuRepository, "Menu");
   }
 
-  public async getMyMenu(request: Request): Promise<MenuDto[]> {
+  public async getMyMenu(request: Request): Promise<MenuDto> {
     const authorizationHeader = request.headers.authorization;
     if (!authorizationHeader)
       throw new ForbiddenException(
@@ -58,24 +58,12 @@ export class MenuService extends GenericService<
       );
 
     const scopes = tokenDto.scope.split(" ");
+    let menu = await this.repository.findOne({ where: { name: "default" } });
 
-    let menu = await this.repository.find({      
-      join: { alias: 'menu', leftJoinAndSelect: { children: 'menu.children' } },
-      where: (builder:SelectQueryBuilder<Menu>) => {
-        builder.where({ // Filter Role fields
-          requiredPermission: In(scopes) 
-        })
-        .andWhere('children.requiredPermission IN (:...scopes)', { scopes: scopes }) // Filter related field
-        .orderBy("children.order")
-      },
-      order: {order: "ASC"}
-    });
-
-
-    return new Mapper(Menu, MenuDto).toDtoList(menu);
+    return new Mapper(Menu, MenuDto).toDto(menu);
   }
 
   protected getRelations(): Array<string> {
-    return ["parent", "children"];
+    return [];
   }
 }

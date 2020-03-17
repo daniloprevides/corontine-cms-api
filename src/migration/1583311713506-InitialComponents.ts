@@ -6,6 +6,7 @@ import { Components } from "./../plugin/entity/components.entity";
 import { PluginTypeEnum } from "./../commons/enum/plugin-type.enum";
 import { Plugin } from "./../plugin/entity/plugin.entity";
 import { MigrationInterface, QueryRunner, getRepository } from "typeorm";
+import { AttributeTypeEnum } from "./../plugin/enum/attribute-type.enum";
 
 export class InitialComponents1583311713506 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
@@ -29,6 +30,7 @@ export class InitialComponents1583311713506 implements MigrationInterface {
         clientId: pluginBase?.clientId,
         name: "login-page",
         description: "Login Page",
+        allowInComposer: false,
         events: [
           {
             clientId: pluginBase?.clientId,
@@ -56,20 +58,23 @@ export class InitialComponents1583311713506 implements MigrationInterface {
             defaultValue: null,
             required: false,
             name: "username",
-            type: FieldTypeEnum.STRING
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.PROPERTY
           } as Attributes,
           {
             clientId: pluginBase?.clientId,
             defaultValue: "default",
             required: false,
             name: "theme",
-            type: FieldTypeEnum.STRING
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.PROPERTY
           } as Attributes
         ]
       } as Fields,
       {
         clientId: pluginBase?.clientId,
         name: "forgot-password-page",
+        allowInComposer: false,
         description: "Forgot Pasword Page",
         events: [
           {
@@ -87,20 +92,23 @@ export class InitialComponents1583311713506 implements MigrationInterface {
             defaultValue: "default",
             required: false,
             name: "theme",
-            type: FieldTypeEnum.STRING
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.ATTRIBUTE
           } as Attributes,
           {
             clientId: pluginBase?.clientId,
             defaultValue: "default",
             required: false,
             name: "username",
-            type: FieldTypeEnum.STRING
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.PROPERTY
           } as Attributes          
         ]
       } as Fields,
       {
         clientId: pluginBase?.clientId,
         name: "password-change-page",
+        allowInComposer: false,
         description: "Password Change Page",
         events: [
           {
@@ -118,17 +126,94 @@ export class InitialComponents1583311713506 implements MigrationInterface {
             defaultValue: null,
             required: false,
             name: "username",
-            type: FieldTypeEnum.STRING
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.PROPERTY
           } as Attributes,
           {
             clientId: pluginBase?.clientId,
             defaultValue: "default",
             required: false,
             name: "theme",
-            type: FieldTypeEnum.STRING
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.PROPERTY
           } as Attributes
         ]
-      } as Fields
+      } as Fields,
+      {
+        clientId: pluginBase?.clientId,
+        name: "title-data",
+        description: "H1 title Component",
+        needApi: false,
+        attributes: [
+          {
+            clientId: pluginBase?.clientId,
+            defaultValue: null,
+            required: false,
+            name: "text",
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.PROPERTY,
+          } as Attributes,
+          {
+            clientId: pluginBase?.clientId,
+            defaultValue: {val: "center"},
+            required: true,
+            name: "position",
+            type: FieldTypeEnum.LIST_CONTENT,
+            possibleValues: [
+              {id: 'center', label: "Centralized"},
+              {id: 'left', label: "Left"},
+              {id: 'right', label: "Right"},
+            ],
+            attributeType: AttributeTypeEnum.PROPERTY,
+          } as Attributes,          
+          {
+            clientId: pluginBase?.clientId,
+            defaultValue: "default",
+            required: false,
+            name: "description",
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.PROPERTY
+          } as Attributes
+        ]
+      } as Fields      ,
+      {
+        clientId: pluginBase?.clientId,
+        name: "label-data",
+        description: "A label component",
+        needApi: false,
+        attributes: [
+          {
+            clientId: pluginBase?.clientId,
+            defaultValue: null,
+            required: false,
+            name: "text",
+            type: FieldTypeEnum.STRING,
+            attributeType: AttributeTypeEnum.PROPERTY,
+          } as Attributes,
+          {
+            clientId: pluginBase?.clientId,
+            defaultValue: {val: "center"},
+            required: true,
+            name: "position",
+            type: FieldTypeEnum.LIST_CONTENT,
+            possibleValues: [
+              {id: 'center', label: "Centralized"},
+              {id: 'left', label: "Left"},
+              {id: 'right', label: "Right"},
+            ],
+            attributeType: AttributeTypeEnum.PROPERTY,
+          } as Attributes,          
+          {
+            clientId: pluginBase?.clientId,
+            defaultValue: null,
+            required: false,
+            name: "style",
+            type: FieldTypeEnum.TEMPLATE,
+            attributeType: AttributeTypeEnum.PROPERTY,
+          } as Attributes,
+        ]
+      } as Fields      
+
     ];
 
     await componentsRepository.save(loginComponents);

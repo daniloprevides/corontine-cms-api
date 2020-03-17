@@ -32,6 +32,7 @@ import { GrantTypeEnum } from "../src/security/enum/grant-type.enum";
 import { PluginEnvironmentEnum } from "../src/plugin/enum/environment.enum";
 import { v4 as uuidv4 } from "uuid";
 import { FieldTypeEnum } from "../src/plugin/enum/field-type.enum";
+import { AttributeTypeEnum } from "../src/plugin/enum/attribute-type.enum";
 
 const stringToBase64 = (string: string) => {
   return Buffer.from(string).toString("base64");
@@ -269,7 +270,8 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       field: field.id,
-      type: FieldTypeEnum.ANY
+      type: FieldTypeEnum.ANY,
+      attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
 
     return createRequest(newAttribute, tokenAttributes, attributesUrl)
@@ -378,7 +380,8 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       type: FieldTypeEnum.ANY,
-      field: field.id
+      field: field.id,
+      attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
     const newAttributeResponse = await createRequest(
       newAttribute,
@@ -503,7 +506,8 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       type: FieldTypeEnum.ANY,
-      field: field.id
+      field: field.id,
+      attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
     const newAttributeResponse = await createRequest(
       newAttribute,
@@ -616,7 +620,8 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       type: FieldTypeEnum.ANY,
-      field: field.id
+      field: field.id,
+      attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
     const newAttributeResponse = await createRequest(
       newAttribute,
@@ -731,7 +736,8 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       type: FieldTypeEnum.ANY,
-      field: field.id
+      field: field.id,
+      attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
     const newAttributeResponse = await createRequest(
       newAttribute,

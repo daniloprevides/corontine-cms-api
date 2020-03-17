@@ -1,4 +1,8 @@
-import { ExposeFieldName } from '../../commons/annotations/expose-field-name.decorator';
+import {
+  ExposeFieldName,
+  ExposeFieldNamesForPage,
+  ComponentDefinition
+} from "../../commons/annotations/expose-field-name.decorator";
 import { NewPluginDto } from "./new-plugin.dto";
 import { NewFieldsDto } from "./new-fields.dto";
 import { Components } from "./../entity/components.entity";
@@ -9,44 +13,48 @@ import { IsString, IsOptional } from "class-validator";
 export class UpdateComponentsDto {
   @ApiProperty()
   @IsString()
-  @Expose()
+  @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {readonly: true}))
   @ExposeFieldName
   id: Components["id"];
 
   @ApiProperty()
   @IsString()
-  @Expose()
+  @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   @ExposeFieldName
   name: Components["name"];
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  @Expose()
+  @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "textarea"}))
   @ExposeFieldName
   description: Components["description"];
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  @Expose()
+  @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   @ExposeFieldName
   informationUrl: Components["informationUrl"];
 
   @ApiProperty()
   @IsString()
-  @Expose()
+  @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   @ExposeFieldName
   url: Components["url"];
 
   @ApiProperty({ type: () => NewFieldsDto })
   @IsOptional()
-  @Expose()
   @ExposeFieldName
   fields: NewFieldsDto[];
 
   @ApiProperty({ type: () => String })
-  @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("object", {order: 6, visible: false, field: "name"}))
   plugin: String;
 }

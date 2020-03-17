@@ -1,5 +1,8 @@
+import html2canvas from "html2canvas";
+
 export class PageBuilderModel {
   constructor() {
+    this.componentHolder = {};
     this.screenModel = {
       pages: [
         {
@@ -29,21 +32,59 @@ export class PageBuilderModel {
     ];
   }
 
-  apiSelected(event) {
+  saveDefinition(fieldList, itemName, id, source, sources) {
+    const sourceItem = sources.find(s => s.name === source);
+    this.setFieldToPage(this.selectedPage, itemName, id, [
+      {
+        name: "fieldDefinition",
+        value: fieldList,
+        type: "ATTRIBUTE",
+        model: ""
+      },
+      { name: "apiSource", value: source, type: "ATTRIBUTE", model: "" },
+      {
+        name: "apiSourceId",
+        value: sourceItem.id,
+        type: "ATTRIBUTE",
+        model: ""
+      }
+    ]);
+  }
+
+  apiSelected(event, selectedSource) {
     this.dispatchEvent("source-selected", {
       page: this.selectedPage,
-      value: event.target.value
+      value: selectedSource
     });
+  }
+
+  eventSelected(event, itemName, id, selectedEvent) {
+    this.selectedEvent = selectedEvent;
+    this.setFieldToPage(this.selectedPage, itemName, id, [
+      {
+        name: "selectedEvent",
+        value: selectedEvent.name,
+        type: "ATTRIBUTE",
+        model: ""
+      }
+    ]);
   }
 
   selectItem(el, customElement, components) {
     const selfId = el.id;
     const closeElement = el.querySelector(`.item-close`);
 
+    //Hide all close elements
+    if (this.selectedMasterElement) {
+      this.selectedMasterElement.querySelectorAll(".item-close").forEach(i => {
+        i.setAttribute("hidden", true);
+      });
+    }
+
     this.selectedItem = this.components.find(
       c => c.id == el.getAttribute("data-type")
     );
-    this.setSelectedItem(this.selectedItem);
+    this.setSelectedItem(this.selectedItem, this.componentHolder[selfId]);
     this.selectedComponent = customElement;
     this.selectedMasterElement = el;
     this.selectedItem.columns = this.selectedItem.columns
@@ -80,6 +121,7 @@ export class PageBuilderModel {
 
     item.field = fieldName;
     this.debugModel = JSON.stringify(this.screenModel);
+    this.setComponentHolder(this.componentHolder);
     this.setDebugModel(this.debugModel);
   }
 
@@ -90,6 +132,7 @@ export class PageBuilderModel {
     if (!item) {
       items.push({ name: itemName, id: id, attributes: [] });
       item = items.find(i => i.name === itemName && i.id === id);
+      this.componentHolder[id] = { attributes: [] };
     }
 
     if (!item.attributes) item.attributes = [];
@@ -100,8 +143,15 @@ export class PageBuilderModel {
         let attribute = item.attributes.find(a => a.name === name);
         //Update if exists
         if (attribute) {
+          this.componentHolder[id].attributes.find(
+            a => a.name === name
+          ).value = value;
           attribute.value = value;
         } else {
+          this.componentHolder[id].attributes.push({
+            name: name,
+            value: value
+          });
           item.attributes.push({
             name: name,
             value: value,
@@ -113,6 +163,7 @@ export class PageBuilderModel {
     }
 
     this.debugModel = JSON.stringify(this.screenModel);
+    this.setComponentHolder(this.componentHolder);
     this.setDebugModel(this.debugModel);
   }
 
@@ -124,17 +175,19 @@ export class PageBuilderModel {
       items = items.filter(i => i.id !== id);
     }
     page.items = items;
+    delete this.componentHolder[id];
     this.debugModel = JSON.stringify(this.screenModel);
+    this.setComponentHolder(this.componentHolder);
     this.setDebugModel(this.debugModel);
   }
 
   removeAttributeFromPage(pageName, fieldName, id, attributeName) {
     const page = this.screenModel.pages.find(n => n.name === pageName);
     const items = page.items;
-    let item = items.find(i => i.name === fieldName);
+    let item = items.find(i => i.name === fieldName && i.id === id);
     if (!item) {
       items.push({ name: name, attributes: [] });
-      item = items.find(i => i.name === fieldName);
+      item = items.find(i => i.name === fieldName && i.id == id);
     }
 
     if (!item) return;
@@ -144,12 +197,20 @@ export class PageBuilderModel {
     item.attributes.forEach(a => {
       let { name, value } = a;
       let attribute = item.attributes.find(a => a.name === name);
-      //Update if exists
+      //Remove if exists
       if (attribute) {
+        const componentHolder = this.componentHolder[id];
+        if (componentHolder && componentHolder.attributes) {
+          componentHolder.attributes = componentHolder.attributes.filter(
+            a => a.name !== attributeName
+          );
+        }
+
         item.attributes = item.attributes.filter(a => a.name !== attributeName);
       }
     });
     this.debugModel = JSON.stringify(this.screenModel);
+    this.setComponentHolder(this.componentHolder);
     this.setDebugModel(this.debugModel);
   }
 
@@ -178,7 +239,7 @@ export class PageBuilderModel {
           attributes.push({
             name: attribute.name,
             value: attribute.defaultValue,
-            type: attribute.type,
+            type: attribute.attributeType,
             model: "none"
           });
           this.setFieldToPage(this.selectedPage, fieldName, id, attributes);
@@ -191,8 +252,8 @@ export class PageBuilderModel {
   }
 
   applyValue(value, attributeName, attribute, id) {
-    console.log("Value", value);
-    this.selectedComponent[attributeName] = value;
+    //this.selectedComponent[attributeName] = value;
+    this.customElement[attributeName] = value;
 
     if (value == null || value.toString().trim() == "") {
       this.removeAttributeFromPage(
@@ -206,7 +267,7 @@ export class PageBuilderModel {
         {
           name: attributeName,
           value: value,
-          type: attribute.type,
+          type: attribute.attributeType,
           model: "none"
         }
       ]);
@@ -226,7 +287,7 @@ export class PageBuilderModel {
       );
     } else {
       this.setFieldToPage(this.selectedPage, this.selectedItem.label, id, [
-        { name: "colspan", value: value, type: "STRING", model: "none" }
+        { name: "colspan", value: value, type: "ATTRIBUTE", model: "none" }
       ]);
     }
   }
@@ -254,8 +315,8 @@ export class PageBuilderModel {
     const oldId = ev.target.id;
     let clonedItem = ev.target.cloneNode(true);
     const newId = `added_${Math.random()
-        .toString(36)
-        .substring(7)}`;
+      .toString(36)
+      .substring(7)}`;
     clonedItem.id = newId;
     clonedItem.querySelector(`#comp_${oldId}`).id = `comp_${id}`;
     ev.dataTransfer.setData("text/html", clonedItem.outerHTML);
@@ -266,22 +327,23 @@ export class PageBuilderModel {
     ev.preventDefault();
     // Get the id of the target and add the moved element to the target's DOM
     let id = null;
-    if (ev.dataTransfer.getData("text/plain").indexOf("move") >= 0){
-        let oldId = null;
-        [,id, oldId] = ev.dataTransfer.getData("text/plain").split(":");
-        //removing old item
-        if (oldId){
-            let element = this.dropArea.querySelector(`#${oldId}`);
-            let componentId = element.getAttribute("data-type")
-            let componentSelected = this.components.find(
-                c => c.id == componentId
-            );
-            this.removeFieldFromPage(this.selectedPage,componentSelected.label,oldId);
-            element.parentNode.removeChild(element);
-        }
-
-    }else{
-        id = ev.dataTransfer.getData("text/plain");
+    if (ev.dataTransfer.getData("text/plain").indexOf("move") >= 0) {
+      let oldId = null;
+      [, id, oldId] = ev.dataTransfer.getData("text/plain").split(":");
+      //removing old item
+      if (oldId) {
+        let element = this.dropArea.querySelector(`#${oldId}`);
+        let componentId = element.getAttribute("data-type");
+        let componentSelected = this.components.find(c => c.id == componentId);
+        this.removeFieldFromPage(
+          this.selectedPage,
+          componentSelected.label,
+          oldId
+        );
+        element.parentNode.removeChild(element);
+      }
+    } else {
+      id = ev.dataTransfer.getData("text/plain");
     }
     const data = ev.dataTransfer.getData("text/html");
     ev.target.innerHTML = ev.target.innerHTML + data;
@@ -289,20 +351,23 @@ export class PageBuilderModel {
     //apply all attributes/properties
     const customElement = this.dropArea.querySelector(`#comp_${id}`);
     const componentSelected = this.components.find(
-        c => c.id == element.getAttribute("data-type")
+      c => c.id == element.getAttribute("data-type")
     );
 
-    this.setFieldToPage(this.selectedPage, componentSelected.label, id);
+    this.customElement = customElement;
+
+    this.setFieldToPage(this.selectedPage, componentSelected.label, id, [
+      { name: "colspan", value: "2", type: "ATTRIBUTE", model: "none" }
+    ]);
 
     this.applyProperties(
-        componentSelected.label,
-        customElement,
-        componentSelected,
-        id
+      componentSelected.label,
+      customElement,
+      componentSelected,
+      id
     );
 
-    this.resetAllEventsAfterDropHandle();    
-    
+    this.resetAllEventsAfterDropHandle();
   }
 
   resetAllEventsAfterDropHandle() {

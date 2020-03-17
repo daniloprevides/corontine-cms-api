@@ -8,12 +8,21 @@
   let dragElement = null;
   let dropArea = null;
   let viewTypeComponent = null;
+  let apiIsSelected = false;
+  let eventIsSelected = false;
 
   let selectedSource = null;
+  let selectedEvent = null;
   let selectedItem = null;
   let selectedComponent = null;
   let selectedMasterElement = null;
   let selectedPage = null;
+  let componentHolder = null;
+
+  let pageName = null;
+  let pageNameError = '';
+  let pageDescription = null;
+  let pageDescriptionError = null;
 
   const model = new PageBuilderModel();
   let screenModel = model.screenModel;
@@ -27,7 +36,7 @@
   export let sources = [];
   export let components = [];
   export let fieldNamesList = [];
-  
+  let fieldNamesListObject = [];
 
   /*
    * Functions
@@ -36,8 +45,29 @@
   const apiSelected = model.apiSelected.bind(model);
   const selectField = model.selectField.bind(model);
 
-  model.setSelectedItem = selectedItemInner => {
+  model.setSelectedItem = (selectedItemInner, componentHolder) => {
     selectedItem = selectedItemInner;
+    //Setting values according to componentHolder
+    if (selectedItem && selectedItem.attributes && componentHolder) {
+      selectedItem.attributes = selectedItem.attributes.map(item => {
+        const componentHolderAttribute = componentHolder.attributes.find(
+          a => a.name === item.name,
+        );
+        if (componentHolderAttribute) {
+          if (item.type === 'BOOLEAN') {
+            item.defaultValue = componentHolderAttribute.value;
+          } else {
+            item.value = componentHolderAttribute.value;
+          }
+        }
+
+        return item;
+      });
+    }
+  };
+
+  model.setComponentHolder = componentHolderModel => {
+    componentHolder = componentHolderModel;
   };
 
   model.setDebugModel = selectedDebug => {
@@ -68,6 +98,24 @@
 
   const applyColValue = model.applyColValue.bind(model);
 
+  const saveDefinition = model.saveDefinition.bind(model);
+
+  const validate = function(){
+    let pageNameError = null;
+
+    if (!pageName || !pageName.length) {
+      pageNameError = 'Name must be filled';
+    }
+
+    return pageNameError === null;
+  };
+
+  const save = event => {
+    if (validate()) {
+      model.dispatchEvent("changed", { name: pageName, description: pageDescription, content: screenModel} );
+    }
+  };
+
   onMount(async () => {
     viewTypeComponent.addEventListener('value-changed', function(e) {
       dropArea = types.find(t => t.label === e.detail.value).component;
@@ -86,6 +134,17 @@
   $: {
     model.components = components;
     model.fieldNamesList = fieldNamesList;
+    model.fieldNamesListObject = fieldNamesList
+      ? fieldNamesList.map((i, ix) => {
+          return {
+            name: i,
+            order: ix,
+            value: i,
+            visible: true,
+          };
+        })
+      : [];
+    fieldNamesListObject = model.fieldNamesListObject;
   }
 </script>
 
@@ -126,6 +185,7 @@
     right: 0;
     top: 40px;
     min-width: 15rem;
+    max-width: 15rem;
     height: calc(100vh - 40px);
     max-height: calc(100vh - 40px);
     overflow-y: auto;
@@ -143,7 +203,7 @@
   #drop-target {
     border: 2px dashed #d9d9d9;
     border-radius: 5px;
-    min-height: calc(100vh - 170px);
+    min-height: calc(100vh - 50vh);
     margin: 0 auto;
     margin-top: 10px;
     padding: 1em;
@@ -206,6 +266,7 @@
     font-size: 0.7rem;
     margin: 5px;
     width: 98%;
+    table-layout: auto;
   }
 
   .input-property-value {
@@ -220,6 +281,29 @@
     color: rgba(0, 0, 0, 0.8);
     border: none;
     width: 100%;
+  }
+
+  .save-button {
+    width: 100%;
+    background-color: hsla(0, 100%, 100%, 0.2);
+    color: white;
+    font-size: 0.8rem;
+  }
+
+  .text-description {
+    color: white;
+    padding: 5px;
+    font-size: 0.7rem;
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+  }
+
+  .btn-warning {
+    background-color: var(--cms-options-disabled) !important;
+    border: none !important;
   }
 </style>
 
@@ -245,7 +329,9 @@
     <div class="row">
       <div class="col-md-8">
         <h2 class="page-title">Page Builder</h2>
-        <small>Add components to your page</small>
+        <small>
+          Configure your page using components and then binding to api values
+        </small>
       </div>
       <div class="col-md-4">
         <label>View Type:</label>
@@ -261,18 +347,65 @@
             </vaadin-list-box>
           </template>
         </vaadin-select>
-
       </div>
     </div>
-    {#each types as type}
-      <vaadin-form-layout
-        name={type.label}
-        id="drop-target"
-        bind:this={type.component}
-        on:drop={dropHandler}
-        on:dragover={dragOver}
-        hidden />
-    {/each}
+
+    <div class="row">
+      {pageNameError}
+      <div class="form-group col-md-12">
+        <label for="name">* Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          aria-describedby="nameHelp"
+          bind:value={pageName}
+          placeholder="Enter a name for your page..." />
+
+        <small class="text-danger">{pageNameError ? pageNameError : ''}</small>
+
+      </div>
+
+      <div class="form-group col-md-12">
+        <label for="name">Description</label>
+        <textarea
+          class="form-control"
+          id="description"
+          aria-describedby="descriptionHelp"
+          bind:value={pageDescription}
+          placeholder="Enter a description for your page..." />
+        {#if pageDescriptionError}
+          <small class="text-danger">{pageDescriptionError}</small>
+        {/if}
+      </div>
+    </div>
+
+    <div>
+      <label>* Page Content</label>
+      <br />
+      <small>Drag components to your page</small>
+      {#each types as type}
+        <vaadin-form-layout
+          name={type.label}
+          id="drop-target"
+          bind:this={type.component}
+          on:drop={dropHandler}
+          on:dragover={dragOver}
+          hidden />
+      {/each}
+    </div>
+
+    <hr />
+    <div class="form-group">
+      <button
+        class="btn btn-primary"
+        on:click={event => {
+          save(event);
+        }}>
+        Save
+      </button>
+    </div>
+
   </div>
 
   <div class="options">
@@ -335,9 +468,11 @@
               {/if}
               {#if attr.type == 'ANY'}
                 <textarea
+                  rows="8"
                   class="input-property-value"
                   on:blur={event => {
-                    model.applyValue(event.target.value, attr.name, attr, model.selectedMasterElement.id);
+                    let value = JSON.parse(event.target.value);
+                    model.applyValue(value, attr.name, attr, model.selectedMasterElement.id);
                   }}>
                   {JSON.stringify(attr.value)}
                 </textarea>
@@ -346,6 +481,7 @@
             </td>
           </tr>
         {/each}
+
       </table>
     {/if}
     <div />
@@ -358,17 +494,24 @@
           <td>
             <select
               class="input-property-select"
-              value={selectedSource}
               on:change={event => {
-                model.apiSelected(event);
+                if (event.target.value === '') {
+                  apiIsSelected = false;
+                } else {
+                  selectedSource = event.target.value;
+                  model.apiSelected(event, selectedSource);
+                  apiIsSelected = true;
+                  saveDefinition([], model.selectedItem.label, model.selectedMasterElement.id, selectedSource, sources);
+                }
               }}>
+              <option value="">Choose</option>
               {#each sources as source}
                 <option value={source.name}>{source.name}</option>
               {/each}
             </select>
           </td>
         </tr>
-        {#if fieldNamesList && fieldNamesList.length}
+        {#if fieldNamesListObject && fieldNamesListObject.length && selectedItem.type === 'SINGLE' && apiIsSelected}
           <tr>
             <td>Item:</td>
             <td>
@@ -377,14 +520,88 @@
                 on:change={event => {
                   model.selectField(event, model.selectedMasterElement.id);
                 }}>
-                {#each fieldNamesList as fieldName}
-                  <option value={fieldName}>{fieldName}</option>
+                {#each fieldNamesListObject as fieldName}
+                  <option value={fieldName.name}>{fieldName.name}</option>
                 {/each}
               </select>
             </td>
           </tr>
         {/if}
+
+        {#if fieldNamesListObject && fieldNamesListObject.length && selectedItem.type === 'MULTI' && apiIsSelected}
+          {#each fieldNamesListObject as fieldName}
+            <tr>
+              <td style="width: 40%">
+                <input
+                  type="text"
+                  class="input-property-value"
+                  value={fieldName.value}
+                  on:change={event => {
+                    fieldName.value = event.target.value;
+                    saveDefinition(fieldNamesListObject, model.selectedItem.label, model.selectedMasterElement.id, selectedSource);
+                  }} />
+              </td>
+              <td style="width: 40%">
+                <input
+                  type="number"
+                  class="input-property-value"
+                  min="0"
+                  value={fieldName.order}
+                  max={fieldNamesListObject.length - 1}
+                  on:change={event => {
+                    fieldName.order = event.target.value;
+                    saveDefinition(fieldNamesListObject, model.selectedItem.label, model.selectedMasterElement.id, selectedSource);
+                  }} />
+              </td>
+              <td style="width: 20%">
+                <input
+                  type="checkbox"
+                  class="input-property-value"
+                  checked={fieldName.visible}
+                  on:change={event => {
+                    fieldName.visible = event.target.checked;
+                    saveDefinition(fieldNamesListObject, model.selectedItem.label, model.selectedMasterElement.id, selectedSource);
+                  }} />
+              </td>
+            </tr>
+          {/each}
+        {/if}
+
       </table>
+    {/if}
+
+    <h2 class="comps-title">Events</h2>
+    {#if selectedItem}
+      <table class="table-general-properties">
+        <tr>
+          <td>Event:</td>
+          <td>
+            <select
+              class="input-property-select"
+              on:change={event => {
+                if (event.target.value === '') {
+                  eventIsSelected = false;
+                } else {
+                  let selectedEventName = event.target.value;
+                  selectedEvent = selectedItem.events.find(e => e.name === selectedEventName);
+                  model.eventSelected(event, model.selectedItem.label, model.selectedMasterElement.id, selectedEvent);
+                  eventIsSelected = true;
+                }
+              }}>
+              <option value="">Choose</option>
+              {#each selectedItem.events as eventSource}
+                <option value={eventSource.name}>{eventSource.name}</option>
+              {/each}
+            </select>
+          </td>
+        </tr>
+
+      </table>
+      <small>
+        <p class="text-description">
+          {selectedEvent ? selectedEvent.description : ''}
+        </p>
+      </small>
     {/if}
   </div>
 </div>
@@ -419,5 +636,5 @@
 </svelte-head>
 
 <span
-  class="item-title component-area selected default-style item-close"
+  class="item-title component-area selected default-style item-close text-description"
   hidden />

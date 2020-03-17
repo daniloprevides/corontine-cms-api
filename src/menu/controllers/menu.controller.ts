@@ -115,7 +115,7 @@ export class MenuController extends GenericController<
   })
   @NeedScope(MenuScopeEnum.MENU_READ)
   @UseGuards(SecurityGuard)
-  public async getMyMenu(@Req() req:Request): Promise<MenuDto[]> {
+  public async getMyMenu(@Req() req:Request): Promise<MenuDto> {
     return this.service.getMyMenu(req);
   }
 

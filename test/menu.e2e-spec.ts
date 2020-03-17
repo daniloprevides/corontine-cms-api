@@ -179,9 +179,8 @@ describe("Menu (e2e)", () => {
     //Create a plugin
     const newMenu = {
       name: uuidv4(),
-      description: "blablabla",
-      label: "My Menu 1",
-      link: "/add/menu1",
+      content: {menu: "abc"},
+      bgColor: "black",
       requiredPermission: ScopeEnum.GROUP_CREATE
     } as NewMenuDto;
     const newMenuResponse = await createRequest(
@@ -196,51 +195,8 @@ describe("Menu (e2e)", () => {
     done();
   });
 
-  it("Should add new Menu with children", async done => {
-    const menuCredential = await createCredentialWithPermissions(
-      uuidv4(),
-      "secret",
-      [MenuScopeEnum.MENU_CREATE, PluginScopeEnum.CMS, ScopeEnum.TOKEN_INFO]
-    );
-
-    const menuCredentials = await getUserClientCredentials(
-      menuCredential.name as any
-    );
-
-    const defaultRequestMenu = await defaultGrantRequest(menuCredentials);
-
-    const tokenMenu = defaultRequestMenu.body.accessToken;
-
-    //Create a plugin
-    const newMenu = {
-      name: uuidv4(),
-      description: "Group Create",
-      label: "Group Create",
-      link: "/add/group",
-      requiredPermission: ScopeEnum.GROUP_CREATE,
-      children: [
-        {
-          name: uuidv4(),
-          description: "Group Delete",
-          label: "Group Delete",
-          requiredPermission: ScopeEnum.GROUP_DELETE
-        } as NewMenuDto
-      ]
-    } as NewMenuDto;
-    const newMenuResponse = await createRequest(
-      newMenu,
-      tokenMenu,
-      menuUrl
-    ).expect(201);
-    const menu = newMenuResponse.body as MenuDto;
-
-    expect(menu.id).toBeDefined();
-    expect(menu.requiredPermission).toBe(newMenu.requiredPermission);
-    expect(menu.children.length).toBe(1);
-    done();
-  });
-
-  it("Should update Menu with children", async done => {
+ 
+  it("Should update Menu", async done => {
     const menuCredential = await createCredentialWithPermissions(
       uuidv4(),
       "secret",
@@ -263,18 +219,9 @@ describe("Menu (e2e)", () => {
     //Create a plugin
     const newMenu = {
       name: uuidv4(),
-      description: "Group Create",
-      label: "Group Create",
-      link: "/add/group",
-      requiredPermission: ScopeEnum.GROUP_CREATE,
-      children: [
-        {
-          name: uuidv4(),
-          description: "Group Delete",
-          label: "Group Delete",
-          requiredPermission: ScopeEnum.GROUP_DELETE
-        } as NewMenuDto
-      ]
+      content: {menu: "abc"},
+      bgColor: "black",
+      requiredPermission: ScopeEnum.GROUP_CREATE
     } as NewMenuDto;
     const newMenuResponse = await createRequest(
       newMenu,
@@ -283,7 +230,7 @@ describe("Menu (e2e)", () => {
     ).expect(201);
     const menu = newMenuResponse.body as MenuDto;
 
-    menu.label = "updated";
+    menu.name = "updated";
 
     return updateRequest(menu, tokenMenu, `${menuUrl}/${menu.id}`)
       .expect(200)
@@ -292,8 +239,6 @@ describe("Menu (e2e)", () => {
         expect(dataResponse.body.requiredPermission).toBe(
           newMenu.requiredPermission
         );
-        expect(dataResponse.body.label).toBe(menu.label);
-        expect(dataResponse.body.children.length).toBe(1);
         done();
       });
   });
@@ -350,55 +295,7 @@ describe("Menu (e2e)", () => {
   //     });
   // });
 
-  it("Should delete children item", async done => {
-    const menuCredential = await createCredentialWithPermissions(
-      uuidv4(),
-      "secret",
-      [
-        MenuScopeEnum.MENU_CREATE,
-        MenuScopeEnum.MENU_DELETE,
-        PluginScopeEnum.CMS,
-        ScopeEnum.TOKEN_INFO
-      ]
-    );
-
-    const menuCredentials = await getUserClientCredentials(
-      menuCredential.name as any
-    );
-
-    const defaultRequestMenu = await defaultGrantRequest(menuCredentials);
-
-    const tokenMenu = defaultRequestMenu.body.accessToken;
-
-    //Create a plugin
-    const newMenu = {
-      name: uuidv4(),
-      description: "Group Create",
-      label: "Group Create",
-      link: "/add/group",
-      requiredPermission: ScopeEnum.GROUP_CREATE,
-      children: [
-        {
-          name: uuidv4(),
-          description: "Group Delete",
-          label: "Group Delete",
-          requiredPermission: ScopeEnum.GROUP_DELETE
-        } as NewMenuDto
-      ]
-    } as NewMenuDto;
-    const newMenuResponse = await createRequest(
-      newMenu,
-      tokenMenu,
-      menuUrl
-    ).expect(201);
-    const menu = newMenuResponse.body as MenuDto;
-
-    return deleteRequest(tokenMenu, `${menuUrl}/${menu.children[0].id}`)
-      .expect(200)
-      .then(dataResponse => {
-        done();
-      });
-  });
+ 
 
   it("Should get by id Menu", async done => {
     const menuCredential = await createCredentialWithPermissions(
@@ -423,18 +320,9 @@ describe("Menu (e2e)", () => {
     //Create a plugin
     const newMenu = {
       name: uuidv4(),
-      description: "Group Create",
-      label: "Group Create",
-      link: "/add/group",
-      requiredPermission: ScopeEnum.GROUP_CREATE,
-      children: [
-        {
-          name: uuidv4(),
-          description: "Group Delete",
-          label: "Group Delete",
-          requiredPermission: ScopeEnum.GROUP_DELETE
-        } as NewMenuDto
-      ]
+      content: {menu: "abc"},
+      bgColor: "black",
+      requiredPermission: ScopeEnum.GROUP_CREATE
     } as NewMenuDto;
     const newMenuResponse = await createRequest(
       newMenu,
@@ -448,7 +336,6 @@ describe("Menu (e2e)", () => {
       .then(dataResponse => {
         expect(menu.id).toBeDefined();
         expect(menu.requiredPermission).toBe(newMenu.requiredPermission);
-        expect(menu.children.length).toBe(1);
         done();
       });
   });
@@ -476,18 +363,9 @@ describe("Menu (e2e)", () => {
     //Create a plugin
     const newMenu = {
       name: uuidv4(),
-      description: "Group Create",
-      label: "Group Create",
-      link: "/add/group",
-      requiredPermission: ScopeEnum.GROUP_CREATE,
-      children: [
-        {
-          name: uuidv4(),
-          description: "Group Delete",
-          label: "Group Delete",
-          requiredPermission: ScopeEnum.GROUP_DELETE
-        } as NewMenuDto
-      ]
+      content: {menu: "abc"},
+      bgColor: "black",
+      requiredPermission: ScopeEnum.GROUP_CREATE
     } as NewMenuDto;
     const newMenuResponse = await createRequest(
       newMenu,
@@ -534,18 +412,9 @@ describe("Menu (e2e)", () => {
     //Create a plugin
     const newMenu = {
       name: uuidv4(),
-      description: "Group Create",
-      label: "Group Create",
-      link: "/add/group",
-      requiredPermission: ScopeEnum.GROUP_CREATE,
-      children: [
-        {
-          name: uuidv4(),
-          description: "Group Delete",
-          label: "Group Delete",
-          requiredPermission: ScopeEnum.GROUP_DELETE
-        } as NewMenuDto
-      ]
+      content: {menu: "abc"},
+      bgColor: "black",
+      requiredPermission: ScopeEnum.GROUP_CREATE
     } as NewMenuDto;
     const newMenuResponse = await createRequest(
       newMenu,
@@ -561,22 +430,6 @@ describe("Menu (e2e)", () => {
 
         expect(menu.id).toBeDefined();
         expect(menu.requiredPermission).toBe(newMenu.requiredPermission);
-        expect(responseItem[0].children.length).toBe(3);
-
-        // expect(responseItem[0].children[0].requiredPermission).toBe(
-        //   MenuScopeEnum.MENU_CREATE
-        // );
-        // expect(responseItem[0].children[1].requiredPermission).toBe(
-        //   MenuScopeEnum.MENU_READ
-        // );
-        // expect(responseItem[0].children[2].requiredPermission).toBe(
-        //   MenuScopeEnum.MENU_READ
-        // );
-
-        // //validating items
-        // expect(responseItem[1].children[0].requiredPermission).toBe(
-        //   ScopeEnum.GROUP_CREATE
-        // );
 
         done();
       });

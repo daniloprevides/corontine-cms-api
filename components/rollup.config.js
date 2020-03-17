@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import autoPreprocess from 'svelte-preprocess'
 
 
 const production = !process.env.ROLLUP_WATCH;
@@ -24,6 +25,29 @@ export default {
 			css: css => {
 				css.write('../views/public/bundle.css');
 			},
+			preprocess: autoPreprocess({
+				typescript: {
+					/**
+					 * Optionally specify the full path to the tsconfig
+					 */
+					//tsconfigFile: './tsconfig.app.json',
+				
+					/**
+					 * Optionally specify compiler options.
+					 * These will be merged with options from the tsconfig if found.
+					 */
+					compilerOptions: {
+					  module: 'es2015',
+					},
+				
+					/**
+					 * Type checking can be skipped by setting 'transpileOnly: true'.
+					 * This speeds up your build process.
+					 */
+					transpileOnly: true,
+				  },
+
+			}),
 			customElement: true,
 		}),
 		// If you have external dependencies installed from
@@ -43,7 +67,7 @@ export default {
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload('public'),
+		!production && livereload({watch: '../views/public', port:  65535} ),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify

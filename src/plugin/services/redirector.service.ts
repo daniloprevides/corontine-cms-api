@@ -68,6 +68,12 @@ export class RedirectorService {
     const context = {
       serverUrl: () => {
         return url;
+      },
+      plugin : (fieldValue:any) => {
+        try {
+          return plugins.find(p => p['name'] == fieldValue);
+        }catch(ex){ console.error(ex);}
+        return null;
       }
     }
     plugins = plugins.map(p => {

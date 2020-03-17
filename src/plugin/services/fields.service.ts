@@ -31,6 +31,6 @@ export class FieldsService extends GenericService<
   }
 
   protected getRelations(): Array<string> {
-    return ["attributes"];
+    return ["attributes","events"];
   }
 }

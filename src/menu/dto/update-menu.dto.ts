@@ -2,63 +2,43 @@ import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsNumber } from "class-validator";
 import { Menu } from "../entity/menu.entity";
-import { ExposeFieldName } from "../../commons/annotations/expose-field-name.decorator";
+import {
+  ExposeFieldName,
+  ExposeFieldNamesForPage,
+  ComponentDefinition
+} from "../../commons/annotations/expose-field-name.decorator";
 
 export class UpdateMenuDto {
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {readonly: true}))
   id: Menu["id"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   name: Menu["name"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
-  label: Menu["label"];
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "color"}))
+  bgColor: Menu["bgColor"];
 
   @ApiProperty()
-  @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "textarea", isJson: true}))
+  content: Menu["content"];
+
+  @ApiProperty()
+  @Expose()
+  @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   requiredPermission: Menu["requiredPermission"];
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  description?: Menu["description"];
-
-  @ApiProperty()
-  @IsNumber()
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  order?: Menu["order"];
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  link: Menu["link"];
-
-  @ApiProperty({ type: () => Menu })
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  children: Menu["children"];
-
-  @ApiProperty({ type: () => Menu })
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  parent: Menu["parent"];
 }

@@ -42,6 +42,6 @@ export class ComponentsService extends GenericService<
   }
 
   protected getRelations(): Array<string> {
-    return ["fields"];
+    return ["fields","plugin"];
   }
 }

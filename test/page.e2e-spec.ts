@@ -185,6 +185,7 @@ describe("Page (e2e)", () => {
     const newPage = {
       name: uuidv4(),
       description: "blablabla",
+      pluginId: "sasasasa",
       content: {
         title: [{ abc: "abc" }]
       }
@@ -226,6 +227,7 @@ describe("Page (e2e)", () => {
     const newPage = {
       name: uuidv4(),
       description: "Group Create",
+      pluginId: "asjasakslajsa",
       content: {
         title: [{ abc: "abc" }]
       }
@@ -270,6 +272,7 @@ describe("Page (e2e)", () => {
     const newPage = {
       name: uuidv4(),
       description: "Group Create",
+      pluginId: "asjasakslajsa",
       content: {
         title: [{ abc: "abc" }]
       }
@@ -311,6 +314,7 @@ describe("Page (e2e)", () => {
     const newPage = {
       name: uuidv4(),
       description: "Group Create",
+      pluginId: "asjasakslajsa",
       content: {
         title: [{ abc: "abc" }]
       }
@@ -383,6 +387,7 @@ describe("Page (e2e)", () => {
     const newPage = {
       name: uuidv4(),
       description: "Group Create",
+      pluginId: "asjasakslajsa",
       content: {
         title: [{ abc: "abc" }]
       }

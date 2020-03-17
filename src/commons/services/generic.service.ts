@@ -63,7 +63,7 @@ export abstract class GenericService<
     clientId?: string,
     relations?: Array<string>
   ): Promise<Pagination<E>> {
-    let options = { relations: this.getRelations() } as FindManyOptions;
+    let options = { relations: this.getRelations() , order: {name: "ASC"}} as FindManyOptions;
     let paginationOptions = {
       page: findParamsDto.page,
       limit: findParamsDto.limit,
@@ -105,12 +105,46 @@ export abstract class GenericService<
     clientId?: string,
     relations?: Array<string>
   ): Promise<E> {
-    let options = { relations: this.getRelations() } as FindOneOptions;
+    let options = { where: {id: id}, relations: this.getRelations() } as FindManyOptions;
     if (relations) options.relations = relations;
 
     if (clientId) options.where = [{ clientId: clientId }];
 
-    const items: E | undefined = await this.repository.findOne(id, options);
+    //FindOne is not retrieving relations (Seems to be a bug)
+    const itemsArray =  await this.repository.find(options);
+    let item: E | undefined = null;
+    if (itemsArray && itemsArray.length){
+      item = itemsArray[0];
+    }
+
+    if (!item) {
+      throw new NotFoundException(`${this.name} not found`);
+    }
+    return item;
+  }
+
+  /**
+   *
+   * @param id Returns data by name
+   * @param clientId
+   * @param relations
+   */
+  @Transactional()
+  public async findByName(
+    name: string,
+    clientId?: string,
+    relations?: Array<string>
+  ): Promise<E> {
+    let options = { relations: this.getRelations() } as FindOneOptions;
+    if (relations) options.relations = relations;
+
+    if (clientId) {
+      options.where = [{ clientId: clientId, name: name }];
+    }else{
+      options.where = [{ name: name }];
+    }
+
+    const items: E | undefined = await this.repository.findOne(options);
 
     if (!items) {
       throw new NotFoundException(`${this.name} not found`);

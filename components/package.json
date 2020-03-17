@@ -20,8 +20,11 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
+    "@fortawesome/free-regular-svg-icons": "^5.12.1",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@vaadin/vaadin-app-layout": "^2.0.5",
     "@vaadin/vaadin-date-picker": "^4.0.7",
+    "@vaadin/vaadin-dialog": "^2.2.1",
     "@vaadin/vaadin-dropdown-menu": "^1.2.0",
     "@vaadin/vaadin-form-layout": "^2.1.7",
     "@vaadin/vaadin-grid": "^5.5.2",
@@ -29,6 +32,9 @@
     "@vaadin/vaadin-menu-bar": "^1.0.5",
     "@vaadin/vaadin-select": "^2.1.7",
     "@vaadin/vaadin-tabs": "^4.0.0-alpha2",
-    "sirv-cli": "^0.4.4"
+    "html2canvas": "^1.0.0-rc.5",
+    "sirv-cli": "^0.4.4",
+    "svelte-awesome": "^2.2.1",
+    "svelte-preprocess": "^3.4.0"
   }
 }

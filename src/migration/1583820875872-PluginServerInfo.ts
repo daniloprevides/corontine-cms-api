@@ -1,3 +1,6 @@
+import { PageConstants } from './../page-creator/constants';
+import { MenuConstants } from './../menu/constants';
+import { SecurityConstants } from './../security/constants';
 import { PluginConstants } from "./../plugin/constants";
 import { Plugin } from "./../plugin/entity/plugin.entity";
 import { MigrationInterface, QueryRunner, getRepository } from "typeorm";
@@ -39,6 +42,39 @@ export class PluginServerInfo1583820875872 implements MigrationInterface {
       "API for retrieving fields",
       `{serverUrl()}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PluginConstants.FIELDS_ENDPOINT}`
     );    
+    await this.createPlugin(
+      clientCredentialsDefault.id,
+      "Plugins",
+      "API for retrieving plugins",
+      `{serverUrl()}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PluginConstants.PLUGIN_ENDPOINT}`
+    );    
+
+    //Group, user, Menu and Page
+    await this.createPlugin(
+      clientCredentialsDefault.id,
+      "group_api",
+      "API for retrieving groups",
+      `{plugin('authentication').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.GROUP_ENDPOINT}`
+    );
+    await this.createPlugin(
+      clientCredentialsDefault.id,
+      "user_api",
+      "API for retrieving users",
+      `{plugin('authentication').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.USER_ENDPOINT}`
+    );
+    await this.createPlugin(
+      clientCredentialsDefault.id,
+      "menu_api",
+      "API for retrieving menu",
+      `{plugin('menu').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${MenuConstants.MENU_ENDPOINT}`
+    );
+    await this.createPlugin(
+      clientCredentialsDefault.id,
+      "pages_api",
+      "API for retrieving pages",
+      `{plugin('pages').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PageConstants.PAGE_ENDPOINT}`
+    );
+
   }
 
   createPlugin(

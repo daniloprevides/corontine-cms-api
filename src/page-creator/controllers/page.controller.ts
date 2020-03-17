@@ -120,6 +120,30 @@ export class PageController extends GenericController<
     return await super.getById(id, req);
   }
 
+  @Get("/name/:name")
+  @HttpCode(200)
+  @ApiOperation({
+    summary: "Get Page By Name",
+    description: "Get Page by Name"
+  })
+  @ApiOkResponse({
+    type: PageDto,
+    isArray: false,
+    description: "Get Page by Name"
+  })
+  @ApiUnauthorizedResponse({
+    description:
+      "thrown if there is not an authorization token or if authorization token does not have enough privileges"
+  })
+  @NeedScope(PageScopeEnum.PAGE_READ)
+  @UseGuards(SecurityGuard)
+  public async getByName(
+    @Param("name") name: Page["name"],
+    @Req() req: Request
+  ): Promise<PageDto> {
+    return await super.getByName(name, req);
+  }
+
   @Get("/api/data")
   @HttpCode(200)
   @ApiOperation({

@@ -5,6 +5,12 @@ import { IsString, IsOptional, IsBoolean } from "class-validator";
 import { NewComponentsDto } from '../../plugin/dto/new-components.dto';
 
 export class PluginInfoDto { 
+
+  @ApiProperty()
+  @IsString()
+  @Expose()
+  id: Plugin["id"];
+
   @ApiProperty()
   @IsString()
   @Expose()

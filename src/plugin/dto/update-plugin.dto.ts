@@ -1,4 +1,4 @@
-import { ExposeFieldName } from '../../commons/annotations/expose-field-name.decorator';
+import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition } from '../../commons/annotations/expose-field-name.decorator';
 import { Plugin } from "./../entity/plugin.entity";
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
@@ -10,12 +10,14 @@ export class UpdatePluginDto {
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {readonly: true}))
   id: Plugin["id"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   name: Plugin["name"];
 
   @ApiProperty()
@@ -23,6 +25,7 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "textarea"}))
   description: Plugin["description"];
 
   @ApiProperty()
@@ -30,12 +33,14 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   componentsUrl: Plugin["componentsUrl"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   apiUrl: Plugin["apiUrl"];
 
   @ApiProperty()
@@ -43,6 +48,7 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   addUrl: Plugin["addUrl"];
 
   @ApiProperty()
@@ -50,6 +56,7 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   removeUrl: Plugin["removeUrl"];
 
   @ApiProperty()
@@ -57,6 +64,7 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   updateUrl: Plugin["updateUrl"];
 
   @ApiProperty()
@@ -64,6 +72,7 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   getUrl: Plugin["getUrl"];
 
   @ApiProperty()
@@ -71,6 +80,7 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   getAllUrl: Plugin["getAllUrl"];
 
   @ApiProperty()
@@ -78,12 +88,14 @@ export class UpdatePluginDto {
   @Expose()
   @ExposeFieldName
   @IsOptional()
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   accessToken: Plugin["accessToken"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   pluginType: Plugin["pluginType"];
 
   @ApiProperty()
@@ -91,6 +103,7 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   tokenType: Plugin["tokenType"];
 
   @ApiProperty()
@@ -98,12 +111,14 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("checkbox-data"))
   enabled: Plugin["enabled"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
   environment: Plugin["environment"];
 
   @ApiProperty({ type: () => NewComponentsDto })

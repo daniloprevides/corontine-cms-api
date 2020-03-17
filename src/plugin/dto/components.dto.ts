@@ -4,18 +4,25 @@ import { Components } from "./../entity/components.entity";
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional } from "class-validator";
-import { ExposeFieldName } from "../../commons/annotations/expose-field-name.decorator";
-
+import {
+  ExposeFieldName,
+  ExposeFieldNamesForPage,
+  ComponentDefinition,
+  ListComponent
+} from "../../commons/annotations/expose-field-name.decorator";
+@ListComponent("edit-component", "Components")
 export class ComponentsDto {
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 1, visible: false}))
   id: Components["id"];
 
   @ApiProperty()
   @IsString()
   @Expose()
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 2, visible: true}))
   @ExposeFieldName
   name: Components["name"];
 
@@ -23,6 +30,7 @@ export class ComponentsDto {
   @IsString()
   @IsOptional()
   @Expose()
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 3, visible: true}))
   @ExposeFieldName
   description: Components["description"];
 
@@ -31,12 +39,14 @@ export class ComponentsDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 4, visible: false}))
   informationUrl: Components["informationUrl"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 5, visible: false}))
   url: Components["url"];
 
   @ApiProperty({ type: () => FieldsDto })
@@ -47,5 +57,6 @@ export class ComponentsDto {
   @ApiProperty({ type: () => PluginDto })
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("object", {order: 6, visible: false, field: "name"}))
   plugin: PluginDto;
 }

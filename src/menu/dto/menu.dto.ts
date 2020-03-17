@@ -2,8 +2,8 @@ import { Menu } from "./../entity/menu.entity";
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsNumber } from "class-validator";
-import { ExposeFieldName } from "../../commons/annotations/expose-field-name.decorator";
-
+import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition, ListComponent } from "../../commons/annotations/expose-field-name.decorator";
+@ListComponent("edit-menu", "menu_api")
 export class MenuDto {
   @ApiProperty()
   @IsString()
@@ -15,50 +15,24 @@ export class MenuDto {
   @IsString()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   name: Menu["name"];
 
   @ApiProperty()
   @IsString()
   @Expose()
   @ExposeFieldName
-  label: Menu["label"];
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
+  bgColor: Menu["bgColor"];
 
   @ApiProperty()
-  @IsString()
   @Expose()
   @ExposeFieldName
+  content: Menu["content"];
+
+  @ApiProperty()
+  @Expose()
+  @ExposeFieldName
+  @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   requiredPermission: Menu["requiredPermission"];
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  description?: Menu["description"];
-
-  @ApiProperty()
-  @IsNumber()
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  order?: Menu["order"];
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  link: Menu["link"];
-
-  @ApiProperty({ type: () => MenuDto })
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  children: MenuDto[];
-
-  @ApiProperty({ type: () => MenuDto })
-  @IsOptional()
-  @Expose()
-  @ExposeFieldName
-  parent: MenuDto;
 }

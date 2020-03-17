@@ -13,13 +13,21 @@ import { Expose } from "class-transformer";
 )
 @Entity({ name: "page" })
 export class Page extends BasicEntity {
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   @Expose()
   name: string;
 
   @Column('simple-json', { nullable: false })
   @Expose()
   content: any;
+
+  @Column('simple-json', { nullable: true})
+  @Expose()
+  fields: any;
+
+  @Column({ nullable: true , name: "plugin_id"})
+  @Expose()
+  pluginId: string;
 
   @Column({ nullable: true })
   @Expose()

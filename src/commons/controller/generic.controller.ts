@@ -83,6 +83,21 @@ export abstract class GenericController<
     return this.mapper.toDto(await this.service.findById(id, clientId));
   }
 
+  public async getByName(
+    @Param("name") name: string,
+    @Req() req: Request
+  ): Promise<DTO> {
+    if (!req.headers.authorization) throw new UnauthorizedException();
+    const localUrl = req.protocol + "://" + req.get("host");
+    let tokenDto = await this.authenticationService.getTokenInfo(
+      localUrl,
+      req.headers.authorization
+    );
+    let clientId = !this.isCmsCall(tokenDto) ? tokenDto.id : null;
+
+    return this.mapper.toDto(await this.service.findByName(name, clientId));
+  }
+
   async add(
     // eslint-disable-next-line @typescript-eslint/camelcase
     @Body() newItem: NEWDTO,
@@ -119,15 +134,18 @@ export abstract class GenericController<
       req.headers.authorization
     );
 
+    let clientId = tokenDto.id;
     if (!this.isCmsCall(tokenDto)){
       const isValidCall = await this.service.validateParent(tokenDto.id, updateInfo[this.getParentFieldName()]);
       if (!isValidCall){
         throw new NotFoundException();
       }
+    }else{
+      clientId = null;
     }
 
     return this.mapper.toDto(
-      await this.service.update(id, updateInfo, tokenDto.id)
+      await this.service.update(id, updateInfo, clientId)
     );
   }
 
