@@ -6,21 +6,29 @@ import { IsString, IsOptional, IsBoolean } from "class-validator";
 import {
   ExposeFieldName,
   ExposeFieldNamesForPage,
-  ComponentDefinition
+  ComponentDefinition,
+  PageRequirePermission,
+  PermissionsDefinition
 } from "../../commons/annotations/expose-field-name.decorator";
-
+import { FieldsDto } from "./fields.dto";
+import { ScopeEnum } from "../enum/scope.enum";
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.ATTRIBUTES_UPDATE,ScopeEnum.ATTRIBUTES_CREATE, ScopeEnum.ATTRIBUTES_DELETE))
 export class UpdateAttributesDto {
   @ApiProperty()
   @IsString()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text", readonly: true}))
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("input-data", { type: "text", readonly: true })
+  )
   @ExposeFieldName
   id: Attributes["id"];
 
   @ApiProperty()
   @IsString()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("input-data", { type: "text" })
+  )
   @ExposeFieldName
   name: Attributes["name"];
 
@@ -28,13 +36,17 @@ export class UpdateAttributesDto {
   @IsString()
   @IsOptional()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "textarea"}))
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("input-data", { type: "textarea" })
+  )
   @ExposeFieldName
   description?: Attributes["description"];
 
   @ApiProperty()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text", readonly: true}))
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("input-data", { type: "text", readonly: true })
+  )
   @ExposeFieldName
   value: Attributes["value"];
 
@@ -43,14 +55,14 @@ export class UpdateAttributesDto {
   @ExposeFieldName
   @ExposeFieldNamesForPage(new ComponentDefinition("checkbox-data"))
   @ExposeFieldName
-  applyAfterSetInComposer: Attributes["applyAfterSetInComposer"];
+  applyAfterSetInComposer?: Attributes["applyAfterSetInComposer"];
 
   @ApiProperty()
   @ExposeFieldName
   @ExposeFieldNamesForPage(new ComponentDefinition("checkbox-data"))
   @IsOptional()
   @ExposeFieldName
-  removeWhenFalse: Attributes["removeWhenFalse"];
+  removeWhenFalse?: Attributes["removeWhenFalse"];
 
   @ApiProperty()
   @ExposeFieldName
@@ -64,14 +76,16 @@ export class UpdateAttributesDto {
   @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   @ExposeFieldName
   @IsOptional()
-  defaultValue: Attributes["defaultValue"];
+  defaultValue?: Attributes["defaultValue"];
 
   @ApiProperty()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("input-data",{readonly: true}))
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("input-data", { readonly: true })
+  )
   @ExposeFieldName
   @IsOptional()
-  possibleValues: Attributes["possibleValues"];
+  possibleValues?: Attributes["possibleValues"];
 
   @ApiProperty()
   @IsString()
@@ -86,11 +100,17 @@ export class UpdateAttributesDto {
   @ExposeFieldName
   @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   @ExposeFieldName
-  attributeType: Attributes["attributeType"];
+  attributeType?: Attributes["attributeType"];
 
-  @ApiProperty({ type: () => String })
+  @ApiProperty({ type: () => FieldsDto })
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("select-data", {api: "Fields", field: "id", displayLabel: "name"}))
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("select-data", {
+      api: "Fields",
+      field: "id",
+      displayLabel: "name"
+    })
+  )
   @ExposeFieldName
-  field: String;
+  field: FieldsDto;
 }

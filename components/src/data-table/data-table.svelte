@@ -13,6 +13,19 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
     crossorigin="anonymous" />
 </head>
+
+{#if crud}
+  <div class="form-page-footer">
+    <button
+      class="btn btn-primary"
+      type="button"
+      on:click={event => {
+        model.createCrudAddModal(modal);
+      }}>
+      New
+    </button>
+  </div>
+{/if}
 <table class="table" bind:this={component}>
   <thead>
     <tr>
@@ -41,11 +54,13 @@
   </tbody>
 </table>
 
-{#if pagination}
-  <ul class="pagination pagination-lg">
+<vaadin-dialog aria-label="polymer templates" bind:this={modal} />
+
+{#if pagination && !itemmodel}
+  <ul class="pagination pagination-sm">
     <li class="page-item ">
       <span
-        class="page-link {!pageData.length ||  ((model.params.page - 1) < 1 )? 'disabled' : ''}"
+        class="page-link {!pageData.length || model.params.page - 1 < 1 ? 'disabled' : ''}"
         on:click={ev => {
           goTo(model.params.page - 1, ev);
         }}>
@@ -53,7 +68,7 @@
       </span>
     </li>
     {#each pageData as page}
-      <li class="page-item {page === model.params.page ? "active" : ""}">
+      <li class="page-item {page === model.params.page ? 'active' : ''}">
         <span
           class="page-link"
           on:click={ev => {
@@ -65,7 +80,7 @@
     {/each}
     <li class="page-item">
       <span
-        class="page-link {!pageData.length  ||  ((model.params.page + 1) > pages )? 'disabled' : ''}"
+        class="page-link {!pageData.length || model.params.page + 1 > pages ? 'disabled' : ''}"
         on:click={ev => {
           goTo(model.params.page + 1, ev);
         }}>

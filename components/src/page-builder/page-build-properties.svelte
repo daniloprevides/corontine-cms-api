@@ -4,10 +4,12 @@
   export let pages = [];
   export let apiSources = [];
   export let fields = [];
+  export let permissions = [];
   export let fieldNames = [];
   export let applyValue = (id, attributeName, value, type) => {};
   export let apiChanged = (apiId, type) => {};
   export let fieldChanged = fieldName => {};
+  export let applyPermission = permission => {};
   export let eventSelected = (event, path) => {};
   export let applyDefinition = fieldList => {};
   export let innerApiChanged = (item, api, fields) => {};
@@ -40,6 +42,51 @@
         class="input-property-value" />
     </td>
   </tr>
+   <tr>
+    <td>View Permission:</td>
+    <td>
+      <select
+        class="input-property-select"
+        bind:value={pageModel.permissionView}
+        on:change={event => {
+        }}>
+        <option value="">Choose</option>
+        {#each permissions as permission}
+          <option value={permission}>{permission}</option>
+        {/each}
+      </select>
+    </td>
+  </tr>
+   <tr>
+    <td>Add Permission:</td>
+    <td>
+      <select
+        class="input-property-select"
+        bind:value={pageModel.permissionAdd}
+        on:change={event => {
+        }}>
+        <option value="">Choose</option>
+        {#each permissions as permission}
+          <option value={permission}>{permission}</option>
+        {/each}
+      </select>
+    </td>
+  </tr>
+   <tr>
+    <td>Delete Permission:</td>
+    <td>
+      <select
+        class="input-property-select"
+        bind:value={pageModel.permissionDelete}
+        on:change={event => {
+        }}>
+        <option value="">Choose</option>
+        {#each permissions as permission}
+          <option value={permission}>{permission}</option>
+        {/each}
+      </select>
+    </td>
+  </tr>
 
 </table>
 
@@ -62,6 +109,7 @@
       </select>
     </td>
   </tr>
+ 
 
 </table>
 

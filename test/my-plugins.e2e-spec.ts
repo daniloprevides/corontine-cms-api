@@ -340,9 +340,11 @@ describe("My Plugin (e2e)", () => {
 
     await createCredentialWithPermissions("all-plugins-3","password",[ScopeEnum.TOKEN_INFO, PluginScopeEnum.PLUGIN_CREATE, PluginScopeEnum.CMS]);
     await createCredentialWithPermissions("my-plugins-3","password",[ScopeEnum.TOKEN_INFO, PluginScopeEnum.PLUGIN_CREATE, PluginScopeEnum.PLUGIN_READ]);
+    await createCredentialWithPermissions("read-only-1","password",[ScopeEnum.TOKEN_INFO, PluginScopeEnum.PLUGIN_READ]);
 
     const allPluginsPermission = await getUserClientCredentials("all-plugins-3" as any);
     const myPluginsPermission = await getUserClientCredentials("my-plugins-3" as any);
+    const readOnlyPermission = await getUserClientCredentials("read-only-1" as any);
 
     return defaultGrantRequest(allPluginsPermission).then(res => {
       return createRequest(plugin, res.body.accessToken, pluginUrl)
@@ -353,10 +355,13 @@ describe("My Plugin (e2e)", () => {
             return createRequest(myPlugin, myPluginRes.body.accessToken, pluginUrl)
             .expect(201)
             .then(myPluginResponse => {
-              return getRequest( myPluginRes.body.accessToken,`${pluginUrl}/${allPluginsResponse.body.id}`)
-             .expect(404)
-              .then(dataResponse => {
-                done();
+              defaultGrantRequest(readOnlyPermission).then(data => {
+                return getRequest( data.body.accessToken,`${pluginUrl}/${allPluginsResponse.body.id}`)
+                .expect(404)
+                 .then(dataResponse => {
+                   console.log(dataResponse.body);
+                   done();
+                 })   
               })
             });
           });

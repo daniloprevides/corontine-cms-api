@@ -7,9 +7,13 @@ import {
   ExposeFieldName,
   ExposeFieldNamesForPage,
   ComponentDefinition,
-  ListComponent
+  ListComponent,
+  PageRequirePermission,
+  PermissionsDefinition
 } from "../../commons/annotations/expose-field-name.decorator";
+import { ScopeEnum } from "../enum/scope.enum";
 @ListComponent("edit-plugin", "Plugins")
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.PLUGIN_READ,ScopeEnum.PLUGIN_CREATE, ScopeEnum.PLUGIN_DELETE))
 export class PluginDto {
   @ApiProperty()
   @IsString()

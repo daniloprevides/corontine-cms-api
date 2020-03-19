@@ -1,17 +1,17 @@
 import {
   ExposeFieldName,
   ExposeFieldNamesForPage,
-  ComponentDefinition
+  ComponentDefinition,
+  PageRequirePermission,
+  PermissionsDefinition
 } from "../../commons/annotations/expose-field-name.decorator";
-import { UpdatePluginDto } from "./update-plugin.dto";
-import { NewPluginDto } from "./new-plugin.dto";
 import { NewFieldsDto } from "./new-fields.dto";
 import { Components } from "./../entity/components.entity";
-import { NewAttributesDto } from "./new-attributes.dto";
-import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional } from "class-validator";
-
+import { PluginDto } from "./plugin.dto";
+import { ScopeEnum } from "../enum/scope.enum";
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.COMPONENTS_CREATE,ScopeEnum.COMPONENTS_CREATE, ScopeEnum.COMPONENTS_DELETE))
 export class NewComponentsDto {
   @ApiProperty()
   @IsString()
@@ -50,7 +50,7 @@ export class NewComponentsDto {
   @ExposeFieldName
   fields: NewFieldsDto[];
 
-  @ApiProperty({ type: () => String })
+  @ApiProperty({ type: () => PluginDto })
   @ExposeFieldNamesForPage(
     new ComponentDefinition("select-data", {
       api: "Plugins",
@@ -59,5 +59,5 @@ export class NewComponentsDto {
     })
   )
   @ExposeFieldName
-  plugin: string;
+  plugin: PluginDto;
 }

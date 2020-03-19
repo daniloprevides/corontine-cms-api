@@ -7,6 +7,7 @@ export let events = [];
 export let fields = [];
 export let fieldNames = [];
 export let pages = [];
+export let permissions = [];
 export let selected = null;
 
 let selectedItemForAttributes = null;
@@ -46,6 +47,9 @@ export class PageModel {
   apiData: any;
   apiType: string;
   validate: boolean = true;
+  permissionView: string;
+  permissionAdd: string;
+  permissionDelete: string;
 
   constructor(
     public name: string,
@@ -161,6 +165,9 @@ export class PageBuilderModel {
   selectedId; //Holds the id of the current selected component inside page builder
   pageModel: PageModel = {
     validate: true,
+    permissionView: "",
+    permissionAdd: "",
+    permissionDelete: "",
     api: "",
     apiData: null,
     apiType: null,
@@ -651,6 +658,25 @@ export class PageBuilderModel {
           });
         });
 
+        if (!this.pageModel.permissionView.length ){
+          errorMessages.push(
+            `A permission to view this page must be selected`
+          );
+        }
+
+        if (!this.pageModel.permissionAdd.length ){
+          errorMessages.push(
+            `A permission to create a new page must be selected`
+          );
+        }
+
+        if (!this.pageModel.permissionDelete.length ){
+          errorMessages.push(
+            `A permission to delete this page must be selected`
+          );
+        }
+
+
         if (errorMessages.length) {
           if (this.pageModel.errors.name != null) {
             this.pageModel.errors.name = this.pageModel.errors.name.replace(
@@ -661,7 +687,7 @@ export class PageBuilderModel {
 
           this.pageModel.errors.components = errorMessages.join("\n");
           return resolve(false);
-        }
+        }        
 
         if (this.pageModel.errors.name != null) {
           this.pageModel.errors.name = this.pageModel.errors.name.replace(
@@ -802,7 +828,7 @@ export class PageBuilderModel {
 const model = new PageBuilderModel();
 
 $: {
-  if (selected && components && buildPropertiesComponent && !loaded) {
+  if (selected && components && buildPropertiesComponent && !loaded && (permissions.length)) {
     console.debug(`Page edit mode is selected`, selected);
     pageMode = "edit";
     try {
@@ -812,6 +838,9 @@ $: {
       model.pageModel.apiData = selected.content.apiData;
       model.pageModel.apiType = selected.content.apiType;
       model.pageModel.validate = selected.content.validate;
+      model.pageModel.permissionView = selected.content.permissionView;
+      model.pageModel.permissionAdd = selected.content.permissionAdd;
+      model.pageModel.permissionDelete = selected.content.permissionDelete;
 
       //Adding api load to end of queue
       setTimeout(async () => {
@@ -850,8 +879,13 @@ $: {
                   a.name,
                   modelComponent.attributes
                 );
-                modelComponent.page = a.value.id;
-                console.log("Page applied", modelComponent);
+
+                if (a && a.value){
+                  modelComponent.page = a.value.id;
+                  console.log("Page applied", modelComponent);
+                }else{
+                  console.debug(`Attribute page not found or is not a model`,a)
+                }
               }
 
               //Applying api
@@ -862,7 +896,12 @@ $: {
                   modelComponent.api
                 );
                 modelComponent.api = a.value.id;
-                console.log("Api applied", modelComponent);
+                if (a && a.value){
+                  console.log("Api applied", modelComponent);
+                }else{
+                  console.debug("Api attribute not found or is not a model", a);
+                }
+
               }
 
 

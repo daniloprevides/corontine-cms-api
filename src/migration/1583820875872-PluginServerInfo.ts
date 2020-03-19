@@ -75,6 +75,13 @@ export class PluginServerInfo1583820875872 implements MigrationInterface {
       `{plugin('pages').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PageConstants.PAGE_ENDPOINT}`
     );
 
+    await this.createPlugin(
+      clientCredentialsDefault.id,
+      "scopes_api",
+      "API for retrieving Scopes",
+      `{plugin('pages').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.SCOPE_ENDPOINT}`
+    );
+
   }
 
   createPlugin(

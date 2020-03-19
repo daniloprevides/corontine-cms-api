@@ -4,8 +4,10 @@ import { NewFieldsDto } from "./new-fields.dto";
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional } from "class-validator";
-import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition, ListComponent } from "../../commons/annotations/expose-field-name.decorator";
+import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition, ListComponent, PageRequirePermission, PermissionsDefinition } from "../../commons/annotations/expose-field-name.decorator";
+import { ScopeEnum } from "../enum/scope.enum";
 @ListComponent("edit-event", "Events")
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.EVENTS_READ,ScopeEnum.EVENTS_CREATE, ScopeEnum.EVENTS_DELETE))
 export class EventsDto {
   @ApiProperty()
   @IsString()

@@ -3,10 +3,12 @@ import { Attributes } from "./../entity/attributes.entity";
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsBoolean } from "class-validator";
-import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition } from "../../commons/annotations/expose-field-name.decorator";
+import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition, PageRequirePermission, PermissionsDefinition } from "../../commons/annotations/expose-field-name.decorator";
 import { FieldTypeEnum } from "../enum/field-type.enum";
 import { AttributeTypeEnum } from "../enum/attribute-type.enum";
-
+import { FieldsDto } from "./fields.dto";
+import { ScopeEnum } from "../enum/scope.enum";
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.ATTRIBUTES_CREATE,ScopeEnum.ATTRIBUTES_CREATE, ScopeEnum.ATTRIBUTES_DELETE))
 export class NewAttributesDto {
   @ApiProperty()
   @IsString()
@@ -29,7 +31,7 @@ export class NewAttributesDto {
   @ExposeFieldNamesForPage(new ComponentDefinition("checkbox-data"))
   @IsOptional()
   @ExposeFieldName
-  removeWhenFalse: Attributes["removeWhenFalse"];
+  removeWhenFalse?: Attributes["removeWhenFalse"];
 
   @ApiProperty()
   @ExposeFieldName
@@ -48,7 +50,7 @@ export class NewAttributesDto {
   @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   @ExposeFieldName
   @IsOptional()
-  possibleValues: Attributes["possibleValues"];
+  possibleValues?: Attributes["possibleValues"];
 
   @ApiProperty()
   @IsString()
@@ -65,7 +67,7 @@ export class NewAttributesDto {
   @IsOptional()
   @ExposeFieldNamesForPage(new ComponentDefinition("checkbox-data"))
   @ExposeFieldName
-  applyAfterSetInComposer: Attributes["applyAfterSetInComposer"];
+  applyAfterSetInComposer?: Attributes["applyAfterSetInComposer"];
 
   @ApiProperty()
   @IsString()
@@ -76,11 +78,11 @@ export class NewAttributesDto {
     })
   }))
   @ExposeFieldName
-  attributeType: Attributes["attributeType"];
+  attributeType?: Attributes["attributeType"];
 
-  @ApiProperty({ type: () => String })
+  @ApiProperty({ type: () => FieldsDto })
   @IsOptional()
   @ExposeFieldName
   @ExposeFieldNamesForPage(new ComponentDefinition("select-data", {api: "Fields", field: "id", displayLabel: "name"}))
-  field: String;
+  field?: FieldsDto;
 }

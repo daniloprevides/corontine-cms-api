@@ -43,8 +43,13 @@ import { FieldNamesDto } from '../../commons/dto/field-names-dto';
 import Request = require('request');
 import { ScopeRepository } from '../repository/scope.repository';
 import { Scope } from '../entity/scope.entity';
+import { NewScopeDTO } from '../dto/new-scope.dto';
+import { UpdateScopeDTO } from '../dto/update-scope.dto';
+import { ScopeDTO } from '../dto/scope.dto';
+import { ScopeMapper } from '../mapper/scope.mapper';
+import { ScopeService } from '../service/scope.service';
 
-@ApiTags("Group")
+@ApiTags("Scopes")
 @ApiBearerAuth()
 @ApiHeader({
   name: "authorization",
@@ -52,145 +57,116 @@ import { Scope } from '../entity/scope.entity';
   description: "Bearer Authorization token"
 })
 @Controller(
-  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.GROUP_ENDPOINT}`
+  `${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.SCOPE_ENDPOINT}`
 )
 
-export class GroupController extends GenericController<
-Group,
-NewGroupDTO,
-UpdateGroupDTO,
-GroupDTO,
-GroupMapper,
-GroupService
+export class ScopeController extends GenericController<
+Scope,
+NewScopeDTO,
+UpdateScopeDTO,
+ScopeDTO,
+ScopeMapper,
+ScopeService
 > {
 
 constructor(
-  service: GroupService,
-  groupsMapper: GroupMapper,
+  service: ScopeService,
+  ScopesMapper: ScopeMapper,
   authenticationService:AuthenticationService,
   private scopeRepository: ScopeRepository
 ) {
-  super(service, groupsMapper, authenticationService, "Group");
+  super(service, ScopesMapper, authenticationService, "Scope");
 }
 
   @Get()
   @HttpCode(200)
-  @ApiOperation({ summary: "Get Groups", description: "Get all Groups" })
+  @ApiOperation({ summary: "Get Scopes", description: "Get all Scopes" })
   @ApiOkResponse({
-    type: GroupDTO,
+    type: ScopeDTO,
     isArray: true,
-    description: "All groups"
+    description: "All Scopes"
   })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  @NeedScope(ScopeEnum.GROUP_READ)
+  @NeedScope(ScopeEnum.SCOPE_READ)
   @UseGuards(ScopeGuard)
   public async getAll(
     @Query() queryParams: FindParamsDto,
     @Req() req: Request
-  ): Promise<GroupDTO[]> {
+  ): Promise<ScopeDTO[]> {
     return super.getAll(queryParams, req);
   }
 
   @Get(":id")
   @HttpCode(200)
   @ApiOperation({
-    summary: "Get Group By Id",
-    description: "Get Group by Id"
+    summary: "Get Scope By Id",
+    description: "Get Scope by Id"
   })
   @ApiOkResponse({
-    type: GroupDTO,
+    type: ScopeDTO,
     isArray: false,
-    description: "Get Group by Id"
+    description: "Get Scope by Id"
   })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  @NeedScope(ScopeEnum.CLIENT_CREDENTIALS_READ)
+  @NeedScope(ScopeEnum.SCOPE_READ)
   @UseGuards(ScopeGuard)
   public async getById(
-    @Param("id") id: Group["id"],
+    @Param("id") id: Scope["id"],
     @Req() req: Request
-  ): Promise<GroupDTO> {
+  ): Promise<ScopeDTO> {
     return await super.getById(id, req);
   }
 
   @Post()
   @HttpCode(201)
   @ApiCreatedResponse({
-    type: GroupDTO,
-    description: "Group created"
+    type: ScopeDTO,
+    description: "Scope created"
   })
-  @ApiOperation({ summary: "Add Group", description: "Creates a new group" })
-  @ApiBody({ type: NewGroupDTO })
+  @ApiOperation({ summary: "Add Scope", description: "Creates a new Scope" })
+  @ApiBody({ type: NewScopeDTO })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have needed scopes"
   })
-  @NeedScope(ScopeEnum.GROUP_CREATE)
+  @NeedScope(ScopeEnum.SCOPE_CREATE)
   @UseGuards(ScopeGuard)
   async add(
     // eslint-disable-next-line @typescript-eslint/camelcase
-    @Body() newItem: NewGroupDTO,
+    @Body() newItem: NewScopeDTO,
     @Req() req: Request
-  ): Promise<GroupDTO> {
-    let scopes = new Array<Scope>();
-    if (newItem.scopes){
-      for (let scope of newItem.scopes){
-        let currentScope = await this.scopeRepository.findOne({where: {name: scope.name}});
-        if (!currentScope){
-          throw new NotFoundException();
-        }
-        scopes.push(currentScope);
-      }
-    }
-    return await super.add({
-      name: newItem.name,
-      description: newItem.description,
-      scopes: scopes
-    }, req);
+  ): Promise<ScopeDTO> {
+    return await super.add( newItem, req);
   }
 
   @Put(":id")
   @HttpCode(200)
-  @ApiOkResponse({ type: GroupDTO })
+  @ApiOkResponse({ type: ScopeDTO })
   @ApiOperation({
-    summary: "Update Group",
-    description: "Updates the Group By ID"
+    summary: "Update Scope",
+    description: "Updates the Scope By ID"
   })
-  @ApiNotFoundResponse({ description: "Group Not Found" })
+  @ApiNotFoundResponse({ description: "Scope Not Found" })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  @NeedScope(ScopeEnum.GROUP_UPDATE)
+  @NeedScope(ScopeEnum.SCOPE_UPDATE)
   @UseGuards(ScopeGuard)
   public async update(
-    @Param("id") id: Group["id"],
-    @Body() updateInfo: UpdateGroupDTO,
+    @Param("id") id: Scope["id"],
+    @Body() updateInfo: UpdateScopeDTO,
     @Req() req: Request
 
-  ): Promise<GroupDTO> {
-
-    let scopes = new Array<Scope>();
-    if (updateInfo.scopes){
-      for (let scope of updateInfo.scopes){
-        let currentScope = await this.scopeRepository.findOne({where: {name: scope.name}});
-        if (!currentScope){
-          throw new NotFoundException();
-        }
-        scopes.push(currentScope);
-      }
-    }
-    return await super.update(id, {
-      id: id,
-      name: updateInfo.name,
-      description: updateInfo.description,
-      scopes: scopes
-    }, req);
+  ): Promise<ScopeDTO> {
+   
+    return await super.update(id, updateInfo, req);
   }
 
   @Delete(":id")
@@ -199,21 +175,21 @@ constructor(
     name: "id",
     type: Number,
     required: true,
-    description: "Group id"
+    description: "Scope id"
   })
   @ApiOperation({
-    summary: "Delete Group",
-    description: "Deletes Group By ID"
+    summary: "Delete Scope",
+    description: "Deletes Scope By ID"
   })
-  @ApiNotFoundResponse({ description: "Group Not Found" })
+  @ApiNotFoundResponse({ description: "Scope Not Found" })
   @ApiUnauthorizedResponse({
     description:
       "thrown if there is not an authorization token or if authorization token does not have enough privileges"
   })
-  @NeedScope(ScopeEnum.GROUP_DELETE)
+  @NeedScope(ScopeEnum.SCOPE_DELETE)
   @UseGuards(ScopeGuard)
   public async delete(
-    @Param("id") id: Group["id"],
+    @Param("id") id: Scope["id"],
     @Req() req: Request
   ): Promise<void> {
     return await super.delete(id, req);
@@ -226,6 +202,6 @@ constructor(
     description: "Get Field Names"
   })
   public async getFieldNames(object:any): Promise<FieldNamesDto> {
-    return await super.getFieldNames(new NewGroupDTO(), new UpdateGroupDTO(), new GroupDTO());
+    return await super.getFieldNames(new NewScopeDTO(), new UpdateGroupDTO(), new GroupDTO());
   }
 }

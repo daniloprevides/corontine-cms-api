@@ -2,14 +2,14 @@ import { Group } from './group.entity';
 import { AuthorizationCode } from './authorization-code.entity';
 import { ScopeEnum } from './../enum/scope.enum';
 import { ClientCredentials } from './client-credentials.entity';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinColumn } from 'typeorm';
 import { Audit } from '../../commons/entity';
 import { Expose } from 'class-transformer';
+import { BasicEntity } from '../../commons/entity/basic.entity';
 
 @Entity({name: 'scope'})
-export class Scope extends Audit {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class Scope extends BasicEntity {
+
 
   @Column({
     type: 'varchar',
@@ -44,6 +44,7 @@ export class Scope extends Audit {
     (group: Group) => group.scopes,
   )
   @Expose()
+  @JoinColumn()
   groups: Group[];
 
 }

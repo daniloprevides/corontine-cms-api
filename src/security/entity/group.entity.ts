@@ -11,6 +11,7 @@ import { Expose } from "class-transformer";
 import { User } from "./user.entity";
 import { RequiredScopes } from "../../commons/annotations/entity-scope.decorator";
 import { ScopeEnum } from "../enum/scope.enum";
+import { BasicEntity } from "../../commons/entity/basic.entity";
 
 @RequiredScopes(
   "group",
@@ -20,10 +21,8 @@ import { ScopeEnum } from "../enum/scope.enum";
   ScopeEnum.GROUP_DELETE
 )
 @Entity({ name: "group" })
-export class Group extends Audit {
-  @PrimaryGeneratedColumn("uuid")
-  @Expose()
-  id: string;
+export class Group extends BasicEntity {
+
 
   @Column({
     nullable: false,

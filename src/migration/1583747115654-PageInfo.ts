@@ -239,7 +239,43 @@ export class PageInfo1583747115654 implements MigrationInterface {
             name: "relations",
             description: "A list of table names , separated by space, for relationship",
             type: FieldTypeEnum.STRING
-          } as Attributes,          
+          } as Attributes,  
+          {
+            clientId: pluginBase?.clientId,
+            attributeType: AttributeTypeEnum.PROPERTY,
+            defaultValue: null,
+            required: false,
+            name: "sourcefield",
+            description: "The name of field to filter",
+            type: FieldTypeEnum.STRING
+          } as Attributes,     
+          {
+            clientId: pluginBase?.clientId,
+            attributeType: AttributeTypeEnum.PROPERTY,
+            defaultValue: null,
+            required: false,
+            name: "pageAdd",
+            description: "The name of page to add crud",
+            type: FieldTypeEnum.STRING
+          } as Attributes, 
+          {
+            clientId: pluginBase?.clientId,
+            attributeType: AttributeTypeEnum.PROPERTY,
+            defaultValue: null,
+            required: false,
+            name: "targetfield",
+            description: "The target field name for a new value (foin field)",
+            type: FieldTypeEnum.STRING
+          } as Attributes,               
+          {
+            clientId: pluginBase?.clientId,
+            attributeType: AttributeTypeEnum.PROPERTY,
+            defaultValue: null,
+            required: false,
+            name: "sourcefield",
+            description: "The name of field to filter",
+            type: FieldTypeEnum.STRING
+          } as Attributes,                                         
           {
             clientId: pluginBase?.clientId,
             attributeType: AttributeTypeEnum.ATTRIBUTE,
@@ -249,6 +285,15 @@ export class PageInfo1583747115654 implements MigrationInterface {
             description: "Allow filtering columns",
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
+          {
+            clientId: pluginBase?.clientId,
+            attributeType: AttributeTypeEnum.PROPERTY,
+            defaultValue: { val: false },
+            required: false,
+            name: "crud",
+            description: "Enable crud, needs sourcefield, pageAdd and pageEdit",
+            type: FieldTypeEnum.BOOLEAN
+          } as Attributes,          
           {
             clientId: pluginBase?.clientId,
             attributeType: AttributeTypeEnum.ATTRIBUTE,

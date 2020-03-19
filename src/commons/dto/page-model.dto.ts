@@ -1,3 +1,4 @@
+import { PermissionsDefinition } from "../annotations/expose-field-name.decorator";
 
 export class Attribute {
     id: string;
@@ -30,6 +31,9 @@ export class Attribute {
     apiData: any;
     apiType: string;
     validate: boolean = true;
+    permissionView: string;
+    permissionAdd: string;
+    permissionDelete: string;
   
     constructor(
       public name: string,

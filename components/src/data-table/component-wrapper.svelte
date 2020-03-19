@@ -16,3 +16,8 @@
 {#if name === 'object'}
   <div>{value[properties.field] === null  ? "" : value[properties.field]}</div>
 {/if}
+
+{#if !name}
+  <div>{value === null ? "" : value}</div>
+{/if}
+

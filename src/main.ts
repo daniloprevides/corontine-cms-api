@@ -39,7 +39,7 @@ async function bootstrap() {
 
   (app as any).setBaseViewsDir(join(__dirname, "..", "views"));
   (app as any).setViewEngine("hbs");
-  (app as any).useStaticAssets(join(__dirname, "../../views/public"), {
+  (app as any).useStaticAssets(join(__dirname, "../views/public"), {
     index: false,
     redirect: false,
     prefix: "/components"

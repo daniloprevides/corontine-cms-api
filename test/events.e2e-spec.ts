@@ -256,8 +256,7 @@ describe("Events (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,
@@ -361,8 +360,7 @@ describe("Events (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,
@@ -479,8 +477,7 @@ describe("Events (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,
@@ -589,8 +586,7 @@ describe("Events (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,
@@ -701,8 +697,7 @@ describe("Events (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,

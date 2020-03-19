@@ -241,8 +241,7 @@ describe("Fields (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
 
     return (
@@ -250,7 +249,6 @@ describe("Fields (e2e)", () => {
         // .expect(201)
         .then(async data => {
           expect(data.body.name).toBe(newField.name);
-          expect(data.body.component).toStrictEqual(newField.component);
 
           done();
         })
@@ -329,7 +327,6 @@ describe("Fields (e2e)", () => {
     let newField = {
       name: uuidv4(),
       description: "description",
-      component: component.id,
       attributes: [
         {
           name: uuidv4(),
@@ -343,7 +340,6 @@ describe("Fields (e2e)", () => {
       .expect(201)
       .then(async data => {
         expect(data.body.name).toBe(newField.name);
-        expect(data.body.component).toStrictEqual(newField.component);
         expect(data.body.attributes[0].name).toStrictEqual(
           newField.attributes[0].name
         );
@@ -427,8 +423,7 @@ describe("Fields (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,
@@ -448,7 +443,6 @@ describe("Fields (e2e)", () => {
       .expect(200)
       .then(async data => {
         expect(data.body.name).toBe(field.name);
-        expect(data.body.component).toStrictEqual(field.component);
         expect(data.body.attributes[0].name).toStrictEqual(
           field.attributes[0].name
         );
@@ -531,8 +525,7 @@ describe("Fields (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,
@@ -619,8 +612,7 @@ describe("Fields (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,
@@ -710,8 +702,7 @@ describe("Fields (e2e)", () => {
     const component = newComponentResponse.body as ComponentsDto;
     let newField = {
       name: uuidv4(),
-      description: "description",
-      component: component.id
+      description: "description"
     } as NewFieldsDto;
     const newFieldResponse = await createRequest(
       newField,

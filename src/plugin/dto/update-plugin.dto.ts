@@ -1,10 +1,11 @@
-import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition } from '../../commons/annotations/expose-field-name.decorator';
+import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition, PageRequirePermission, PermissionsDefinition } from '../../commons/annotations/expose-field-name.decorator';
 import { Plugin } from "./../entity/plugin.entity";
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsBoolean } from "class-validator";
 import { NewComponentsDto } from "./new-components.dto";
-
+import { ScopeEnum } from '../enum/scope.enum';
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.PLUGIN_UPDATE,ScopeEnum.PLUGIN_CREATE, ScopeEnum.PLUGIN_DELETE))
 export class UpdatePluginDto {
   @ApiProperty()
   @IsString()
@@ -125,5 +126,32 @@ export class UpdatePluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("table-data", {
+      sourcefield: "components",
+      api: "Components",
+      page: "edit-component",
+      sortable: true,
+      filterable: true,
+      size: 10,
+      pageAdd: "add-component",
+      targetfield: "plugin",
+      isArray: true,
+      crud: true,
+      fieldDefinition: [
+        {
+          name: "name",
+          value: "Name",
+          order: 1,
+          visible: true,
+          component: "label"
+        }
+      ]
+    })
+  )
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("title-data", {
+      text: "Scopes", position: "center", description: "Components attached",  titleType: "subtitle"
+  }))
   components: NewComponentsDto[];
 }

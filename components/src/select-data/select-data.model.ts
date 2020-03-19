@@ -23,20 +23,6 @@ let selectedValue;
 let component;
 let errorMessage;
 
-$: {
-  // if (options && data != "" && field){
-  //   alert(`id: ${data} of ${options.map(o => o[field]).join(",")}`);
-  //   let currentItem = options.find(d => d[field] === data);
-  //   alert(JSON.stringify(currentItem));
-  // }
-  // if (options && data != "" && field){
-  //   let currentItem = options.find(d => d[field] === data);
-  //   //alert(currentItem);
-  //   if (currentItem){
-  //     //alert(currentItem);
-  //   }
-  // }
-}
 
 export class SelectDataModel {
   changed(value) {

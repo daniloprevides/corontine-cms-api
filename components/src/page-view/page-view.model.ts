@@ -2,12 +2,26 @@ import { PageParser } from "./page-parser";
 
 //Data for building page
 export let data;
-//Data for selected item
+export let permissions = null;
+let loading = false;
+let dialogComponent;
+let permissionDenied = false;
+let mainComponent;
 
 const isObject = (val) => {
   if (val === null) { return false;}
   return ( (typeof val === 'function') || (typeof val === 'object') );
 }
+
+export const applyValuesChanged = (item => {
+  setTimeout(() => {
+    component.childNodes[0]
+      .querySelectorAll(".dynamic-element")
+      .forEach(async el => {
+        el.itemmodel = item;
+      });
+  }, 100);
+})
 
 export const applyValues = item => {
   model.model = item;
@@ -36,8 +50,12 @@ export const applyValues = item => {
           }
         }
 
+        if (value != undefined){
+          el.data = value;
+        }
 
-        el.data = value;
+        el.itemmodel = model.model;
+        el.permissions = permissions;
       });
   }, 100);
 };
@@ -77,6 +95,11 @@ export const getDataForSave = () => {
 };
 
 export class PageViewModel {
+  
+  checkPermissionsFor(permissions: Array<string>, neededPermission: string) : boolean{
+    return (permissions.indexOf(neededPermission) >= 0);
+  }
+
   parser = new PageParser();
   properties: any;
   api: any;
@@ -192,6 +215,45 @@ export class PageViewModel {
     });
   }
 
+  showMessage(text:string , ok:Function = () => {}, cancel:Function = () => {}, showCancel = false){
+    customElements.whenDefined('vaadin-dialog').then(() => {
+      dialogComponent.renderer = function(root, dialog) {
+        // Check if there is a DOM generated with the previous renderer call to update its content instead of recreation
+        if (root.firstElementChild) {
+          return;
+        }
+        const div = window.document.createElement('div');
+        div.textContent = text;
+  
+        const br = window.document.createElement('br');
+  
+        const okButton = window.document.createElement('vaadin-button');
+        okButton.setAttribute('theme', 'primary');
+        okButton.textContent = 'OK';
+        okButton.setAttribute('style', 'margin-right: 1em');
+        okButton.addEventListener('click', function() {
+          ok();
+          dialog.opened = false;
+        });
+  
+        const cancelButton = window.document.createElement('vaadin-button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.addEventListener('click', function() {
+          cancel()
+          dialog.opened = false;
+        });
+  
+        root.appendChild(div);
+        root.appendChild(br);
+        root.appendChild(okButton);
+        if (showCancel)
+          root.appendChild(cancelButton);
+      };
+      dialogComponent.opened = true;
+    })
+
+  }
+
   private async applyDefaultEvents(
     id: string,
     selectedItem: any,
@@ -214,7 +276,7 @@ export class PageViewModel {
 
     
     element.addEventListener(selectedItem.component.defaultEvent, data => {
-      console.debug("Event selected " + selectedItem.component.defaultEvent , data.detail);
+      console.debug("Event selected " + selectedItem.component.defaultEvent , data.detail);      
       let value = data.detail;
       if (selectedItem.component.defaultEventPath) {
         value = data.detail[selectedItem.component.defaultEventPath];
@@ -235,6 +297,8 @@ export class PageViewModel {
         this.model[selectedItem.fieldName] = value;
       }
 
+      console.debug("Applying model changes to all fields");
+      applyValuesChanged(this.model);
       console.debug("Model", this.model);
     });
   }
@@ -271,7 +335,7 @@ export class PageViewModel {
   }
 
   dispatchEvent(name, detail) {
-    component.dispatchEvent(
+    mainComponent.dispatchEvent(
       new CustomEvent(name, {
         composed: true,
         cancelable: false,
@@ -284,9 +348,29 @@ export class PageViewModel {
 export const model = new PageViewModel();
 
 $: {
-  if (!ready && data) {
+  if (!ready && data && !loading) {
+    loading = true;
     model.createPage().then((isOk: boolean) => {
       ready = isOk;
+      loading = false;
     });
+
   }
+
+  if (permissions && permissions.length){
+    const hasPermissionForScreen = model.checkPermissionsFor(permissions, data.content.permissionView);
+    console.debug(`Checking permission ${data.content.permissionView} for ${data.content.name}`, hasPermissionForScreen);
+    if (!hasPermissionForScreen){
+      permissionDenied = true;
+      model.showMessage("You dont have permission for opening this page.", () => {
+        model.dispatchEvent("permission-denied", {requiredPermission: data.content.permissionView, permissions: permissions})
+      });  
+    }
+  }
+
+
+
+
+
+
 }

@@ -4,30 +4,35 @@
   /**
    * Variables Definition
    */
-  export let text = "";
-  export let description = "";
-  export let position= "center";
-  let alignClass = "text-center"
+  export let text = '';
+  export let description = '';
+  export let position = 'center';
+  export let titleType = 'title';
+  let alignClass = 'text-center';
 
   /**
    * Event Binding
    */
 
-  onMount(async () => {
+  onMount(async () => {});
 
-  });
-
-  $:{
-    if (position){
-      switch(position){
-        case "center": alignClass = "text-center"; break;
-        case "left": alignClass = "text-left"; break;
-        case "right": alignClass = "text-right"; break;
+  $: {
+    if (position) {
+      switch (position) {
+        case 'center':
+          alignClass = 'text-center';
+          break;
+        case 'left':
+          alignClass = 'text-left';
+          break;
+        case 'right':
+          alignClass = 'text-right';
+          break;
         default: {
-          alignClass = "text-right"; break;
+          alignClass = 'text-right';
+          break;
         }
       }
-      
     }
   }
 </script>
@@ -41,6 +46,11 @@
 </head>
 
 <svelte:options tag="title-data" />
-<h1 class="{alignClass}">{text}</h1>
-<p class="{alignClass}">{description}</p>
+{#if titleType == 'title'}
+  <h1 class={alignClass}>{text}</h1>
+{/if}
+{#if titleType == 'subtitle'}
+  <h3 class={alignClass}>{text}</h3>
+{/if}
 
+<p class={alignClass}>{description}</p>

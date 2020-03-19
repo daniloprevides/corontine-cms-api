@@ -1,7 +1,5 @@
-import { FieldNamesDto } from "./../dto/field-names-dto";
 import "reflect-metadata";
-import { IsString } from "class-validator";
-import { AuthenticationService } from "./authentication-service";
+import { FieldNamesDto } from "./../dto/field-names-dto";
 import { GenericFilterService } from "./generic-filter.service";
 import { FindParamsDto } from "./../dto/find-params.dto";
 import { GenericServiceInterface } from "./interface.generic.service";
@@ -19,7 +17,6 @@ import {
   ConflictException,
   InternalServerErrorException
 } from "@nestjs/common";
-import { classToPlain } from "class-transformer";
 import { EXPOSE_FIELD_NAMES_KEY } from "../annotations/expose-field-name.decorator";
 
 export abstract class GenericService<
@@ -108,7 +105,9 @@ export abstract class GenericService<
     let options = { where: {id: id}, relations: this.getRelations() } as FindManyOptions;
     if (relations) options.relations = relations;
 
-    if (clientId) options.where = [{ clientId: clientId }];
+    if (clientId){
+      options.where['clientId'] = clientId;
+    }
 
     //FindOne is not retrieving relations (Seems to be a bug)
     const itemsArray =  await this.repository.find(options);

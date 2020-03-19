@@ -8,9 +8,13 @@ import {
   ExposeFieldName,
   ExposeFieldNamesForPage,
   ComponentDefinition,
-  ListComponent
+  ListComponent,
+  PageRequirePermission,
+  PermissionsDefinition
 } from "../../commons/annotations/expose-field-name.decorator";
+import { ScopeEnum } from "../enum/scope.enum";
 @ListComponent("edit-attribute", "Attributes")
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.ATTRIBUTES_READ,ScopeEnum.ATTRIBUTES_CREATE, ScopeEnum.ATTRIBUTES_DELETE))
 export class AttributesDto {
   @ApiProperty()
   @IsString()

@@ -12,18 +12,19 @@ import {
 } from '@nestjs/common';
 import { Group } from '../entity/group.entity';
 import { GenericService } from '../../commons/services/generic.service';
+import { Scope } from '../entity/scope.entity';
+import { NewScopeDTO } from '../dto/new-scope.dto';
+import { UpdateScopeDTO } from '../dto/update-scope.dto';
 
 @Injectable()
-export class GroupService extends GenericService<Group,GroupRepository,NewGroupDTO, UpdateGroupDTO>{
+export class ScopeService extends GenericService<Scope,ScopeRepository,NewScopeDTO, UpdateScopeDTO>{
   
   constructor(    
-    @Inject(forwardRef(() => GroupRepository))
-    public readonly repository: GroupRepository,
     @Inject(forwardRef(() => ScopeRepository))
     public readonly scopeRepository: ScopeRepository,
 
     ) {
-      super(repository,"Group")
+      super(scopeRepository,"Scope")
     }
   
     public async validateParent(clientId:string, id:string): Promise<boolean>{
@@ -31,7 +32,7 @@ export class GroupService extends GenericService<Group,GroupRepository,NewGroupD
     }
   
     protected getRelations(): Array<string> {
-      return ["scopes"];
+      return ["groups"];
     }
 
 }

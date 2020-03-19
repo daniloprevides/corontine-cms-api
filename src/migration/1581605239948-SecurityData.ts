@@ -85,6 +85,23 @@ export class SecurityData1581605239948 implements MigrationInterface {
         "Update permission for client credentials"
       ),
 
+      [ScopeEnum.SCOPE_CREATE]: await createScope(
+        ScopeEnum.SCOPE_CREATE,
+        "Create permission for scope"
+      ),
+      [ScopeEnum.SCOPE_READ]: await createScope(
+        ScopeEnum.SCOPE_READ,
+        "Reading permission for scope"
+      ),
+      [ScopeEnum.SCOPE_DELETE]: await createScope(
+        ScopeEnum.SCOPE_DELETE,
+        "Delete permission for scope"
+      ),
+      [ScopeEnum.SCOPE_UPDATE]: await createScope(
+        ScopeEnum.SCOPE_UPDATE,
+        "Update permission for scope"
+      ),
+
       [ScopeEnum.TOKEN_INFO]: await createScope(
         ScopeEnum.TOKEN_INFO,
         "Allows retrieving informations from a token"

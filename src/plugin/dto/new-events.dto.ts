@@ -5,9 +5,12 @@ import { Events } from "../entity/events.entity";
 import {
   ExposeFieldName,
   ExposeFieldNamesForPage,
-  ComponentDefinition
+  ComponentDefinition,
+  PageRequirePermission,
+  PermissionsDefinition
 } from "../../commons/annotations/expose-field-name.decorator";
-
+import { ScopeEnum } from "../enum/scope.enum";
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.EVENTS_CREATE,ScopeEnum.EVENTS_CREATE, ScopeEnum.EVENTS_DELETE))
 export class NewEventsDto {
   @ApiProperty()
   @IsString()

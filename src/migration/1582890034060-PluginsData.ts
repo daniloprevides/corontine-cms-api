@@ -46,6 +46,7 @@ export class PluginsData1582890034060 implements MigrationInterface {
         await createScope(ScopeEnum.EVENTS_READ, "Read events");
         await createScope(ScopeEnum.EVENTS_DELETE, "Delete events");
         await createScope(ScopeEnum.EVENTS_UPDATE, "Update events");
+        
 
         await createScope(ScopeEnum.CMS, "Scope needed for CMS screen tasks (Only for users)");
 

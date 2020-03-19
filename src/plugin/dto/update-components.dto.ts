@@ -1,7 +1,9 @@
 import {
   ExposeFieldName,
   ExposeFieldNamesForPage,
-  ComponentDefinition
+  ComponentDefinition,
+  PageRequirePermission,
+  PermissionsDefinition
 } from "../../commons/annotations/expose-field-name.decorator";
 import { NewPluginDto } from "./new-plugin.dto";
 import { NewFieldsDto } from "./new-fields.dto";
@@ -9,7 +11,9 @@ import { Components } from "./../entity/components.entity";
 import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional } from "class-validator";
-
+import { PluginDto } from "./plugin.dto";
+import { ScopeEnum } from "../enum/scope.enum";
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.COMPONENTS_UPDATE,ScopeEnum.COMPONENTS_CREATE, ScopeEnum.COMPONENTS_DELETE))
 export class UpdateComponentsDto {
   @ApiProperty()
   @IsString()
@@ -51,10 +55,45 @@ export class UpdateComponentsDto {
   @ApiProperty({ type: () => NewFieldsDto })
   @IsOptional()
   @ExposeFieldName
+  @Expose()
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("table-data", {
+      sourcefield: "fields",
+      api: "Fields",
+      page: "edit-field",
+      sortable: true,
+      filterable: true,
+      size: 10,
+      pageAdd: "add-field",
+      targetfield: "component",
+      isArray: false,
+      crud: true,
+      fieldDefinition: [
+        {
+          name: "name",
+          value: "Name",
+          order: 1,
+          visible: true,
+          component: "label"
+        },
+        {
+          name: "description",
+          value: "Description",
+          order: 2,
+          visible: true,
+          component: "label"
+        }
+      ]
+    })
+  )
+  @ExposeFieldNamesForPage(
+    new ComponentDefinition("title-data", {
+      text: "Fields", position: "center", description: "Fields attached",  titleType: "subtitle"
+  }))
   fields: NewFieldsDto[];
 
-  @ApiProperty({ type: () => String })
+  @ApiProperty({ type: () => PluginDto })
   @ExposeFieldName
   @ExposeFieldNamesForPage(new ComponentDefinition("object", {order: 6, visible: false, field: "name"}))
-  plugin: String;
+  plugin: PluginDto;
 }

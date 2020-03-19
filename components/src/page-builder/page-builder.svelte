@@ -116,6 +116,7 @@
       item={selectedItemForAttributes}
       apiSources={sources}
       eventSource={events}
+      permissions={permissions}
       {fields}
       {fieldNames}
       innerApiChanged={(item, api, fields) => model.innerApiChanged(item, api, fields)}

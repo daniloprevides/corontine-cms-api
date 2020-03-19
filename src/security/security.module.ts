@@ -28,6 +28,9 @@ import { Group } from "./entity/group.entity";
 import { Scope } from "./entity/scope.entity";
 import { AuthorizationCodeService } from "./service/authorization-code.service";
 import { GroupMapper } from "./mapper/group.mapper";
+import { ScopeController } from './controller/scope.controller';
+import { ScopeService } from './service/scope.service';
+import { ScopeMapper } from './mapper/scope.mapper';
 
 @Module({
   imports: [
@@ -60,7 +63,8 @@ import { GroupMapper } from "./mapper/group.mapper";
     SecurityController,
     UserController,
     ClientCredentialsController,
-    GroupController
+    GroupController,
+    ScopeController
   ],
   providers: [
     SecurityService,
@@ -71,14 +75,17 @@ import { GroupMapper } from "./mapper/group.mapper";
     ClientCredentialsService,
     ChangePasswordService,
     AuthorizationCodeService,
-    GroupService
+    GroupService,
+    ScopeService,
+    ScopeMapper
   ],
   exports: [
     SecurityService,
     UserService,
     ClientCredentialsService,
     AuthorizationCodeService,
-    GroupService
+    GroupService,
+    ScopeService
   ]
 })
 export class SecurityModule {}

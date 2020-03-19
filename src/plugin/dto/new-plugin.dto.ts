@@ -3,8 +3,10 @@ import { Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsBoolean, IsFQDN } from "class-validator";
 import { NewComponentsDto } from './new-components.dto';
-import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition } from '../../commons/annotations/expose-field-name.decorator';
+import { ExposeFieldName, ExposeFieldNamesForPage, ComponentDefinition, PageRequirePermission, PermissionsDefinition } from '../../commons/annotations/expose-field-name.decorator';
+import { ScopeEnum } from '../enum/scope.enum';
 
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.PLUGIN_CREATE,ScopeEnum.PLUGIN_CREATE, ScopeEnum.PLUGIN_DELETE))
 export class NewPluginDto {
   @ApiProperty()
   @IsString()

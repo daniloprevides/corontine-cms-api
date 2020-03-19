@@ -19,6 +19,7 @@ import { ClientCredentials } from '../src/security/entity/client-credentials.ent
 import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.enum';
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
 import { RequestContextMiddleware } from '../src/middlewares/request-context-middleware';
+import { NewScopeDTO } from '../src/security/dto/new-scope.dto';
 
 const stringToBase64 = (string: string) => {
   return Buffer.from(string).toString('base64');
@@ -176,10 +177,12 @@ describe('Group (e2e)', () => {
       }); 
 
       it('Should add group with scopes', async done => {
+        let scope = new NewScopeDTO();
+        scope.name = ScopeEnum.GROUP_CREATE;
         let group = {
           name: "NewGroup2",
           description: "MyGroup2",
-          scopes: [ScopeEnum.GROUP_CREATE]
+          scopes: [scope]
   
         } as NewGroupDTO
         return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
@@ -197,10 +200,12 @@ describe('Group (e2e)', () => {
         }); 
 
         it('Should throw error 404 on scope not found', async done => {
+          let scope = new NewScopeDTO();
+          scope.name = "Inexistent scope";  
           let group = {
             name: "NewGroup2",
             description: "MyGroup2",
-            scopes: ["Scope that does not exist"]
+            scopes: [scope]
     
           } as NewGroupDTO
           return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
@@ -319,7 +324,7 @@ describe('Group (e2e)', () => {
               });  
             }); 
 
-        it('Shoud find all groups', async done => {
+        it('Should find all groups', async done => {
           return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
             .then(res => {
               return getRequest(res.body.accessToken, groupUrl)
@@ -327,7 +332,7 @@ describe('Group (e2e)', () => {
               .then(async (groupResponse) => {
                 const groupRepository: Repository<Group> = moduleFixture.get<Repository<Group>>(getRepositoryToken(Group));
                 const length = await groupRepository.count();
-                expect(length).toBe(groupResponse.body.length);
+                expect(length).toBe(groupResponse.body.items.length);
                 done();
               })
             });  

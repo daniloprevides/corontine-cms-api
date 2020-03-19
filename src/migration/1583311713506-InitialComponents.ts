@@ -142,7 +142,7 @@ export class InitialComponents1583311713506 implements MigrationInterface {
       {
         clientId: pluginBase?.clientId,
         name: "title-data",
-        description: "H1 title Component",
+        description: "Title Component",
         needApi: false,
         attributes: [
           {
@@ -166,6 +166,18 @@ export class InitialComponents1583311713506 implements MigrationInterface {
             ],
             attributeType: AttributeTypeEnum.PROPERTY,
           } as Attributes,          
+          {
+            clientId: pluginBase?.clientId,
+            defaultValue: {val: "title"},
+            required: true,
+            name: "titleType",
+            type: FieldTypeEnum.LIST_CONTENT,
+            possibleValues: [
+              {id: 'title', label: "H1 Title"},
+              {id: 'subtitle', label: "H3 Subtitle"},
+            ],
+            attributeType: AttributeTypeEnum.PROPERTY,
+          } as Attributes,                    
           {
             clientId: pluginBase?.clientId,
             defaultValue: "default",

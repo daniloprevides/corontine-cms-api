@@ -6,9 +6,12 @@ import { Group } from "../entity/group.entity";
 import {
   ExposeFieldName,
   ExposeFieldNamesForPage,
-  ComponentDefinition
+  ComponentDefinition,
+  PageRequirePermission,
+  PermissionsDefinition
 } from "../../commons/annotations/expose-field-name.decorator";
-
+import { ScopeEnum } from "../enum/scope.enum";
+@PageRequirePermission(new PermissionsDefinition(ScopeEnum.GROUP_CREATE,ScopeEnum.GROUP_CREATE, ScopeEnum.GROUP_DELETE))
 export class NewGroupDTO {
   @ApiProperty()
   @IsString()
@@ -25,10 +28,9 @@ export class NewGroupDTO {
   @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "textarea"}))
   description: Group["description"];
 
-  @ApiProperty({ type: Array })
-  @IsArray()
+  @ApiProperty({ type: () => NewScopeDTO })
   @IsOptional()
   @Expose()
   @ExposeFieldName
-  scopes: string[];
+  scopes: NewScopeDTO[];
 }

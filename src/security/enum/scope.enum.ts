@@ -17,6 +17,11 @@ export enum ScopeEnum {
     USER_ME_READ= "user_me_read",
     USER_ME_UPDATE= "user_me_update",
 
+    SCOPE_READ = 'scope_read',
+    SCOPE_UPDATE = 'scope_update',
+    SCOPE_CREATE = 'scope_create',
+    SCOPE_DELETE = 'scope_delete',
+
     TOKEN_INFO="token_info"
 }
   
