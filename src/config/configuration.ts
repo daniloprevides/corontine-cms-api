@@ -66,7 +66,7 @@ export default () => ({
         migrations: [__dirname + '/../migration/*{.ts,.js}'],
         dropSchema: true,
         migrationsRun: false,
-        logging: false,
+        logging: true,
         cli: {
           migrationsDir: 'src/migration',
         },        

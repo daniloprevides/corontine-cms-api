@@ -153,10 +153,6 @@ export class PageBuilder {
                   attribute.value = await pageRepository.findOne({
                     where: { name: attribute.value }
                   });
-                  console.log(
-                    "Populating pageAdd for " + oldName + " with ",
-                    attribute.value
-                  );
                   //delete attribute.value.content;
                   pageUpdated = true;
                 }
