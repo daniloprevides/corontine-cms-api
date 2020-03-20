@@ -35,7 +35,7 @@ describe('AppController', () => {
         } 
       } as any;
       const result = appController.getHello(req) as any;
-      expect(result.description).toEqual('Cooker API');
+      expect(result.description).toEqual('Corontine API');
     });
   });
 });

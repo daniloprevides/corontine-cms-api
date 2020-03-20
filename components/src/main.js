@@ -19,6 +19,7 @@ import CheckboxData from "./checkbox-data/checkbox-data.svelte";
 import SelectStaticData from "./select-static-data/select-static-data.svelte";
 import UserManager from "./user-manager/user-manager.svelte";
 import GroupManager from "./group-manager/group-manager.svelte";
+import ViewerData from "./viewer-data/viewer-data.svelte";
 
 //Vaading components
 import "@vaadin/vaadin-login";
@@ -56,5 +57,6 @@ export {
   Label,
   SelectStaticData,
   GroupManager,
-  UserManager
+  UserManager,
+  ViewerData
 };
