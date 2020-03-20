@@ -35,6 +35,9 @@
       }}
       on:keydown={event => {
         model.dataChanged(event.target.value);
+      }}
+      on:blur={event => {
+        model.changed(data);
       }} />
     {#if required && errorMessage && validate}
       <small class="validation-error">{errorMessage}</small>
@@ -58,6 +61,9 @@
       on:keydown={event => {
         model.dataChanged(event.target.value);
         data = event.target.value;
+      }}
+      on:blur={event => {
+        model.changed(data);
       }} />
     {#if required && errorMessage && validate}
       <small class="validation-error">{errorMessage}</small>

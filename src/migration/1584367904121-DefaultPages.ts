@@ -23,6 +23,8 @@ import { UpdateScopeDTO } from "../security/dto/update-scope.dto";
 import { ScopeDTO } from "../security/dto/scope.dto";
 import { PageBuilder } from "../commons/services/page-builder.service";
 import { NewFieldsDto } from "../plugin/dto/new-fields.dto";
+import { ScopeEnum } from "../security/enum/scope.enum";
+import { ScopeEnum as ScopeEnumPlugin} from "../plugin/enum/scope.enum";
 
 export class DefaultPages1584367904121 implements MigrationInterface {
 
@@ -48,39 +50,38 @@ export class DefaultPages1584367904121 implements MigrationInterface {
 
 
         await pageBuilder.loadDynamicDataForNeededFields();
-        //const pagePages =  await this.createPageFor(new NewPageDto(), new UpdatePageDto(), new PageDto(), pagesPlugin,"Page");
 
-        await this.addGroupMenu("Group", groupPages);    
-        await this.addGroupMenu("Scopes", scopesPages);    
-        await this.addGroupMenu("Plugins", pluginPages);
-        await this.addGroupMenu("Component", componentsPages);
+        //await this.addGroupMenu("Group", groupPages, ScopeEnum.GROUP_READ, ScopeEnum.GROUP_CREATE);    
+        await this.addGroupMenu("Scopes", scopesPages, ScopeEnum.SCOPE_READ, ScopeEnum.SCOPE_CREATE);    
+        await this.addGroupMenu("Plugins", pluginPages, ScopeEnumPlugin.PLUGIN_READ, ScopeEnumPlugin.PLUGIN_CREATE);
+        await this.addGroupMenu("Component", componentsPages, ScopeEnumPlugin.COMPONENTS_READ, ScopeEnumPlugin.COMPONENTS_CREATE);
 
-        await this.addGroupMenu("Field", fieldsPages);
-        await this.addGroupMenu("Attribute", attributesPages);
+        await this.addGroupMenu("Field", fieldsPages,ScopeEnumPlugin.FIELDS_READ, ScopeEnumPlugin.FIELDS_CREATE);
+        await this.addGroupMenu("Attribute", attributesPages, ScopeEnumPlugin.ATTRIBUTES_READ, ScopeEnumPlugin.ATTRIBUTES_CREATE);
 
   //      await this.addGroupMenu("Page", pagePages);
 //        await this.addGroupMenu("Event", eventsPages);        
     }
 
-    async addGroupMenu(name:string, pages:any){
-        const id =  await this.addToMenu(name, `Manage ${name}`);
-        await this.addToMenu("View",`View ${name}`,id,pages.list.name,pages.list.id);
-        await this.addToMenu("Add", `Add a new ${name}`,id,pages.add.name,pages.add.id);
+    async addGroupMenu(name:string, pages:any, permissionView:string, permissionAdd:string){
+        const id =  await this.addToMenu(name, `Manage ${name}`,null,null,null,"cms");
+        await this.addToMenu("View",`View ${name}`,id,pages.list.name,pages.list.id,permissionView);
+        await this.addToMenu("Add", `Add a new ${name}`,id,pages.add.name,pages.add.id,permissionAdd);
     }
 
 
-    async addToMenu(label:string, description:string, parentId?:string, page?:string, idPage?:string,route?:string){
+    async addToMenu(label:string, description:string, parentId?:string, page?:string, idPage?:string,permission:string = "",route?:string){
         const menuRepository = getRepository<Menu>(
             "menu"
         );
         const id = "M" + Math.random().toString(36).substring(7);
-        let menuDto = new MenuDto(id, label, description,null,page,idPage,parentId,route);
+        let menuDto = new MenuDto(id, label, description,null,page,idPage,parentId,permission,route);
 
         let defaultMenu = await menuRepository.findOne({where: {name: "default"}});
         if (!defaultMenu){
             defaultMenu = new Menu();
             defaultMenu.name = "default";
-            defaultMenu.requiredPermission = "cms";
+            defaultMenu.requiredPermission = permission;
             defaultMenu.content = [menuDto];
         }else{
             if (parentId){

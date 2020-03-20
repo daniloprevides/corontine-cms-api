@@ -136,7 +136,7 @@ export class UpdatePluginDto {
       size: 10,
       pageAdd: "add-component",
       targetfield: "plugin",
-      isArray: true,
+      isArray: false,
       crud: true,
       fieldDefinition: [
         {
@@ -151,7 +151,7 @@ export class UpdatePluginDto {
   )
   @ExposeFieldNamesForPage(
     new ComponentDefinition("title-data", {
-      text: "Scopes", position: "center", description: "Components attached",  titleType: "subtitle"
+      text: "Components", position: "center", description: "Components attached",  titleType: "subtitle"
   }))
   components: NewComponentsDto[];
 }

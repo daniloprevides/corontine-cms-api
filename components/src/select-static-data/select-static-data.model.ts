@@ -9,7 +9,7 @@ export let validate = true;
 // Required message
 export let requiredMessage = "Field cannot be empty";
 //Data
-let data = "";
+export let data = "";
 //export options
 export let options = []
 
@@ -17,7 +17,7 @@ let component;
 let errorMessage;
 
 $:{
-  if (options) console.log(options);
+
 }
 
 export class InputDataModel {
@@ -44,6 +44,10 @@ export class InputDataModel {
     return errorMessage == null;
   }
 
+  getErrorMessage(){
+    return errorMessage;
+  }
+
   dispatchEvent(name, detail) {
     component.dispatchEvent(
       new CustomEvent(name, {
@@ -57,3 +61,4 @@ export class InputDataModel {
 
 export const model = new InputDataModel();
 export const validateData = model.validate;
+export const getErrorMessage = model.getErrorMessage;

@@ -60,6 +60,33 @@ export class MenuService extends GenericService<
     const scopes = tokenDto.scope.split(" ");
     let menu = await this.repository.findOne({ where: { name: "default" } });
 
+    //filtering items that user does not have access
+    if (menu.content) {
+      const getChildren = (items:Array<any>) => {
+        let subitems = [];
+        for (let children of items){
+          if (scopes.indexOf(children.requiredPermission) >= 0){
+            subitems.push(children);
+          }
+        }
+
+        return subitems;
+      }
+
+      const reference = JSON.parse(JSON.stringify(menu.content));
+      const items = new Array<any>();
+      for (let item of reference){
+        item.children = getChildren(item.children);
+        if (scopes.indexOf(item.requiredPermission) >= 0 && item.children.length){
+          items.push(item);
+        }
+      }
+      
+      menu.content = items;
+    }
+
+    
+
     return new Mapper(Menu, MenuDto).toDto(menu);
   }
 

@@ -110,6 +110,15 @@
     background-color: transparent;
     border: none;
   }
+
+  .btn-primary {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+    font-size: 15px !important;
+    width: 80% !important;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
 </style>
 
 <svelte:options tag="password-change-page" />
@@ -156,9 +165,7 @@
                 bind:value={username}
                 on:blur={() => validate('username', username)} />
               {#if usernameError}
-                <small class="error-message text-danger">
-                  {usernameError}
-                </small>
+                <small class="error-message text-danger">{usernameError}</small>
               {/if}
             </div>
             <div class="form-label-group">
@@ -174,7 +181,7 @@
                   {oldPasswordError}
                 </small>
               {/if}
-            </div>            
+            </div>
             <div class="form-label-group">
               <input
                 type="password"

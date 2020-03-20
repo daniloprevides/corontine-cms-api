@@ -7,7 +7,7 @@ import { Expose } from "class-transformer";
 @RequiredScopes(
   "menu",
   MenuScopeEnum.MENU_CREATE,
-  MenuScopeEnum.MENU_READ,
+  [MenuScopeEnum.MENU_READ, MenuScopeEnum.MY_MENU],
   MenuScopeEnum.MENU_UPDATE,
   MenuScopeEnum.MENU_DELETE
 )

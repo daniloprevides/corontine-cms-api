@@ -39,6 +39,10 @@ export class SelectDataModel {
     return errorMessage == null;
   }
 
+  getErrorMessage(){
+    return errorMessage;
+  }
+
   dispatchEvent(name, detail) {
     component.dispatchEvent(
       new CustomEvent(name, {
@@ -52,3 +56,4 @@ export class SelectDataModel {
 
 export const model = new SelectDataModel();
 export const validateData = model.validate;
+export const getErrorMessage = model.getErrorMessage;

@@ -1,8 +1,11 @@
 .label {
-    width: 100%;
+  width: 100%;
 }
 
 .validation-error {
-    color: var(--cms-validation-error-color);
+  color: var(--cms-validation-error-color);
 }
 
+.form-group {
+  position: relative;
+}

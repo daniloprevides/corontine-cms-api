@@ -8,12 +8,28 @@ let dialogComponent;
 let permissionDenied = false;
 let mainComponent;
 
-const isObject = (val) => {
-  if (val === null) { return false;}
-  return ( (typeof val === 'function') || (typeof val === 'object') );
-}
+const isObject = val => {
+  if (val === null) {
+    return false;
+  }
+  return typeof val === "function" || typeof val === "object";
+};
 
-export const applyValuesChanged = (item => {
+export const hideItems = (items: Array<string>) => {
+  items.forEach(fieldName => {
+    const item = data.content.items.find(i => i.fieldName === fieldName);
+    if (item) {
+      const element: HTMLElement = component.childNodes[0].querySelector(
+        `#${item.id}`
+      );
+      if (element) {
+        element.hidden = true;
+      }
+    }
+  });
+};
+
+export const applyValuesChanged = item => {
   setTimeout(() => {
     component.childNodes[0]
       .querySelectorAll(".dynamic-element")
@@ -21,69 +37,79 @@ export const applyValuesChanged = (item => {
         el.itemmodel = item;
       });
   }, 100);
-})
+};
 
 export const applyValues = item => {
   model.model = item;
 
-
-  setTimeout(() => {
+  //setTimeout(() => {
     component.childNodes[0]
       .querySelectorAll(".dynamic-element")
       .forEach(async el => {
         let id = el.id;
         let selectedItem = data.content.items.find(i => i.id === id);
-        
+
         let fieldName = selectedItem.fieldName;
         let value = model.model[fieldName];
         //If item is object and defaultPropertyBind is filled
-        if (selectedItem?.component?.defaultPropertyBind && isObject(value)){          
+        if (selectedItem?.component?.defaultPropertyBind && isObject(value)) {
           value = value[selectedItem.component.defaultPropertyBind];
         }
-        if (selectedItem.component.type == 'API' ){
+        if (selectedItem.component.type == "API") {
           let field = selectedItem?.attributes?.find(a => a.name === "field");
-          if (field && field.value){
-            if (isObject(model.model[fieldName])){
+          if (field && field.value) {
+            if (isObject(model.model[fieldName])) {
               let currentValue = model.model[fieldName][field.value];
               value = currentValue;
-            }  
+            }
           }
         }
 
-        if (value != undefined){
-          el.data = value;
+        if (value != undefined) {
+          customElements.whenDefined(selectedItem?.component.name).then(d => {
+            console.debug(`Applying data ${value} for ${fieldName} of type ${selectedItem.component.name}`);
+            el.data = value;
+          })
         }
 
         el.itemmodel = model.model;
         el.permissions = permissions;
       });
-  }, 100);
+ // }, 100);
 };
 
-export const validate = () => {
-  console.debug("Checking validation");
-  let validationData = {};
-  component.childNodes[0]
-    .querySelectorAll(".dynamic-element")
-    .forEach(async el => {
-      let isValid = true;
-      let input = el.shadowRoot.querySelector("input");
-      let validationMessage = null;
-      if (el.validateData) isValid = el.validateData();
-      if (isValid) {
-        if (input) {
-          isValid = input.checkValidity();
-          validationMessage = input.validationMessage;
-        }
-      }
 
-      validationData[el.id] = { isValid: isValid, message: validationMessage };
-    });
+export const getValidationData = () => {
+  console.debug('Checking validation');
+  let validationData = {};
+  component.querySelectorAll('.dynamic-element').forEach(async el => {
+    let isValid = true;
+    let input = el.shadowRoot.querySelector('input');
+    let validationMessage = null;
+    if (el.validateData) isValid = el.validateData();
+    if (isValid) {
+      if (input) {
+        isValid = input.checkValidity();
+        validationMessage = input.validationMessage;
+      }
+    } else {
+      validationMessage = el.getErrorMessage();
+    }
+
+    validationData[el.getAttribute('id')] = {
+      isValid: isValid,
+      message: validationMessage,
+    };
+  });
 
   return validationData;
 };
 
-export let getData = (url:string, params: any, apiId:string) => {
+export const validate = () => {
+  return getValidationData();
+};
+
+export let getData = (url: string, params: any, apiId: string) => {
   return null;
 };
 let ready = false;
@@ -95,9 +121,11 @@ export const getDataForSave = () => {
 };
 
 export class PageViewModel {
-  
-  checkPermissionsFor(permissions: Array<string>, neededPermission: string) : boolean{
-    return (permissions.indexOf(neededPermission) >= 0);
+  checkPermissionsFor(
+    permissions: Array<string>,
+    neededPermission: string
+  ): boolean {
+    return permissions.indexOf(neededPermission) >= 0;
   }
 
   parser = new PageParser();
@@ -107,17 +135,24 @@ export class PageViewModel {
   model = {} as any;
 
   private applyValues(element: any, properties, id) {
-    if (id && id.length) {
-      if (properties[id]) {
-        Object.keys(this.properties[id]).forEach(key => {
-          let value = this.properties[id][key];          
-          console.debug(`Applying property ${key} to element ${id}`,this.properties[id]);
-          if (value != null){
-            element[key] = value;
-          }
-        });
+    return new Promise((resolve,reject) => {
+      if (id && id.length) {
+        if (properties[id]) {
+          Object.keys(this.properties[id]).forEach(key => {
+            let value = this.properties[id][key];
+            console.debug(
+              `Applying property ${key} to element ${id}`,
+              this.properties[id]
+            );
+            if (value != null) {
+              element[key] = value;
+            }
+          });
+        }
       }
-    }
+      
+      resolve();
+    })
   }
 
   private applyColumns(element: any, columns: number) {
@@ -125,6 +160,7 @@ export class PageViewModel {
   }
 
   private async buildApiComponent(element: any, selectedItem: any, id: string) {
+    console.debug("Build api component", selectedItem);
     let apiData = selectedItem.attributes.find(a => a.name === "api");
     if (!apiData || !apiData.value) {
       console.debug(
@@ -138,7 +174,11 @@ export class PageViewModel {
       );
 
       if (field && displayLabel && field.value && displayLabel.value) {
-        const childrenData = await getData(apiData.value.apiUrl,{}, apiData.value.id);
+        const childrenData = await getData(
+          apiData.value.apiUrl,
+          {},
+          apiData.value.id
+        );
         console.debug(
           `Data acquired for ${apiData.value.apiUrl}`,
           childrenData
@@ -149,6 +189,7 @@ export class PageViewModel {
           element.options = childrenData.items.map(c => {
             return c;
           });
+
         }
       }
     }
@@ -162,6 +203,7 @@ export class PageViewModel {
     let fieldsDefinition = selectedItem.attributes.find(
       a => a.name === "fieldDefinition"
     );
+    console.debug("Build multi component", selectedItem);
     let apiData = selectedItem.attributes.find(a => a.name === "api");
     if (!apiData || !apiData.value) {
       console.debug(
@@ -186,21 +228,24 @@ export class PageViewModel {
       console.log(element.columns);
 
       element.columns = JSON.parse(JSON.stringify(columns));
+      element.getData = getData;
     } else {
       console.debug(`Field definition not found to ${selectedItem.name}`);
     }
 
-    console.debug(`Acquiring data for `,apiData);
+    console.debug(`Acquiring data for `, apiData);
 
     //get default size
     let options = {} as any;
-    let size = selectedItem.attributes.find(
-      a => a.name === "size"
-    );
+    let size = selectedItem.attributes.find(a => a.name === "size");
 
     if (size && size.value) options.limit = size.value;
 
-    const childrenData = await getData(apiData.value.apiUrl, options, apiData.value.id);
+    const childrenData = await getData(
+      apiData.value.apiUrl,
+      options,
+      apiData.value.id
+    );
     console.debug(`Data acquired for ${apiData.value.apiUrl}`, childrenData);
 
     if (childrenData && childrenData.items) {
@@ -210,48 +255,59 @@ export class PageViewModel {
     //Apply event listener for reload data
     element.addEventListener("load-data", async params => {
       let options = params.detail;
-      const data = await getData(apiData.value.apiUrl, options, apiData.value.id)
+      const data = await getData(
+        apiData.value.apiUrl,
+        options,
+        apiData.value.id
+      );
       element.data = data;
     });
   }
 
-  showMessage(text:string , ok:Function = () => {}, cancel:Function = () => {}, showCancel = false){
-    customElements.whenDefined('vaadin-dialog').then(() => {
+  showMessage(
+    text: string,
+    ok: Function = () => {},
+    cancel: Function = () => {},
+    showCancel = false
+  ) {
+    customElements.whenDefined("vaadin-dialog").then(() => {
       dialogComponent.renderer = function(root, dialog) {
         // Check if there is a DOM generated with the previous renderer call to update its content instead of recreation
         if (root.firstElementChild) {
           return;
         }
-        const div = window.document.createElement('div');
+        const div = window.document.createElement("div");
         div.textContent = text;
-  
-        const br = window.document.createElement('br');
-  
-        const okButton = window.document.createElement('vaadin-button');
-        okButton.setAttribute('theme', 'primary');
-        okButton.textContent = 'OK';
-        okButton.setAttribute('style', 'margin-right: 1em');
-        okButton.addEventListener('click', function() {
+
+        const br = window.document.createElement("br");
+
+        const okButton = window.document.createElement("vaadin-button");
+        okButton.setAttribute("theme", "primary");
+        okButton.textContent = "OK";
+        okButton.setAttribute("style", "margin-right: 1em");
+        okButton.addEventListener("click", function() {
           ok();
           dialog.opened = false;
         });
-  
-        const cancelButton = window.document.createElement('vaadin-button');
-        cancelButton.textContent = 'Cancel';
-        cancelButton.addEventListener('click', function() {
-          cancel()
+
+        const cancelButton = window.document.createElement("vaadin-button");
+        cancelButton.textContent = "Cancel";
+        cancelButton.addEventListener("click", function() {
+          cancel();
           dialog.opened = false;
         });
-  
+
+        const footer = document.createElement("div");
+        footer.style.margin = "10px;"
+        footer.appendChild(okButton);
+        if (showCancel) footer.appendChild(cancelButton);
+
         root.appendChild(div);
         root.appendChild(br);
-        root.appendChild(okButton);
-        if (showCancel)
-          root.appendChild(cancelButton);
+        root.appendChild(footer);        
       };
       dialogComponent.opened = true;
-    })
-
+    });
   }
 
   private async applyDefaultEvents(
@@ -274,18 +330,24 @@ export class PageViewModel {
       }
     }
 
-    
     element.addEventListener(selectedItem.component.defaultEvent, data => {
-      console.debug("Event selected " + selectedItem.component.defaultEvent , data.detail);      
+      console.debug(
+        "Event selected " + selectedItem.component.defaultEvent,
+        data.detail
+      );
       let value = data.detail;
       if (selectedItem.component.defaultEventPath) {
         value = data.detail[selectedItem.component.defaultEventPath];
       }
 
       if (selectedItem.component.type === "MULTI") {
-        let page = selectedItem.attributes.find(a => a.name === 'page');        
-        if (!page){
-          console.debug("Any action for this component " + selectedItem.component.name + " has been defined. (Any configured page)");
+        let page = selectedItem.attributes.find(a => a.name === "page");
+        if (!page) {
+          console.debug(
+            "Any action for this component " +
+              selectedItem.component.name +
+              " has been defined. (Any configured page)"
+          );
         }
 
         console.debug("Opening page", page);
@@ -318,7 +380,7 @@ export class PageViewModel {
             let id = el.id;
             let selectedItem = data.content.items.find(i => i.id === id);
             console.log("Properties", this.properties);
-            this.applyValues(el, this.properties, id);
+            await this.applyValues(el, this.properties, id);
             this.applyColumns(el, selectedItem.columns);
 
             if (selectedItem.component.defaultEvent) {
@@ -354,23 +416,28 @@ $: {
       ready = isOk;
       loading = false;
     });
-
   }
 
-  if (permissions && permissions.length){
-    const hasPermissionForScreen = model.checkPermissionsFor(permissions, data.content.permissionView);
-    console.debug(`Checking permission ${data.content.permissionView} for ${data.content.name}`, hasPermissionForScreen);
-    if (!hasPermissionForScreen){
+  if (permissions && permissions.length) {
+    const hasPermissionForScreen = model.checkPermissionsFor(
+      permissions,
+      data.content.permissionView
+    );
+    console.debug(
+      `Checking permission ${data.content.permissionView} for ${data.content.name}`,
+      hasPermissionForScreen
+    );
+    if (!hasPermissionForScreen) {
       permissionDenied = true;
-      model.showMessage("You dont have permission for opening this page.", () => {
-        model.dispatchEvent("permission-denied", {requiredPermission: data.content.permissionView, permissions: permissions})
-      });  
+      model.showMessage(
+        "You dont have permission for opening this page.",
+        () => {
+          model.dispatchEvent("permission-denied", {
+            requiredPermission: data.content.permissionView,
+            permissions: permissions
+          });
+        }
+      );
     }
   }
-
-
-
-
-
-
 }

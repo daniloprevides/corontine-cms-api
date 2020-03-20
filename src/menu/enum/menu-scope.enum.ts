@@ -3,5 +3,6 @@ export enum MenuScopeEnum {
     MENU_UPDATE = 'menu_update',
     MENU_CREATE = 'menu_create',
     MENU_DELETE = 'menu_delete',
+    MY_MENU = 'my_menu',
 }
   

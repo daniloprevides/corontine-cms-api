@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsBoolean, IsOptional } from 'class-validator';
 import { Expose } from 'class-transformer';
 import { User } from '../entity/user.entity';
+import { GroupDTO } from './group.dto';
 
 export class NewUserDTO {
   @ApiProperty({ type: String })
@@ -33,9 +34,9 @@ export class NewUserDTO {
   @Expose()
   urlInstagram: User['urlInstagram'];
 
-  @ApiProperty({ type: Array })
+  @ApiProperty({ type: GroupDTO })
   @Expose()
-  groups: Array<string>;
+  groups: Array<GroupDTO>;
 
 
 

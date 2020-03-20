@@ -10,4 +10,8 @@ export class BasicEntity extends Audit{
     @Column({nullable: true, name: "client_id"})
     @Expose()
     clientId: string;
+
+    @Column({nullable: true, type: Boolean, default: false})
+    @Expose()
+    deleted: boolean;
 }

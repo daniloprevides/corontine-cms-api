@@ -829,6 +829,12 @@ export class PageInfo1583747115654 implements MigrationInterface {
     const adminGroup = await groupRepository.findOne({ name: "admin" });
     adminGroup.scopes = await scopeRepository.find();
     groupRepository.save(adminGroup);
+
+    const defaultUserGroup = await groupRepository.findOne({ name: "Default User" }, {relations: ["scopes"]});
+    const pageReadScope = await scopeRepository.findOne({name: "page_read"});
+    defaultUserGroup.scopes.push(pageReadScope);
+    groupRepository.save(defaultUserGroup);
+
   }
 
   private async createMenu(

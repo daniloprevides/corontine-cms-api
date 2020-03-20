@@ -7,6 +7,7 @@ export class MenuDto{
         public page?:string,
         public idPage?:string,
         public parentId?:string,
+        public requiredPermission?:string,
         public route?:string,
         public externalUrl?:string,
     ){}

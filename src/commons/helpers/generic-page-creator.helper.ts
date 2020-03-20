@@ -108,7 +108,7 @@ export class GenericPageCreatorHelper {
             }
 
             field.eventPath = item.field.defaultEventPath;
-            //field.modelComponent = item.field;
+            delete field.modelComponent;
             field.fieldName = item.name;
             page.items.push(field);
         }        

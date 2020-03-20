@@ -32,6 +32,6 @@ export class ScopeDTO {
   @IsArray()
   @Expose()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 3, visible: true}))
+  @ExposeFieldNamesForPage(new ComponentDefinition("object", {order: 3, visible: true, field: "name" , isArray: true}))
   groups: GroupDTO[];
 }

@@ -50,7 +50,7 @@ export class UserService {
 
   @Transactional()
   public async getAll(): Promise<User[]> {
-    return this.repository.find();
+    return this.repository.find({relations: ["groups"]});
   }
 
   @Transactional()
@@ -72,21 +72,11 @@ export class UserService {
   public async add(user: NewUserDTO): Promise<User> {
     const salt: string = this.createSalt();
     const hashPassword: string = this.createHashedPassword(user.password, salt);
-    //Find groupd by ID
-    let groups: Array<Group> = new Array();
-    if (user.groups) {
-      for (let groupName of user.groups) {
-        groups.push(
-          await this.groupRepository.findOne({ where: { name: groupName } })
-        );
-      }
-    }
     try {
       return await this.repository.save({
         ...user,
         salt,
-        password: hashPassword,
-        groups: groups
+        password: hashPassword
       });
     } catch (e) {
       if (e.code === "ER_DUP_ENTRY") {
@@ -111,7 +101,6 @@ export class UserService {
     return await this.repository.save({
       ...user,
       ...userUpdatedInfo,
-      groups: user.groups,
       id: user.id
     });
   }

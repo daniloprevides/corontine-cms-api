@@ -1,37 +1,42 @@
 .table {
-    width: 100%;
-    max-width: 100vw;
-    margin-top: 25px;
-    font-family: var(--cms-options-font-family);
-    cursor: pointer;
-    table-layout: fixed;
-  }
+  width: 100%;
+  max-width: 100vw;
+  margin-top: 25px;
+  font-family: var(--cms-options-font-family);
+  cursor: pointer;
+  table-layout: fixed;
+}
 
-  .page-link {
-    color: var(--cms-options-dark-text-color) !important;
-    cursor: pointer;
-    font-family: var(--cms-options-font-family);
-  }
-  .pagination {
-    font-family: var(--cms-options-font-family);
-  }
+.page-link {
+  color: var(--cms-options-dark-text-color) !important;
+  cursor: pointer;
+  font-family: var(--cms-options-font-family);
+}
+.pagination {
+  font-family: var(--cms-options-font-family);
+}
 
-  .disabled {
-    color: var(--cms-options-disabled) !important;
-  }
+.disabled {
+  color: var(--cms-options-disabled) !important;
+}
 
-  .page-item.active .page-link{
-    background-color: var(--cms-options-bg-color) !important;
-    border: none !important;
-    color: var(--cms-options-color) !important;
-  }
-  
-  .btn-primary {
-    background-color: var(--primary-color) !important;
-    border: none !important;
-  }
-  
-  .btn-warning {
-    background-color: var(--cms-options-disabled) !important;
-    border: none !important;
-  }
+.page-item.active .page-link {
+  background-color: var(--cms-options-bg-color) !important;
+  border: none !important;
+  color: var(--cms-options-color) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border: none !important;
+}
+
+.btn-warning {
+  background-color: var(--cms-options-disabled) !important;
+  border: none !important;
+}
+
+
+.table-container {
+  overflow-y: auto;
+}

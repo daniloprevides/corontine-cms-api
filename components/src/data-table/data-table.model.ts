@@ -17,6 +17,7 @@ let modal;
 /**
  * Export variables
  */
+export let maxheight = "50vh";
 export let columns = [
   { field: "code", label: "Code", sortable: true, filterable: true },
   { field: "name", label: "Name", sortable: true, filterable: true },
@@ -32,6 +33,7 @@ export let data = null;
 export let size = 10;
 export let filterable = true;
 export let sortable = true;
+export let selectable = false;
 export let pagination = true;
 export let sourcefield = null;
 export let targetfield = null;
@@ -41,6 +43,11 @@ export let crud = false;
 export let pageAdd = null;
 export let pageEdit = null;
 export let permissions = null;
+
+export let getData = (url:string, params: any, apiId:string) => {
+  console.debug('Get data not implemented');
+  return null;
+};
 
 export class DataTableModel {
   params: any = { page: 1 };
@@ -88,24 +95,28 @@ export class DataTableModel {
         item.classList.remove("error");
       }
     });
-    //validationErrorFields.map(e => e.message).join(", ")
-    //alert(JSON.stringify(validationErrorFields));
 
     return validationErrorFields == null;
   }
 
+  
+
   createCrudAddModal(modal) {
     modal.renderer = function(root, dialog) {
       const pageView = document.createElement("page-view") as any;
+      pageView.getData = getData;
       pageView.data = pageAdd;
       pageView.applyValues({[targetfield]: isArray ? [itemmodel] : itemmodel});
+      pageView.hideItems([targetfield]);
       pageView.permissions = permissions;
+
 
       const main = document.createElement("div");
       const footer = document.createElement("div");
       const buttonOk = document.createElement("button");
       buttonOk.className = "btn btn-primary";
       buttonOk.type = "button";
+      buttonOk.style.padding = "5px";
       buttonOk.textContent = "OK";
       buttonOk.onclick = event => {
         let isValid = model.validateCrudData(pageView);
@@ -122,10 +133,12 @@ export class DataTableModel {
       buttonCancel.className = "btn btn-warning";
       buttonCancel.type = "button";
       buttonCancel.textContent = "Cancel";
+      buttonCancel.style.padding = "5px";
       buttonCancel.onclick = event => {
         dialog.opened = false;
       };
 
+      footer.style.marginBottom = "20px";
       footer.appendChild(buttonOk);
       footer.appendChild(buttonCancel);
 
@@ -184,6 +197,7 @@ $: {
     };
     data = dataTable;
   }
+
 }
 
 /**

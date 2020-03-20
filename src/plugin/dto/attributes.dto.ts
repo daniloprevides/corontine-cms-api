@@ -91,7 +91,7 @@ export class AttributesDto {
   @IsString()
   @IsOptional()
   @Expose()
-  @ExposeFieldNamesForPage(new ComponentDefinition("boolean", {order: 11, visible: true}))
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 11, visible: true}))
   @ExposeFieldName
   attributeType: Attributes["attributeType"];
 

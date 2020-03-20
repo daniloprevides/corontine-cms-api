@@ -22,7 +22,7 @@ export let type = "text";
 export let data = "";
 
 let component;
-let errorMessage;
+export let errorMessage;
 
 export class InputDataModel {
   changed(value) {
@@ -48,6 +48,10 @@ export class InputDataModel {
     return errorMessage == null;
   }
 
+  getErrorMessage(){
+    return errorMessage;
+  }
+
   dispatchEvent(name, detail) {
     component.dispatchEvent(
       new CustomEvent(name, {
@@ -61,3 +65,5 @@ export class InputDataModel {
 
 export const model = new InputDataModel();
 export const validateData = model.validate;
+export const getErrorMessage = model.getErrorMessage;
+

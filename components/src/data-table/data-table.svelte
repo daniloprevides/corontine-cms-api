@@ -26,35 +26,58 @@
     </button>
   </div>
 {/if}
-<table class="table" bind:this={component}>
-  <thead>
-    <tr>
-      {#each columns as column}
-        <th>{column.label}</th>
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each items as row}
-      <tr
-        on:click={event => {
-          openItem(row);
-        }}>
+<div
+  class="table-container"
+  style="max-height: {maxheight}"
+  bind:this={component}>
+  <table class="table">
+    <thead>
+      <tr>
+        {#if selectable}
+          <th />
+        {/if}
         {#each columns as column}
-          <td>
-            <ComponentWrapper
-              name={column.detail.component}
-              value={row[column.field]}
-              properties={column.detail.params} />
-          </td>
+          <th>{column.label}</th>
         {/each}
       </tr>
-    {/each}
+    </thead>
+    <tbody>
+      {#each items as row}
+        <tr>
+          {#if selectable}
+            <td on:click={() => {
+              row.selected = !row.selected
+            }}>
+              <input
+                class="form-group btn btn-primary"
+                type="checkbox"
+                bind:checked={row.selected}
+                on:change={event => {
+                  openItem(items);
+                }} />
+            </td>
+          {/if}
 
-  </tbody>
-</table>
+          {#each columns as column}
+            <td
+              on:click={event => {
+                openItem(row);
+              }}>
+              <ComponentWrapper
+                name={column.detail.component}
+                value={row[column.field]}
+                properties={column.detail.params} />
+            </td>
+          {/each}
+        </tr>
+      {/each}
 
-<vaadin-dialog aria-label="polymer templates" bind:this={modal} />
+    </tbody>
+  </table>
+
+</div>
+
+<vaadin-dialog aria-label="" bind:this={modal} />
 
 {#if pagination && !itemmodel}
   <ul class="pagination pagination-sm">

@@ -105,7 +105,8 @@ export class PageBuilder {
   }
 
   //Apply api and pages for all fields
-  public async loadDynamicDataForNeededFields() {
+
+  private async loadPageData(items){
     const pageRepository = getRepository<Page>("page");
     const pluginRepository = getRepository<Plugin>("plugin");
 
@@ -116,49 +117,56 @@ export class PageBuilder {
       return typeof val === "function" || typeof val === "object";
     };
 
+    let pageUpdated = false;
+    for (let item of items) {
+      if (item.attributes?.length) {
+        for (let attribute of item.attributes) {
+          if (
+            attribute.name === "api" &&
+            (!attribute.value || !isObject(attribute.value))
+          ) {
+            attribute.value = await pluginRepository.findOne({
+              where: { name: attribute.value }
+            });
+            pageUpdated = true;
+          }
+          if (
+            attribute.name === "page" &&
+            (!attribute.value || !isObject(attribute.value))
+          ) {
+            attribute.value = await pageRepository.findOne({
+              where: { name: attribute.value }
+            });
+            if (attribute?.value?.content) {
+              delete attribute.value.content;
+            }
+            pageUpdated = true;
+          }
+          if (
+            attribute.name === "pageAdd" &&
+            (!attribute.value || !isObject(attribute.value))
+          ) {
+            attribute.value = await pageRepository.findOne({
+              where: { name: attribute.value }
+            });
+            //delete attribute.value.content;
+            attribute.value.content.items = await this.loadPageData(attribute?.value?.content?.items);
+          }
+        }
+      }
+    }
+    return items;
+  }
+
+  public async loadDynamicDataForNeededFields() {
+    const pageRepository = getRepository<Page>("page");
     const allPages = await pageRepository.find();
+
     for (let page of allPages) {
-      let pageUpdated = false;
+      let pageUpdated = true;
       if (page?.content) {
         if (page.content.items?.length) {
-          for (let item of page.content.items) {
-            if (item.attributes?.length) {
-              for (let attribute of item.attributes) {
-                if (
-                  attribute.name === "api" &&
-                  (!attribute.value || !isObject(attribute.value))
-                ) {
-                  attribute.value = await pluginRepository.findOne({
-                    where: { name: attribute.value }
-                  });
-                  pageUpdated = true;
-                }
-                if (
-                  attribute.name === "page" &&
-                  (!attribute.value || !isObject(attribute.value))
-                ) {
-                  attribute.value = await pageRepository.findOne({
-                    where: { name: attribute.value }
-                  });
-                  if (attribute?.value?.content) {
-                    delete attribute.value.content;
-                  }
-                  pageUpdated = true;
-                }
-                if (
-                  attribute.name === "pageAdd" &&
-                  (!attribute.value || !isObject(attribute.value))
-                ) {
-                  let oldName = attribute.value;
-                  attribute.value = await pageRepository.findOne({
-                    where: { name: attribute.value }
-                  });
-                  //delete attribute.value.content;
-                  pageUpdated = true;
-                }
-              }
-            }
-          }
+          page.content.items = await this.loadPageData(page.content.items);        
         }
       }
 
