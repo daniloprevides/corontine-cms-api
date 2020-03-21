@@ -39559,7 +39559,7 @@ var app = (function (exports) {
     	return child_ctx;
     }
 
-    // (421:4) {#if showAdd}
+    // (423:4) {#if showAdd}
     function create_if_block$a(ctx) {
     	let hr0;
     	let t0;
@@ -39658,53 +39658,53 @@ var app = (function (exports) {
     			button1.textContent = "Cancel";
     			t19 = space();
     			hr1 = element("hr");
-    			add_location(hr0, file$e, 421, 6, 11731);
-    			add_location(h2, file$e, 423, 8, 11781);
+    			add_location(hr0, file$e, 423, 6, 11747);
+    			add_location(h2, file$e, 425, 8, 11797);
     			attr_dev(label0, "for", "name");
-    			add_location(label0, file$e, 427, 14, 11924);
+    			add_location(label0, file$e, 429, 14, 11940);
     			attr_dev(input, "type", "text");
     			attr_dev(input, "class", "form-control");
     			attr_dev(input, "id", "name");
     			attr_dev(input, "aria-describedby", "nameHelp");
     			attr_dev(input, "placeholder", "Enter name");
-    			add_location(input, file$e, 428, 14, 11969);
+    			add_location(input, file$e, 430, 14, 11985);
     			attr_dev(div0, "class", "form-group col-md-12");
-    			add_location(div0, file$e, 426, 12, 11875);
+    			add_location(div0, file$e, 428, 12, 11891);
     			attr_dev(label1, "for", "page");
-    			add_location(label1, file$e, 440, 14, 12409);
+    			add_location(label1, file$e, 442, 14, 12425);
     			attr_dev(textarea, "row", "5");
     			attr_dev(textarea, "type", "text");
     			attr_dev(textarea, "class", "form-control");
     			attr_dev(textarea, "id", "description");
     			attr_dev(textarea, "aria-describedby", "descriptionHelp");
     			attr_dev(textarea, "placeholder", "Enter description...");
-    			add_location(textarea, file$e, 441, 14, 12461);
+    			add_location(textarea, file$e, 443, 14, 12477);
     			attr_dev(div1, "class", "form-group col-md-12");
-    			add_location(div1, file$e, 439, 12, 12360);
+    			add_location(div1, file$e, 441, 12, 12376);
     			attr_dev(label2, "for", "permission");
-    			add_location(label2, file$e, 451, 14, 12826);
+    			add_location(label2, file$e, 453, 14, 12842);
     			option.__value = "";
     			option.value = option.__value;
-    			add_location(option, file$e, 460, 16, 13222);
+    			add_location(option, file$e, 462, 16, 13238);
     			attr_dev(select, "class", "input-property-select form-control");
-    			add_location(select, file$e, 452, 14, 12892);
+    			add_location(select, file$e, 454, 14, 12908);
     			attr_dev(div2, "class", "form-group col-md-12");
-    			add_location(div2, file$e, 450, 12, 12777);
+    			add_location(div2, file$e, 452, 12, 12793);
     			attr_dev(div3, "class", "col-md-12");
-    			add_location(div3, file$e, 425, 10, 11839);
+    			add_location(div3, file$e, 427, 10, 11855);
     			attr_dev(div4, "class", "col-md-12");
-    			add_location(div4, file$e, 473, 10, 13658);
+    			add_location(div4, file$e, 475, 10, 13674);
     			attr_dev(div5, "class", "row");
-    			add_location(div5, file$e, 424, 8, 11811);
+    			add_location(div5, file$e, 426, 8, 11827);
     			attr_dev(button0, "class", "btn btn-primary");
-    			add_location(button0, file$e, 636, 10, 20718);
+    			add_location(button0, file$e, 638, 10, 20734);
     			attr_dev(button1, "class", "btn btn-warning");
-    			add_location(button1, file$e, 657, 10, 21506);
+    			add_location(button1, file$e, 659, 10, 21522);
     			attr_dev(div6, "class", "form-group col-md-6");
-    			add_location(div6, file$e, 635, 8, 20674);
+    			add_location(div6, file$e, 637, 8, 20690);
     			attr_dev(div7, "class", "main-edit-form");
-    			add_location(div7, file$e, 422, 6, 11744);
-    			add_location(hr1, file$e, 676, 6, 21988);
+    			add_location(div7, file$e, 424, 6, 11760);
+    			add_location(hr1, file$e, 678, 6, 22004);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr0, anchor);
@@ -39871,14 +39871,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block$a.name,
     		type: "if",
-    		source: "(421:4) {#if showAdd}",
+    		source: "(423:4) {#if showAdd}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (436:14) {#if newPageErrorMessage}
+    // (438:14) {#if newPageErrorMessage}
     function create_if_block_7$1(ctx) {
     	let small;
     	let t;
@@ -39888,7 +39888,7 @@ var app = (function (exports) {
     			small = element("small");
     			t = text(/*newPageErrorMessage*/ ctx[5]);
     			attr_dev(small, "class", "text-danger");
-    			add_location(small, file$e, 436, 16, 12252);
+    			add_location(small, file$e, 438, 16, 12268);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, small, anchor);
@@ -39906,14 +39906,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_7$1.name,
     		type: "if",
-    		source: "(436:14) {#if newPageErrorMessage}",
+    		source: "(438:14) {#if newPageErrorMessage}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (462:16) {#each permissions as permission}
+    // (464:16) {#each permissions as permission}
     function create_each_block_2$2(ctx) {
     	let option;
     	let t_value = /*permission*/ ctx[60] + "";
@@ -39926,7 +39926,7 @@ var app = (function (exports) {
     			t = text(t_value);
     			option.__value = option_value_value = /*permission*/ ctx[60];
     			option.value = option.__value;
-    			add_location(option, file$e, 462, 18, 13323);
+    			add_location(option, file$e, 464, 18, 13339);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -39950,14 +39950,14 @@ var app = (function (exports) {
     		block,
     		id: create_each_block_2$2.name,
     		type: "each",
-    		source: "(462:16) {#each permissions as permission}",
+    		source: "(464:16) {#each permissions as permission}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (466:14) {#if requiredPermissionErrorMessage}
+    // (468:14) {#if requiredPermissionErrorMessage}
     function create_if_block_6$1(ctx) {
     	let small;
     	let t;
@@ -39967,7 +39967,7 @@ var app = (function (exports) {
     			small = element("small");
     			t = text(/*requiredPermissionErrorMessage*/ ctx[6]);
     			attr_dev(small, "class", "text-danger");
-    			add_location(small, file$e, 466, 16, 13487);
+    			add_location(small, file$e, 468, 16, 13503);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, small, anchor);
@@ -39985,14 +39985,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_6$1.name,
     		type: "if",
-    		source: "(466:14) {#if requiredPermissionErrorMessage}",
+    		source: "(468:14) {#if requiredPermissionErrorMessage}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (475:12) {#if currentName}
+    // (477:12) {#if currentName}
     function create_if_block_1$9(ctx) {
     	let div1;
     	let h3;
@@ -40044,41 +40044,41 @@ var app = (function (exports) {
     			vaadin_grid_column4 = element("vaadin-grid-column");
     			t10 = space();
     			vaadin_grid_column5 = element("vaadin-grid-column");
-    			add_location(h3, file$e, 476, 16, 13793);
+    			add_location(h3, file$e, 478, 16, 13809);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-primary");
-    			add_location(button, file$e, 478, 18, 13869);
+    			add_location(button, file$e, 480, 18, 13885);
     			attr_dev(div0, "class", "item-add");
-    			add_location(div0, file$e, 477, 16, 13828);
-    			add_location(hr, file$e, 488, 16, 14159);
+    			add_location(div0, file$e, 479, 16, 13844);
+    			add_location(hr, file$e, 490, 16, 14175);
     			set_custom_element_data(vaadin_grid_column0, "path", "text");
     			set_custom_element_data(vaadin_grid_column0, "header", "Name");
     			set_custom_element_data(vaadin_grid_column0, "flex-grow", "1");
-    			add_location(vaadin_grid_column0, file$e, 612, 18, 19869);
+    			add_location(vaadin_grid_column0, file$e, 614, 18, 19885);
     			set_custom_element_data(vaadin_grid_column1, "path", "page");
     			set_custom_element_data(vaadin_grid_column1, "header", "Page");
     			set_custom_element_data(vaadin_grid_column1, "flex-grow", "1");
-    			add_location(vaadin_grid_column1, file$e, 613, 18, 19950);
+    			add_location(vaadin_grid_column1, file$e, 615, 18, 19966);
     			set_custom_element_data(vaadin_grid_column2, "path", "route");
     			set_custom_element_data(vaadin_grid_column2, "header", "Route");
     			set_custom_element_data(vaadin_grid_column2, "flex-grow", "1");
-    			add_location(vaadin_grid_column2, file$e, 614, 18, 20031);
+    			add_location(vaadin_grid_column2, file$e, 616, 18, 20047);
     			set_custom_element_data(vaadin_grid_column3, "path", "externalUrl");
     			set_custom_element_data(vaadin_grid_column3, "header", "External Url");
     			set_custom_element_data(vaadin_grid_column3, "flex-grow", "1");
-    			add_location(vaadin_grid_column3, file$e, 618, 18, 20174);
+    			add_location(vaadin_grid_column3, file$e, 620, 18, 20190);
     			set_custom_element_data(vaadin_grid_column4, "path", "requiredPermission");
     			set_custom_element_data(vaadin_grid_column4, "header", "Required Permission");
     			set_custom_element_data(vaadin_grid_column4, "flex-grow", "1");
-    			add_location(vaadin_grid_column4, file$e, 622, 18, 20330);
+    			add_location(vaadin_grid_column4, file$e, 624, 18, 20346);
     			set_custom_element_data(vaadin_grid_column5, "path", "action");
     			set_custom_element_data(vaadin_grid_column5, "header", "");
     			set_custom_element_data(vaadin_grid_column5, "flex-grow", "1");
-    			add_location(vaadin_grid_column5, file$e, 626, 18, 20500);
+    			add_location(vaadin_grid_column5, file$e, 628, 18, 20516);
     			set_custom_element_data(vaadin_grid, "class", "children-grid");
-    			add_location(vaadin_grid, file$e, 609, 16, 19745);
+    			add_location(vaadin_grid, file$e, 611, 16, 19761);
     			attr_dev(div1, "class", "children col-md-6 children-container");
-    			add_location(div1, file$e, 475, 14, 13726);
+    			add_location(div1, file$e, 477, 14, 13742);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -40132,14 +40132,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_1$9.name,
     		type: "if",
-    		source: "(475:12) {#if currentName}",
+    		source: "(477:12) {#if currentName}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (490:16) {#if showChildrenAdd}
+    // (492:16) {#if showChildrenAdd}
     function create_if_block_2$7(ctx) {
     	let div6;
     	let div0;
@@ -40261,61 +40261,61 @@ var app = (function (exports) {
     			button1 = element("button");
     			button1.textContent = "Cancel";
     			attr_dev(label0, "for", "name");
-    			add_location(label0, file$e, 492, 22, 14316);
+    			add_location(label0, file$e, 494, 22, 14332);
     			attr_dev(input0, "type", "text");
     			attr_dev(input0, "class", "form-control");
     			attr_dev(input0, "id", "name");
     			attr_dev(input0, "aria-describedby", "nameHelp");
     			attr_dev(input0, "placeholder", "Enter name");
-    			add_location(input0, file$e, 493, 22, 14369);
+    			add_location(input0, file$e, 495, 22, 14385);
     			attr_dev(div0, "class", "form-group col-md-4");
-    			add_location(div0, file$e, 491, 20, 14260);
+    			add_location(div0, file$e, 493, 20, 14276);
     			attr_dev(label1, "for", "page");
-    			add_location(label1, file$e, 508, 22, 14975);
+    			add_location(label1, file$e, 510, 22, 14991);
     			option0.__value = "";
     			option0.value = option0.__value;
-    			add_location(option0, file$e, 517, 24, 15410);
+    			add_location(option0, file$e, 519, 24, 15426);
     			attr_dev(select0, "class", "input-property-select form-control");
-    			add_location(select0, file$e, 509, 22, 15028);
+    			add_location(select0, file$e, 511, 22, 15044);
     			attr_dev(div1, "class", "form-group col-md-4");
-    			add_location(div1, file$e, 507, 20, 14919);
+    			add_location(div1, file$e, 509, 20, 14935);
     			attr_dev(label2, "for", "permission");
-    			add_location(label2, file$e, 530, 22, 15955);
+    			add_location(label2, file$e, 532, 22, 15971);
     			option1.__value = "";
     			option1.value = option1.__value;
-    			add_location(option1, file$e, 539, 24, 16437);
+    			add_location(option1, file$e, 541, 24, 16453);
     			attr_dev(select1, "class", "input-property-select form-control");
-    			add_location(select1, file$e, 531, 22, 16029);
+    			add_location(select1, file$e, 533, 22, 16045);
     			attr_dev(div2, "class", "form-group col-md-4");
-    			add_location(div2, file$e, 529, 20, 15899);
+    			add_location(div2, file$e, 531, 20, 15915);
     			attr_dev(label3, "for", "name");
-    			add_location(label3, file$e, 552, 22, 17010);
+    			add_location(label3, file$e, 554, 22, 17026);
     			attr_dev(input1, "type", "text");
     			attr_dev(input1, "class", "form-control");
     			attr_dev(input1, "id", "route");
     			attr_dev(input1, "aria-describedby", "routeHelp");
     			attr_dev(input1, "placeholder", "Enter route");
-    			add_location(input1, file$e, 553, 22, 17064);
+    			add_location(input1, file$e, 555, 22, 17080);
     			attr_dev(div3, "class", "form-group col-md-4");
-    			add_location(div3, file$e, 551, 20, 16954);
+    			add_location(div3, file$e, 553, 20, 16970);
     			attr_dev(label4, "for", "name");
-    			add_location(label4, file$e, 563, 22, 17455);
+    			add_location(label4, file$e, 565, 22, 17471);
     			attr_dev(input2, "type", "text");
     			attr_dev(input2, "class", "form-control");
     			attr_dev(input2, "id", "externalUrl");
     			attr_dev(input2, "aria-describedby", "externalUrlHelp");
     			attr_dev(input2, "placeholder", "Enter External Url");
-    			add_location(input2, file$e, 564, 22, 17516);
+    			add_location(input2, file$e, 566, 22, 17532);
     			attr_dev(div4, "class", "form-group col-md-8");
-    			add_location(div4, file$e, 562, 20, 17399);
+    			add_location(div4, file$e, 564, 20, 17415);
     			attr_dev(button0, "class", "btn btn-primary");
-    			add_location(button0, file$e, 574, 22, 17932);
+    			add_location(button0, file$e, 576, 22, 17948);
     			attr_dev(button1, "class", "btn btn-warning");
-    			add_location(button1, file$e, 593, 22, 19190);
+    			add_location(button1, file$e, 595, 22, 19206);
     			attr_dev(div5, "class", "form-group col-md-6");
-    			add_location(div5, file$e, 573, 20, 17876);
+    			add_location(div5, file$e, 575, 20, 17892);
     			attr_dev(div6, "class", "row");
-    			add_location(div6, file$e, 490, 18, 14222);
+    			add_location(div6, file$e, 492, 18, 14238);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div6, anchor);
@@ -40542,14 +40542,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_2$7.name,
     		type: "if",
-    		source: "(490:16) {#if showChildrenAdd}",
+    		source: "(492:16) {#if showChildrenAdd}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (501:22) {#if childrenPageErrorMessage}
+    // (503:22) {#if childrenPageErrorMessage}
     function create_if_block_5$1(ctx) {
     	let small;
     	let t;
@@ -40559,7 +40559,7 @@ var app = (function (exports) {
     			small = element("small");
     			t = text(/*childrenPageErrorMessage*/ ctx[7]);
     			attr_dev(small, "class", "text-danger");
-    			add_location(small, file$e, 501, 24, 14729);
+    			add_location(small, file$e, 503, 24, 14745);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, small, anchor);
@@ -40577,14 +40577,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_5$1.name,
     		type: "if",
-    		source: "(501:22) {#if childrenPageErrorMessage}",
+    		source: "(503:22) {#if childrenPageErrorMessage}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (519:24) {#each pages as page}
+    // (521:24) {#each pages as page}
     function create_each_block_1$2(ctx) {
     	let option;
     	let t_value = /*page*/ ctx[63].name + "";
@@ -40597,7 +40597,7 @@ var app = (function (exports) {
     			t = text(t_value);
     			option.__value = option_value_value = /*page*/ ctx[63].id;
     			option.value = option.__value;
-    			add_location(option, file$e, 519, 26, 15515);
+    			add_location(option, file$e, 521, 26, 15531);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -40621,14 +40621,14 @@ var app = (function (exports) {
     		block,
     		id: create_each_block_1$2.name,
     		type: "each",
-    		source: "(519:24) {#each pages as page}",
+    		source: "(521:24) {#each pages as page}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (523:22) {#if childrenPageErrorPageMessage}
+    // (525:22) {#if childrenPageErrorPageMessage}
     function create_if_block_4$2(ctx) {
     	let small;
     	let t;
@@ -40638,7 +40638,7 @@ var app = (function (exports) {
     			small = element("small");
     			t = text(/*childrenPageErrorPageMessage*/ ctx[9]);
     			attr_dev(small, "class", "text-danger");
-    			add_location(small, file$e, 523, 24, 15705);
+    			add_location(small, file$e, 525, 24, 15721);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, small, anchor);
@@ -40656,14 +40656,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_4$2.name,
     		type: "if",
-    		source: "(523:22) {#if childrenPageErrorPageMessage}",
+    		source: "(525:22) {#if childrenPageErrorPageMessage}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (541:24) {#each permissions as permission}
+    // (543:24) {#each permissions as permission}
     function create_each_block$3(ctx) {
     	let option;
     	let t_value = /*permission*/ ctx[60] + "";
@@ -40676,7 +40676,7 @@ var app = (function (exports) {
     			t = text(t_value);
     			option.__value = option_value_value = /*permission*/ ctx[60];
     			option.value = option.__value;
-    			add_location(option, file$e, 541, 26, 16554);
+    			add_location(option, file$e, 543, 26, 16570);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -40700,14 +40700,14 @@ var app = (function (exports) {
     		block,
     		id: create_each_block$3.name,
     		type: "each",
-    		source: "(541:24) {#each permissions as permission}",
+    		source: "(543:24) {#each permissions as permission}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (545:22) {#if childrenPageErrorPermissionMessage}
+    // (547:22) {#if childrenPageErrorPermissionMessage}
     function create_if_block_3$4(ctx) {
     	let small;
     	let t;
@@ -40717,7 +40717,7 @@ var app = (function (exports) {
     			small = element("small");
     			t = text(/*childrenPageErrorPermissionMessage*/ ctx[8]);
     			attr_dev(small, "class", "text-danger");
-    			add_location(small, file$e, 545, 24, 16754);
+    			add_location(small, file$e, 547, 24, 16770);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, small, anchor);
@@ -40735,7 +40735,7 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_3$4.name,
     		type: "if",
-    		source: "(545:22) {#if childrenPageErrorPermissionMessage}",
+    		source: "(547:22) {#if childrenPageErrorPermissionMessage}",
     		ctx
     	});
 
@@ -40803,43 +40803,43 @@ var app = (function (exports) {
     			attr_dev(link, "href", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css");
     			attr_dev(link, "integrity", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T");
     			attr_dev(link, "crossorigin", "anonymous");
-    			add_location(link, file$e, 372, 2, 10370);
-    			add_location(head, file$e, 371, 0, 10361);
-    			add_location(small, file$e, 386, 8, 10775);
+    			add_location(link, file$e, 374, 2, 10386);
+    			add_location(head, file$e, 373, 0, 10377);
+    			add_location(small, file$e, 388, 8, 10791);
     			attr_dev(span, "class", "btn-add-item ");
     			attr_dev(span, "title", "Add new Item");
-    			add_location(span, file$e, 393, 10, 11060);
+    			add_location(span, file$e, 395, 10, 11076);
     			set_custom_element_data(vaadin_menu_bar, "theme", "dark");
     			set_custom_element_data(vaadin_menu_bar, "class", "role-menu-bar");
-    			add_location(vaadin_menu_bar, file$e, 401, 10, 11258);
+    			add_location(vaadin_menu_bar, file$e, 403, 10, 11274);
     			set_style(div0, "position", "relative");
     			set_style(div0, "background-color", /*currentBgColor*/ ctx[22]);
     			set_style(div0, "min-height", "30px");
     			set_style(div0, "border-radius", "3px");
-    			add_location(div0, file$e, 389, 8, 10881);
+    			add_location(div0, file$e, 391, 8, 10897);
     			attr_dev(div1, "class", "col-md-12");
-    			add_location(div1, file$e, 385, 6, 10743);
-    			add_location(hr, file$e, 407, 6, 11405);
+    			add_location(div1, file$e, 387, 6, 10759);
+    			add_location(hr, file$e, 409, 6, 11421);
     			attr_dev(label, "for", "name");
-    			add_location(label, file$e, 410, 8, 11468);
+    			add_location(label, file$e, 412, 8, 11484);
     			attr_dev(input, "type", "color");
     			attr_dev(input, "class", "form-control");
     			attr_dev(input, "id", "bgColor");
     			attr_dev(input, "aria-describedby", "bgColorHelp");
-    			add_location(input, file$e, 411, 8, 11516);
+    			add_location(input, file$e, 413, 8, 11532);
     			attr_dev(div2, "class", "form-group col-md-6");
     			div2.hidden = true;
-    			add_location(div2, file$e, 409, 6, 11419);
+    			add_location(div2, file$e, 411, 6, 11435);
     			attr_dev(div3, "class", "card-header");
     			attr_dev(div3, "id", "headingOne");
-    			add_location(div3, file$e, 383, 4, 10694);
+    			add_location(div3, file$e, 385, 4, 10710);
     			attr_dev(div4, "class", "card");
-    			add_location(div4, file$e, 382, 2, 10671);
+    			add_location(div4, file$e, 384, 2, 10687);
     			attr_dev(div5, "id", "accordion");
-    			add_location(div5, file$e, 381, 0, 10648);
+    			add_location(div5, file$e, 383, 0, 10664);
     			set_custom_element_data(vaadin_dialog, "no-close-on-esc", "");
     			set_custom_element_data(vaadin_dialog, "no-close-on-outside-click", "");
-    			add_location(vaadin_dialog, file$e, 681, 0, 22022);
+    			add_location(vaadin_dialog, file$e, 683, 0, 22038);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -41068,7 +41068,7 @@ var app = (function (exports) {
     			$$invalidate(6, requiredPermissionErrorMessage = "Required Permission Must be filled");
     		}
 
-    		return newPageErrorMessage == null && requiredPermissionErrorMessage == null;
+    		if (curre) return newPageErrorMessage == null && requiredPermissionErrorMessage == null;
     	};
 
     	const validateChildren = () => {
