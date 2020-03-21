@@ -29,6 +29,7 @@ export class Attribute {
   export class PageModel {
     api: string;
     apiData: any;
+    type: string;
     apiType: string;
     validate: boolean = true;
     permissionView: string;

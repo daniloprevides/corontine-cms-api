@@ -47,6 +47,7 @@ export class PageModel {
   apiData: any;
   apiType: string;
   validate: boolean = true;
+  type: "default";
   permissionView: string;
   permissionAdd: string;
   permissionDelete: string;
@@ -165,6 +166,7 @@ export class PageBuilderModel {
   selectedId; //Holds the id of the current selected component inside page builder
   pageModel: PageModel = {
     validate: true,
+    type: "default",
     permissionView: "",
     permissionAdd: "",
     permissionDelete: "",
@@ -664,17 +666,20 @@ export class PageBuilderModel {
           );
         }
 
-        if (!this.pageModel.permissionAdd.length ){
-          errorMessages.push(
-            `A permission to create a new page must be selected`
-          );
+        if (this.pageModel.type === "default"){
+          if (!this.pageModel.permissionAdd.length ){
+            errorMessages.push(
+              `A permission to create a new page must be selected`
+            );
+          }
+  
+          if (!this.pageModel.permissionDelete.length ){
+            errorMessages.push(
+              `A permission to delete this page must be selected`
+            );
+          }  
         }
 
-        if (!this.pageModel.permissionDelete.length ){
-          errorMessages.push(
-            `A permission to delete this page must be selected`
-          );
-        }
 
 
         if (errorMessages.length) {
@@ -838,6 +843,7 @@ $: {
       model.pageModel.apiData = selected.content.apiData;
       model.pageModel.apiType = selected.content.apiType;
       model.pageModel.validate = selected.content.validate;
+      model.pageModel.type = selected.content.type;
       model.pageModel.permissionView = selected.content.permissionView;
       model.pageModel.permissionAdd = selected.content.permissionAdd;
       model.pageModel.permissionDelete = selected.content.permissionDelete;

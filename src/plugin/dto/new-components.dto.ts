@@ -26,7 +26,7 @@ export class NewComponentsDto {
     new ComponentDefinition("input-data", { type: "textarea" })
   )
   @ExposeFieldName
-  description: Components["description"];
+  description?: Components["description"];
 
   @ApiProperty()
   @IsString()
@@ -35,7 +35,7 @@ export class NewComponentsDto {
     new ComponentDefinition("input-data", { type: "text" })
   )
   @ExposeFieldName
-  informationUrl: Components["informationUrl"];
+  informationUrl?: Components["informationUrl"];
 
   @ApiProperty()
   @IsString()
@@ -43,12 +43,12 @@ export class NewComponentsDto {
     new ComponentDefinition("input-data", { type: "text" })
   )
   @ExposeFieldName
-  url: Components["url"];
+  url?: Components["url"];
 
   @ApiProperty({ type: () => NewFieldsDto })
   @IsOptional()
   @ExposeFieldName
-  fields: NewFieldsDto[];
+  fields?: NewFieldsDto[];
 
   @ApiProperty({ type: () => PluginDto })
   @ExposeFieldNamesForPage(

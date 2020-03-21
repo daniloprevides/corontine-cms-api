@@ -13,6 +13,7 @@
   let confirmationModal;
 
   let newPageErrorMessage = null;
+  let requiredPermissionErrorMessage = null;
   let childrenPageErrorMessage = null;
   let childrenPageErrorPermissionMessage = null;
   let childrenPageErrorPageMessage = null;
@@ -25,6 +26,7 @@
 
   let currentName = null;
   let currentDescription = null;
+  let currentRequiredPermission = null;
   let currentChildrenName = null;
   let currentChildrenPage = null;
   let currentChildrenId = null;
@@ -78,6 +80,7 @@
           id: id,
           text: text,
           description: description,
+          requiredPermission: currentRequiredPermission,
           children: children,
         });
         menuItem = menuItems.find(i => i.id === id);
@@ -144,11 +147,20 @@
 
   const validateNewPage = () => {
     newPageErrorMessage = null;
+    requiredPermissionErrorMessage = null;
     if (!currentName || currentName.trim() === '') {
       newPageErrorMessage = 'Name Must be filled';
     }
 
-    return newPageErrorMessage == null;
+    if (!currentRequiredPermission || currentRequiredPermission.trim() === '') {
+      requiredPermissionErrorMessage = 'Required Permission Must be filled';
+    }
+
+    if (curre)
+
+    return (
+      newPageErrorMessage == null && requiredPermissionErrorMessage == null
+    );
   };
 
   const validateChildren = () => {
@@ -342,19 +354,19 @@
     width: 26px;
     background-color: white;
     font-size: 27px;
-    color:  hsla(0, 0%, 16%, 0.83);
+    color: hsla(0, 0%, 16%, 0.83);
     border: 1px dotted var(--cms-options-disabled);
     padding-left: 3px;
     padding-right: 3px;
     cursor: pointer;
   }
 
-    .btn-add-item:hover{
-      color: black;
-      border: 1px solid var(--cms-options-disabled);
+  .btn-add-item:hover {
+    color: black;
+    border: 1px solid var(--cms-options-disabled);
   }
 
-  .role-menu-bar{
+  .role-menu-bar {
     margin-left: 20px;
   }
 </style>
@@ -381,12 +393,18 @@
           style="position: relative; background-color: {currentBgColor};
           min-height: 30px; border-radius: 3px;"
           bind:this={containerComponent}>
-          <span class="btn-add-item " 
-          title="Add new Item"
-           on:click={event => {
-            showAdd = !showAdd;
-          }}>+</span>
-          <vaadin-menu-bar theme="dark" class="role-menu-bar" bind:this={component} />
+          <span
+            class="btn-add-item "
+            title="Add new Item"
+            on:click={event => {
+              showAdd = !showAdd;
+            }}>
+            +
+          </span>
+          <vaadin-menu-bar
+            theme="dark"
+            class="role-menu-bar"
+            bind:this={component} />
         </div>
       </div>
       <hr />
@@ -431,6 +449,27 @@
                 bind:value={currentDescription}
                 aria-describedby="descriptionHelp"
                 placeholder="Enter description..." />
+            </div>
+            <div class="form-group col-md-12">
+              <label for="permission">Required Permission</label>
+              <select
+                class="input-property-select form-control"
+                value={currentRequiredPermission}
+                on:change={event => {
+                  if (event.target.value !== '') {
+                    currentRequiredPermission = event.target.value;
+                  }
+                }}>
+                <option value="">Choose</option>
+                {#each permissions as permission}
+                  <option value={permission}>{permission}</option>
+                {/each}
+              </select>
+              {#if requiredPermissionErrorMessage}
+                <small class="text-danger">
+                  {requiredPermissionErrorMessage}
+                </small>
+              {/if}
             </div>
           </div>
 

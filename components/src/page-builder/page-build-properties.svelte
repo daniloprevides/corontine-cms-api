@@ -42,14 +42,25 @@
         class="input-property-value" />
     </td>
   </tr>
-   <tr>
+  <tr>
+    <td>Type:</td>
+    <td>
+      <select
+        class="input-property-select"
+        bind:value={pageModel.type}
+        on:change={event => {}}>
+        <option value="default">Default</option>
+        <option value="custom">Custom</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
     <td>View Permission:</td>
     <td>
       <select
         class="input-property-select"
         bind:value={pageModel.permissionView}
-        on:change={event => {
-        }}>
+        on:change={event => {}}>
         <option value="">Choose</option>
         {#each permissions as permission}
           <option value={permission}>{permission}</option>
@@ -57,37 +68,36 @@
       </select>
     </td>
   </tr>
-   <tr>
-    <td>Add Permission:</td>
-    <td>
-      <select
-        class="input-property-select"
-        bind:value={pageModel.permissionAdd}
-        on:change={event => {
-        }}>
-        <option value="">Choose</option>
-        {#each permissions as permission}
-          <option value={permission}>{permission}</option>
-        {/each}
-      </select>
-    </td>
-  </tr>
-   <tr>
-    <td>Delete Permission:</td>
-    <td>
-      <select
-        class="input-property-select"
-        bind:value={pageModel.permissionDelete}
-        on:change={event => {
-        }}>
-        <option value="">Choose</option>
-        {#each permissions as permission}
-          <option value={permission}>{permission}</option>
-        {/each}
-      </select>
-    </td>
-  </tr>
-
+  {#if pageModel.type === 'default'}
+    <tr>
+      <td>Add Permission:</td>
+      <td>
+        <select
+          class="input-property-select"
+          bind:value={pageModel.permissionAdd}
+          on:change={event => {}}>
+          <option value="">Choose</option>
+          {#each permissions as permission}
+            <option value={permission}>{permission}</option>
+          {/each}
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Delete Permission:</td>
+      <td>
+        <select
+          class="input-property-select"
+          bind:value={pageModel.permissionDelete}
+          on:change={event => {}}>
+          <option value="">Choose</option>
+          {#each permissions as permission}
+            <option value={permission}>{permission}</option>
+          {/each}
+        </select>
+      </td>
+    </tr>
+  {/if}
 </table>
 
 <h2 class="comps-title">Api</h2>
@@ -109,7 +119,6 @@
       </select>
     </td>
   </tr>
- 
 
 </table>
 
@@ -248,7 +257,7 @@
           </td>
         </tr>
 
-        {#if item && (item.modelComponent.type === 'API' || item.modelComponent.type === 'MULTI')}
+        {#if item && (item.modelComponent.type === 'API' || item.modelComponent.type === 'MULTI' || item.modelComponent.type === 'CUSTOM')}
           <tr>
             <td>* Source data:</td>
             <td>

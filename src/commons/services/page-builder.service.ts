@@ -39,9 +39,9 @@ export class PageBuilder {
     };
 
     const pages = {
-      add: await this.getPageEntry(pageNames.add),
-      edit: await this.getPageEntry(pageNames.edit),
-      list: await this.getPageEntry(pageNames.list)
+      add: await this.getPageEntry(pageNames.add,pageNames.addDescription),
+      edit: await this.getPageEntry(pageNames.edit, pageNames.editDescription),
+      list: await this.getPageEntry(pageNames.list, pageNames.listDescription)
     };
 
     //getting all fields definitions

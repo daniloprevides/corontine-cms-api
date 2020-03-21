@@ -74,7 +74,7 @@ export default () => ({
     testDatabase: {
       type: "sqlite",
       database: ":memory:",
-      dropSchema: true,
+      dropSchema: false,
       synchronize: false,
       entities: [
           __dirname + '/../**/*.entity{.ts,.js}',

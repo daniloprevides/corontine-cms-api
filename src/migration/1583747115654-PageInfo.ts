@@ -38,93 +38,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
     const pluginBase = await pluginRepository.findOne({
       where: { pluginType: PluginTypeEnum.PAGES }
     });
-
-    // const page = new Page();
-    // page.name = "page_add";
-    // page.content = {
-    //   pages: [
-    //     {
-    //       name: "add",
-    //       style: "",
-    //       items: [
-    //         {
-    //           name: "h1-title",
-    //           id: "added_v4n5y8h",
-    //           attributes: [
-    //             {
-    //               name: "fieldDefinition",
-    //               value: [],
-    //               type: "ANY",
-    //               required: true
-    //             } as Attributes,
-    //             {
-    //               name: "apiSource",
-    //               value: "Pages API",
-    //               type: AttributeTypeEnum.ATTRIBUTE,
-    //               required: true
-    //             },
-    //             {
-    //               name: "text",
-    //               value: "Page",
-    //               type: AttributeTypeEnum.ATTRIBUTE,
-    //               model: "none"
-    //             },
-    //             {
-    //               name: "description",
-    //               value: "New Page",
-    //               type: AttributeTypeEnum.ATTRIBUTE,
-    //               model: "none"
-    //             }
-    //           ]
-    //         },
-    //         { id: "added_v4n5y8h", attributes: [], field: "content" },
-    //         {
-    //           name: "vaadin-text-field",
-    //           id: "added_k4tczo",
-    //           attributes: [
-    //             {
-    //               name: "i18n",
-    //               value: { clear: "Clear" },
-    //               type: AttributeTypeEnum.PROPERTY,
-    //               model: "none"
-    //             },
-    //             {
-    //               name: "label",
-    //               value: "Name",
-    //               type: AttributeTypeEnum.ATTRIBUTE,
-    //               model: "none"
-    //             }
-    //           ]
-    //         },
-    //         {
-    //           name: "vaadin-text-area",
-    //           id: "added_bs3xu",
-    //           attributes: [
-    //             {
-    //               name: "i18n",
-    //               value: { clear: "Clear" },
-    //               type: AttributeTypeEnum.PROPERTY,
-    //               model: "none"
-    //             },
-    //             {
-    //               name: "label",
-    //               value: "Content",
-    //               type: AttributeTypeEnum.PROPERTY,
-    //               model: "none"
-    //             }
-    //           ]
-    //         }
-    //       ]
-    //     },
-    //     { name: "edit", style: "", items: [] },
-    //     { name: "list", style: "", items: [] }
-    //   ]
-    // };
-    // page.clientId = pluginBase.clientId;
-    // page.description = "Add format for Page";
-    // page.pluginId = pluginBase.id;
-
-    // pageRepository.save(page);
+  
   }
 
   private async createComponent() {
@@ -318,7 +232,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         clientId: pluginBase?.clientId,
         name: "select-data",
         description: "Allow user to select an item from specific data",
-        type: FieldSelectionTypeEnum.API,
+        type: FieldSelectionTypeEnum.MULTI,
         defaultEvent: "changed",
         defaultEventPath: "",
         allowInComposer: true,
@@ -777,7 +691,61 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes
         ]
-      } as Fields      
+      } as Fields,
+      {
+        clientId: pluginBase?.clientId,
+        name: "viewer-data",
+        description: "Viewer for data",
+        type: FieldSelectionTypeEnum.CUSTOM,        
+        defaultEvent: "item-selected",
+        defaultEventPath: "",
+        allowInComposer: true,        
+        needApi: false,
+        events: [
+          {
+            clientId: pluginBase?.clientId,
+            name: "item-selected",
+            description: "Event triggered when one item is selected",
+            outputObjectDefinition: {},
+            outputType: FieldTypeEnum.ANY
+          } as Events
+        ],
+        attributes: [
+          {
+            clientId: pluginBase?.clientId,
+            attributeType: AttributeTypeEnum.PROPERTY,
+            required: true,
+            description: "",
+            applyAfterSetInComposer: true,
+            name: "label1",
+            value:null,
+            defaultValue: {val: "Estimated"},
+            type: FieldTypeEnum.STRING
+          } as Attributes,
+          {
+            clientId: pluginBase?.clientId,
+            attributeType: AttributeTypeEnum.PROPERTY,
+            required: true,
+            description: "",
+            applyAfterSetInComposer: true,
+            name: "label2",
+            value:null,
+            defaultValue: {val: "Real"},
+            type: FieldTypeEnum.STRING
+          } as Attributes,   
+          {
+            clientId: pluginBase?.clientId,
+            attributeType: AttributeTypeEnum.PROPERTY,
+            required: false,
+            description: "",
+            applyAfterSetInComposer: true,
+            name: "estimated",
+            value:null,
+            defaultValue: {val: null},
+            type: FieldTypeEnum.NUMBER
+          } as Attributes,                                  
+        ]
+      } as Fields,                   
     ];
 
     await componentsRepository.save(pageComponents);

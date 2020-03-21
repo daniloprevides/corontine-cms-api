@@ -1,19 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsBoolean, IsOptional } from 'class-validator';
-import { Expose } from 'class-transformer';
-import { User } from '../entity/user.entity';
-import { GroupDTO } from './group.dto';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsBoolean, IsOptional } from "class-validator";
+import { Expose } from "class-transformer";
+import { User } from "../entity/user.entity";
+import { GroupDTO } from "./group.dto";
 
 export class NewUserDTO {
   @ApiProperty({ type: String })
   @IsNotEmpty()
   @Expose()
-  name: User['name'];
+  name: User["name"];
 
   @ApiProperty({ type: String })
   @IsNotEmpty()
   @Expose()
-  email: User['email'];
+  email: User["email"];
 
   @ApiProperty({ type: Boolean })
   @IsBoolean()
@@ -24,20 +24,22 @@ export class NewUserDTO {
   @ApiProperty({ type: String })
   @IsNotEmpty()
   @Expose()
-  password: User['password'];
+  password: User["password"];
 
   @ApiProperty({ type: String })
   @Expose()
-  urlFacebook: User['urlFacebook'];
+  urlFacebook: User["urlFacebook"];
 
   @ApiProperty({ type: String })
   @Expose()
-  urlInstagram: User['urlInstagram'];
+  urlInstagram: User["urlInstagram"];
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @Expose()
+  homePage?: User["homePage"];
 
   @ApiProperty({ type: GroupDTO })
   @Expose()
   groups: Array<GroupDTO>;
-
-
-
 }

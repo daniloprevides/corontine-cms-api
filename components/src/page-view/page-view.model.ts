@@ -264,6 +264,41 @@ export class PageViewModel {
     });
   }
 
+  private async buildCustomComponent(
+    element: any,
+    selectedItem: any,
+    id: string
+  ) {
+    console.debug("Build custom component", selectedItem);
+    let apiData = selectedItem.attributes.find(a => a.name === "api");
+    if (!apiData || !apiData.value) {
+      console.debug(
+        `Cannot load child data for component ${selectedItem.name} with id ${id} because no api was selected`
+      );
+      return;
+    }
+    //adding lifeCyckle methods
+    element.getData = getData;
+    element.api = apiData;
+    console.debug(`Acquiring data for `, apiData);
+
+    //get default size
+    let options = {} as any;
+    let size = selectedItem.attributes.find(a => a.name === "size");
+    if (size && size.value) options.limit = size.value;
+
+    const childrenData = await getData(
+      apiData.value.apiUrl,
+      options,
+      apiData.value.id
+    );
+    console.debug(`Data acquired for ${apiData.value.apiUrl}`, childrenData);
+
+    if (childrenData && childrenData.items) {
+      element.data = childrenData;
+    }
+  }
+
   showMessage(
     text: string,
     ok: Function = () => {},
@@ -326,6 +361,11 @@ export class PageViewModel {
       }
       case "MULTI": {
         await this.buildMultiComponent(element, selectedItem, id);
+        break;
+      }
+
+      case "CUSTOM": {
+        await this.buildCustomComponent(element, selectedItem, id);
         break;
       }
     }

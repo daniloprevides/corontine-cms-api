@@ -246,7 +246,7 @@ describe("Events (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -350,7 +350,7 @@ describe("Events (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -467,7 +467,7 @@ describe("Events (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -576,7 +576,7 @@ describe("Events (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -687,7 +687,7 @@ describe("Events (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,

@@ -49,6 +49,10 @@ export class User extends Audit {
   @Expose()
   urlInstagram: string;
 
+  @Column({ name: "home_page", nullable: false, default: "home" })
+  @Expose()
+  homePage: string;
+
   @Column({
     default: ""
   })

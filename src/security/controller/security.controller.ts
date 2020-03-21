@@ -47,7 +47,7 @@ export class SecurityController {
     allowEmptyValue: true,
     description: "Base64 authenticated string"
   })
-  @ApiOAuth2(['pets:write'])
+  @ApiOAuth2([''])
   @HttpCode(200)
   async authenticateUser(
     // eslint-disable-next-line @typescript-eslint/camelcase

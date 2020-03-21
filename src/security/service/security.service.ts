@@ -100,6 +100,7 @@ export class SecurityService {
       id: user.id,
       username: user.name,
       secret: user.password,
+      page: user.homePage,
       type: "user",
       scope: (await this.userService.getAllUserScopes(user.id)).map(s => s.name).join(" ")
     } as TokenDto;
@@ -322,7 +323,8 @@ export class SecurityService {
       ),
       tokenType: 'bearer',
       expiresIn: this.appConfigService.get("jwt").tokenExpiration,
-      scope: tokenDto.scope
+      scope: tokenDto.scope,
+      page: tokenDto.page
     };
   }
 

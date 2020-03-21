@@ -247,7 +247,7 @@ describe("Attributes (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -268,7 +268,7 @@ describe("Attributes (e2e)", () => {
     let newAttribute = {
       name: uuidv4(),
       value: { name: "danilo" },
-      field: field.id,
+      field: field,
       type: FieldTypeEnum.ANY,
       attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
@@ -356,7 +356,7 @@ describe("Attributes (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -378,7 +378,7 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       type: FieldTypeEnum.ANY,
-      field: field.id,
+      field: field,
       attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
     const newAttributeResponse = await createRequest(
@@ -481,7 +481,7 @@ describe("Attributes (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -503,7 +503,7 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       type: FieldTypeEnum.ANY,
-      field: field.id,
+      field: field,
       attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
     const newAttributeResponse = await createRequest(
@@ -594,7 +594,7 @@ describe("Attributes (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -616,7 +616,7 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       type: FieldTypeEnum.ANY,
-      field: field.id,
+      field: field,
       attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
     const newAttributeResponse = await createRequest(
@@ -709,7 +709,7 @@ describe("Attributes (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let newComponent = {
       name: uuidv4(),
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
     const newComponentResponse = await createRequest(
       newComponent,
@@ -731,7 +731,7 @@ describe("Attributes (e2e)", () => {
       name: uuidv4(),
       value: { name: "danilo" },
       type: FieldTypeEnum.ANY,
-      field: field.id,
+      field: field,
       attributeType: AttributeTypeEnum.ATTRIBUTE
     } as NewAttributesDto;
     const newAttributeResponse = await createRequest(

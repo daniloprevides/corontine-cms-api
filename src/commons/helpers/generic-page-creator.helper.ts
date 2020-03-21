@@ -54,16 +54,20 @@ export class GenericPageCreatorHelper {
     }
 
 
-    private async createPageModel(name:string, description:string, api:Plugin, fields:Array<{name: string, field: Fields, propertiesMap:any}>, apiType:string, context:any, permission:PermissionsDefinition, style?:string){
+    public async createPageModel(name:string, description:string, api:Plugin, fields:Array<{name: string, field: Fields, propertiesMap:any}>, apiType:string, context:any, permission:PermissionsDefinition, style?:string){
 
         //For getting the url, must do a call
         const newId =(prefix?:string)=> {
             return (prefix ? prefix+"_" : "B_") + Math.random().toString(36).substring(7);
         }
         const page = new PageModel(name, description,style,[]);
-        api.apiUrl = api.apiUrl,context;
-        page.api = api.id;
-        page.apiData = api;
+        if (api){
+            api.apiUrl = api.apiUrl;
+            page.api = api.id;
+            page.apiData = api;    
+        }
+        page.description = description;
+        page.type = "default";
         page.apiType = apiType;
         page.permissionView = permission.viewPermission;
         page.permissionAdd = permission.addPermission;
@@ -83,8 +87,6 @@ export class GenericPageCreatorHelper {
             //Adding label
             attributes.push({name: "label", value: item.name, type: "ATTRIBUTE", id: newId()});
 
-            //if is a table (list)
-
             //applying the properties
             if (item.propertiesMap){
                 Object.keys(item.propertiesMap).forEach(p => {
@@ -98,7 +100,7 @@ export class GenericPageCreatorHelper {
             delete item.field.attributes;
             let field = new FieldItem(id,item.field.name,item,null,null,attributes);
             field.componentId = item.field.id;
-            field.columns = "2";
+            field.columns = item.propertiesMap?.columns ? item.propertiesMap?.columns.toString() : "2";
             let component = JSON.parse(JSON.stringify(item.field));
             delete component.attributes;
             field.component = component;

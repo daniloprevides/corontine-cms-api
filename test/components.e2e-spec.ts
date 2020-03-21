@@ -243,7 +243,7 @@ describe("Components (e2e)", () => {
     let component = {
       name: "new-component-add",
       url: "abc",
-      plugin: plugin.id
+      plugin: plugin
     } as NewComponentsDto;
 
     return createRequest(component, tokenComponent, componentUrl)
@@ -296,7 +296,7 @@ describe("Components (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let component = {
       name: "new-component-add-2",
-      plugin: plugin.id,
+      plugin: plugin,
       url: "abc",
       fields: [
         { name: "new-field-1", description: "description" } as NewFieldsDto
@@ -356,7 +356,7 @@ describe("Components (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let component = {
       name: "new-component-add-3",
-      plugin: plugin.id,
+      plugin: plugin,
       url: "abc"
     } as NewComponentsDto;
 
@@ -425,7 +425,7 @@ describe("Components (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let component = {
       name: "new-component-add-4",
-      plugin: plugin.id,
+      plugin: plugin,
       url: "abc"
     } as NewComponentsDto;
 
@@ -483,7 +483,7 @@ describe("Components (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let component = {
       name: "new-component-add-5",
-      plugin: plugin.id,
+      plugin: plugin,
       url: "abc"
     } as NewComponentsDto;
 
@@ -538,7 +538,7 @@ describe("Components (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let component = {
       name: "new-component-add-6",
-      plugin: plugin.id,
+      plugin: plugin,
       url: "abc"
     } as NewComponentsDto;
 
@@ -602,12 +602,12 @@ describe("Components (e2e)", () => {
     const plugin = newPluginResponse.body as PluginDto;
     let component = {
       name: "new-component-add-7-a",
-      plugin: plugin.id,
+      plugin: plugin,
       url: "abc"
     } as NewComponentsDto;
     let component2 = {
       name: "new-component-add-7-b",
-      plugin: plugin.id,
+      plugin: plugin,
       url: "abc"
     } as NewComponentsDto;
 

@@ -65,6 +65,13 @@
       );
     }
 
+    createItem(
+      'homePage',
+      'Home Page Name',
+      model.homePage,
+      "home",
+      false,
+    );
     createItem('urlFacebook', 'Facebook Url', model.urlFacebook, false, false);
     createItem(
       'urlInstagram',
@@ -199,7 +206,7 @@
     cancelButton.className = 'btn';
     cancelButton.textContent = 'Cancel';
     cancelButton.onclick = () => {
-      alert('Cancel');
+      //alert('Cancel');
     };
 
     const footer = document.createElement('div');

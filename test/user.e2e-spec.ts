@@ -23,6 +23,8 @@ import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.e
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { RequestContextMiddleware } from '../src/middlewares/request-context-middleware';
+import { Group } from '../src/security/entity/group.entity';
+import { GroupDTO } from '../src/security/dto/group.dto';
 
 
 const stringToBase64 = (string: string) => {
@@ -37,6 +39,7 @@ describe('UserController', () => {
   const credentialUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.CLIENT_CREDENTIALS_ENDPOINT}`;
 
   let server = null;
+  let groupDto;
 
   const getUserClientCredentials = async (credential:ClientCredentialsEnum) => {
     const clientCredentialRepository: Repository<ClientCredentials> = moduleFixture.get<Repository<ClientCredentials>>(getRepositoryToken(ClientCredentials));
@@ -132,7 +135,7 @@ describe('UserController', () => {
 
 
   beforeAll(async () => {
-    jest.setTimeout(30000);
+    jest.setTimeout(60000);
     return new Promise(async (resolve, reject) => {
       moduleFixture = await Test.createTestingModule({
         imports: [AppModule]
@@ -146,6 +149,11 @@ describe('UserController', () => {
       app.useGlobalFilters(new HttpExceptionFilter());
       app.use(RequestContextMiddleware);
       await app.init();
+
+      const groupRepository: Repository<Group> = moduleFixture.get<Repository<Group>>(getRepositoryToken(Group));
+      const adminGroup = await groupRepository.findOne({name: "admin"});
+      groupDto = adminGroup as GroupDTO;
+    
   
       setTimeout(async () => {
         await createDefaultClientCredentialsForTesting();
@@ -188,7 +196,7 @@ describe('UserController', () => {
       email: 'admin@email.com',
       password: 'password',
       name: 'name',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -207,7 +215,7 @@ describe('UserController', () => {
       email: 'admin@email.com',
       password: 'password',
       //name: 'name',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -224,7 +232,7 @@ describe('UserController', () => {
       email: 'adminanother@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -256,7 +264,7 @@ describe('UserController', () => {
       email: 'adminanother@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]))
       .then(res => {
@@ -273,7 +281,7 @@ describe('UserController', () => {
       email: 'adminanother2@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -295,7 +303,7 @@ describe('UserController', () => {
       email: 'adminanother3@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -316,7 +324,7 @@ describe('UserController', () => {
       email: 'adminanother4@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -336,7 +344,7 @@ describe('UserController', () => {
       email: 'user_for_delete@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -357,7 +365,7 @@ describe('UserController', () => {
       email: 'user_for_delete_fail@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -389,7 +397,7 @@ describe('UserController', () => {
       email: 'user_for_testing_me@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
     .then(res => {      
@@ -419,7 +427,7 @@ describe('UserController', () => {
       email: 'user_for_testing_me_2@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
     .then(res => {      
@@ -453,7 +461,7 @@ describe('UserController', () => {
       email: 'user_for_testing_me_3@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
     .then(res => {      
@@ -482,7 +490,7 @@ describe('UserController', () => {
       email: 'user_for_testing_me_4@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
     .then(res => {      
@@ -511,7 +519,7 @@ describe('UserController', () => {
       email: 'testforemailcms@gmail.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
     .then(res => {      
@@ -546,7 +554,7 @@ describe('UserController', () => {
       email: 'user_chahnge_own_pass@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
     .then(res => {      

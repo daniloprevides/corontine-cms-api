@@ -36,4 +36,9 @@ export class UserUpdateDTO {
   @IsOptional()
   @Expose()
   urlInstagram: User['urlInstagram'];
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @Expose()
+  homePage?: User["homePage"];
 }

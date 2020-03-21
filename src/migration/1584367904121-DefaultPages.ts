@@ -25,6 +25,9 @@ import { PageBuilder } from "../commons/services/page-builder.service";
 import { NewFieldsDto } from "../plugin/dto/new-fields.dto";
 import { ScopeEnum } from "../security/enum/scope.enum";
 import { ScopeEnum as ScopeEnumPlugin} from "../plugin/enum/scope.enum";
+import { GenericPageCreatorHelper } from "../commons/helpers/generic-page-creator.helper";
+import { Fields } from "../plugin/entity/fields.entity";
+import { PermissionsDefinition } from "../commons/annotations/expose-field-name.decorator";
 
 export class DefaultPages1584367904121 implements MigrationInterface {
 
@@ -60,7 +63,8 @@ export class DefaultPages1584367904121 implements MigrationInterface {
         await this.addGroupMenu("Attribute", attributesPages, ScopeEnumPlugin.ATTRIBUTES_READ, ScopeEnumPlugin.ATTRIBUTES_CREATE);
 
   //      await this.addGroupMenu("Page", pagePages);
-//        await this.addGroupMenu("Event", eventsPages);        
+//        await this.addGroupMenu("Event", eventsPages);    
+        await this.createHomePage();
     }
 
     async addGroupMenu(name:string, pages:any, permissionView:string, permissionAdd:string){
@@ -107,6 +111,38 @@ export class DefaultPages1584367904121 implements MigrationInterface {
         return menuDto.id;
 
 
+    }
+
+    async createHomePage(){
+        const fieldsRepository = getRepository<Fields>(
+            "fields"
+        );
+        const pageRepository = getRepository<Page>(
+            "page"
+        );
+        const pluginRepository = getRepository<Plugin>(
+            "plugin"
+        );
+        const permissions = new PermissionsDefinition("cms","cms","cms");
+        const title = await fieldsRepository.findOne({name: 'title-data'}, {relations: ["attributes","events"]});
+        let items:Array<{name:string, field:Fields, propertiesMap:any}> = new Array();
+        items.push({name: "title", field: title, propertiesMap: {text: "Dashboard", description: "Welcome to Corontine CMS"}});
+        //Loading dashboard for fields
+        for (let item of ["Plugins","Fields","Components","Attributes"]){
+            const component = await fieldsRepository.findOne({name: 'viewer-data'}, {relations: ["attributes","events"]});
+            const api = await pluginRepository.findOne({name: item});
+            items.push({name: item, field:component, propertiesMap: { api: api, columns: 1, type: "bar", label1: "Total"}});
+        };
+
+        const genericPageCreate = new GenericPageCreatorHelper();
+        
+        const content = await genericPageCreate.createPageModel("home","Dashboard home page",null,items,"home", {},permissions);
+        const page = new Page();
+        page.name = "home";
+        page.description = "Home Page";
+        page.content = content;
+        await pageRepository.save(page);
+        
     }
 
     async createPageFor(newDto:any, updateDto:any, listDto:any, plugin:Plugin, name:string) : Promise<{add: Page, edit:Page, list:Page}>{

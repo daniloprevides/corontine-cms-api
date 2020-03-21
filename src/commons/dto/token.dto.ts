@@ -22,6 +22,12 @@ export class TokenDto {
   @ApiProperty({ type: String })
   @IsString()
   @Expose()
+  @IsOptional()
+  page: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @Expose()
   secret: string;
 
   @ApiProperty({ type: Number })

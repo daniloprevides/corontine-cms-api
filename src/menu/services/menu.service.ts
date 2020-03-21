@@ -64,6 +64,9 @@ export class MenuService extends GenericService<
     if (menu.content) {
       const getChildren = (items:Array<any>) => {
         let subitems = [];
+
+        if (!items || (items && !items.length)) return null;
+
         for (let children of items){
           if (scopes.indexOf(children.requiredPermission) >= 0){
             subitems.push(children);
@@ -77,7 +80,7 @@ export class MenuService extends GenericService<
       const items = new Array<any>();
       for (let item of reference){
         item.children = getChildren(item.children);
-        if (scopes.indexOf(item.requiredPermission) >= 0 && item.children.length){
+        if (scopes.indexOf(item.requiredPermission) >= 0 && item.children?.length){
           items.push(item);
         }
       }

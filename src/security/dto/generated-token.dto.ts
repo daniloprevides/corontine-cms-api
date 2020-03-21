@@ -11,4 +11,6 @@ export class GeneratedTokenDTO {
   expiresIn: string;
   @ApiProperty()
   scope: string;
+  @ApiProperty()
+  page: string;
 }

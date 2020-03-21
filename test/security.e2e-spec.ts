@@ -16,6 +16,8 @@ import { NewUserDTO } from '../src/security/dto/new-user.dto';
 import { ClientCredentialsEnum } from '../src/security/enum/client-credentials.enum';
 import { GrantTypeEnum } from '../src/security/enum/grant-type.enum';
 import { RequestContextMiddleware } from '../src/middlewares/request-context-middleware';
+import { GroupDTO } from '../src/security/dto/group.dto';
+import { Group } from '../src/security/entity/group.entity';
 
 
 const stringToBase64 = (string: string) => {
@@ -28,6 +30,7 @@ describe('SecurityController (e2e)', () => {
   let authorization: string;
   const userUrl = `/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.USER_ENDPOINT}`;
   let server = null;
+  let groupDto;
 
   const createDefaultClientCredentialsForTesting = async () => {
     const clientCredentialRepository: Repository<ClientCredentials> = moduleFixture.get<Repository<ClientCredentials>>(getRepositoryToken(ClientCredentials));
@@ -167,6 +170,10 @@ describe('SecurityController (e2e)', () => {
       app.use(RequestContextMiddleware);
 
       await app.init();
+
+      const groupRepository: Repository<Group> = moduleFixture.get<Repository<Group>>(getRepositoryToken(Group));
+      const adminGroup = await groupRepository.findOne({name: "admin"});
+      groupDto = adminGroup as GroupDTO;
   
       setTimeout(async () => {
         await createDefaultClientCredentialsForTesting();
@@ -209,7 +216,7 @@ describe('SecurityController (e2e)', () => {
       email: 'admin@email.com',
       password: 'password',
       name: 'name',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -227,7 +234,7 @@ describe('SecurityController (e2e)', () => {
       email: 'admin@email.com',
       password: 'password',
       name: 'name',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]))
       .then(res => {
@@ -244,7 +251,7 @@ describe('SecurityController (e2e)', () => {
       email: 'superadmin@email.com',
       password: 'password',
       name: 'name',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -277,7 +284,7 @@ describe('SecurityController (e2e)', () => {
       email: 'wrongadmin@email.com',
       password: 'password',
       name: 'name',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
       .then(res => {
@@ -449,7 +456,7 @@ describe('SecurityController (e2e)', () => {
       email: 'user_for_testing_upf@email.com',
       password: 'password',
       name: 'myname',
-      groups: ['admin']
+      groups: [groupDto]
     } as NewUserDTO;
     return defaultGrantRequest(await getUserClientCredentials(ClientCredentialsEnum["ADMIN@APP"]))
     .then(res => {      
@@ -477,7 +484,7 @@ describe('SecurityController (e2e)', () => {
       email: 'add_user_with_group_without_group_add_permission@email.com',
       password: 'password',
       name: 'add_user_with_group_without_group_add_permission',
-      groups: ["admin"] //Group does not exist
+      groups: [groupDto] //Group does not exist
     } as NewUserDTO;
     const credentialName = "UserCreationCredential";
 
