@@ -36022,7 +36022,7 @@ var app = (function (exports) {
         return html2canvas;
 
     }));
-    //# sourceMappingURL=html2canvas.js.map
+
     });
 
     class PageBuilderModel {

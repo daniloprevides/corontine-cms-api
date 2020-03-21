@@ -4,7 +4,6 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "dev:all": "yarn-run-all build",
     "start": "sirv public -p 6000"
   },
   "devDependencies": {
