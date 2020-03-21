@@ -57,9 +57,9 @@ export class PageBuilder {
 
     //getting fields properties
     const fieldsProperties = {
-      add: await this.getFields(name, fieldListNew),
-      edit: await this.getFields(name, fieldListEdit),
-      list: await this.getFields(name, fieldListList)
+      add: await this.getFields(name, fieldListNew,pageNames.addDescription),
+      edit: await this.getFields(name, fieldListEdit, pageNames.editDescription),
+      list: await this.getFields(name, fieldListList, pageNames.listDescription)
     };
 
     const pagesContent = {
@@ -195,7 +195,8 @@ export class PageBuilder {
 
   private async getFields(
     text: string,
-    definition: Array<ComponentDefinition>
+    definition: Array<ComponentDefinition>,
+    description:string
   ): Promise<Array<PropertyInfo>> {
     const fieldsRepository = getRepository<Fields>("fields");
     const attributesRepository = getRepository<Attributes>("attributes");
@@ -205,7 +206,7 @@ export class PageBuilder {
       {
         name: "none",
         field: await this.getDefaultTitleAttribute(text),
-        propertiesMap: { text: text, position: "center" }
+        propertiesMap: { text: text, position: "center", description: description }
       }
     ] as any;
 
