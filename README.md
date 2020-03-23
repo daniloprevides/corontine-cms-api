@@ -31,7 +31,11 @@ Navigate to http://localhost:3000
 To configure database, edit the .env file in root folder, or for more configurations you can chack the configuration.ts file inside src/config
 
 The CMS Client is inside folder cms-frontend
-The web components are insude folder components
+The web components are inside folder components
+
+The admin initial user and password is:
+user:       daniloprevides@gmail.com
+password:   Change@Password
 
 # Want to Help?
 This is still an early version. If you liked the idea and want to contribute somehow, contact me on daniloprevides@gmail.com
