@@ -40,6 +40,7 @@ import {
 import {GenericController} from "../../commons/controller/generic.controller";
 import Request = require('request');
 import { MenuScopeEnum } from '../enum/menu-scope.enum';
+import { MenuAddEntryDTO } from '../dto/menu-add-entry.dto';
 
 @ApiTags("menu")
 @ApiBearerAuth()
@@ -188,6 +189,26 @@ export class MenuController extends GenericController<
     , @Req() req: Request
   ): Promise<MenuDto> {
     return await super.update(id, updateInfo, req);
+  }
+
+  @Put("/add/entry")
+  @HttpCode(200)
+  @ApiOkResponse({ type: MenuDto })
+  @ApiOperation({
+    summary: "Update Menu",
+    description: "Updates the Menu By ID"
+  })
+  @ApiNotFoundResponse({ description: "Menu Not Found" })
+  @ApiUnauthorizedResponse({
+    description:
+      "thrown if there is not an authorization token or if authorization token does not have enough privileges"
+  })
+  @NeedScope(MenuScopeEnum.MENU_ADD_ENTRY)
+  @UseGuards(SecurityGuard)
+  public async addEntry(
+    @Body() entry: MenuAddEntryDTO
+  ): Promise<MenuDto> {
+    return this.mapper.toDto(await this.service.addNewEntry(entry));
   }
 
   @Delete(":id")

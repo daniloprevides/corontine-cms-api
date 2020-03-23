@@ -41,6 +41,7 @@ import { NewPageDto } from "../dto/new-page.dto";
 import { UpdatePageDto } from "../dto/update-page.dto";
 import { PageDto } from "../dto/page.dto";
 import { PageMapper } from "../mapper/page.mapper";
+import { NewCustomPluginPageDto } from '../dto/new-custom-plugin-page';
 
 @ApiTags("page")
 @ApiBearerAuth()
@@ -189,6 +190,37 @@ export class PageController extends GenericController<
     @Req() req: Request
   ): Promise<PageDto> {
     return await super.add(newItem, req);
+  }
+
+  @Post("/custom/page")
+  @HttpCode(201)
+  @ApiCreatedResponse({
+    type: PageDto,
+    description: "Page created"
+  })
+  @ApiOperation({
+    summary: "Add Custom Page",
+    description: "Creates a custom Page with a custom plugin"
+  })
+  @ApiBody({ type: NewPageDto })
+  @ApiUnauthorizedResponse({
+    description:
+      "thrown if there is not an authorization token or if authorization token does not have needed scopes"
+  })
+  @NeedScope(PageScopeEnum.PAGE_CREATE)
+  @UseGuards(SecurityGuard)
+  async addCustomPage(
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    @Body() newItem: NewCustomPluginPageDto,
+    @Req() req: Request
+  ): Promise<PageDto> {
+    const localUrl = req.protocol + "://" + req.get("host");
+    let tokenDto = await this.authenticationService.getTokenInfo(
+      localUrl,
+      req.headers.authorization
+    );
+    let clientId = !this.isCmsCall(tokenDto) ? tokenDto.id : null;
+    return this.mapper.toDto(await this.service.addCustomPage(newItem, clientId));
   }
 
   @Put(":id")

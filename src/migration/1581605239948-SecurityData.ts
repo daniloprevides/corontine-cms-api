@@ -131,6 +131,7 @@ export class SecurityData1581605239948 implements MigrationInterface {
     let adminGroup = new Group();
     adminGroup.name = "admin";
     adminGroup.description = "Admin Group";
+    adminGroup.isAdmin = true;
     adminGroup.scopes = [];
     adminGroup.scopes.push(...Object.values(scopes));
     adminGroup = await groupRepository.save(adminGroup);

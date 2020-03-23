@@ -22,10 +22,26 @@ export class ScopeService extends GenericService<Scope,ScopeRepository,NewScopeD
   constructor(    
     @Inject(forwardRef(() => ScopeRepository))
     public readonly scopeRepository: ScopeRepository,
+    @Inject(forwardRef(() => GroupRepository))
+    public readonly groupRepository : GroupRepository
 
     ) {
       super(scopeRepository,"Scope")
     }
+
+    public async add(item: NewScopeDTO, clientId?: string): Promise<Scope> {
+      //Add new scope, and then add scope to admin group
+      const newItem = await super.add(item,clientId);
+
+      const adminGroup = await this.groupRepository.findOne({where: {isAdmin: true}, relations: ["scopes"]});
+      if (adminGroup){
+        adminGroup.scopes.push(newItem);
+        await this.groupRepository.save(adminGroup);
+      }
+
+      return newItem;
+    }
+
   
     public async validateParent(clientId:string, id:string): Promise<boolean>{
       return true;

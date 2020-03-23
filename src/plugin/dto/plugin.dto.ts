@@ -49,7 +49,7 @@ export class PluginDto {
   @IsString()
   @Expose()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 5, visible: true}))
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 5, visible: false}))
   apiUrl: Plugin["apiUrl"];
 
   @ApiProperty()
@@ -57,7 +57,7 @@ export class PluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 6, visible: true}))
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 6, visible: false}))
   addUrl: Plugin["addUrl"];
 
   @ApiProperty()
@@ -65,7 +65,7 @@ export class PluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 7, visible: true}))
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 7, visible: false}))
   removeUrl: Plugin["removeUrl"];
 
   @ApiProperty()
@@ -73,7 +73,7 @@ export class PluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 8, visible: true}))
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 8, visible: false}))
   updateUrl: Plugin["updateUrl"];
 
   @ApiProperty()
@@ -81,7 +81,7 @@ export class PluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 9, visible: true}))
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 9, visible: false}))
   getUrl: Plugin["getUrl"];
 
   @ApiProperty()
@@ -89,7 +89,7 @@ export class PluginDto {
   @IsOptional()
   @Expose()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 10, visible: true}))
+  @ExposeFieldNamesForPage(new ComponentDefinition("label", {order: 10, visible: false}))
   getAllUrl: Plugin["getAllUrl"];
 
   @ApiProperty()

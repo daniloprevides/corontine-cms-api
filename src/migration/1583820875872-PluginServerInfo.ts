@@ -15,6 +15,9 @@ export class PluginServerInfo1583820875872 implements MigrationInterface {
     const clientCredentialsRepository = getRepository<ClientCredentials>(
       "client-credentials"
     );
+    const pluginRepository = getRepository<Plugin>(
+      "plugin"
+    );
     let clientCredentialsDefault = await clientCredentialsRepository.findOne({
       where: { name: ClientCredentialsEnum["USER_PERMISSIONS@APP"] }
     });
@@ -75,11 +78,28 @@ export class PluginServerInfo1583820875872 implements MigrationInterface {
       `{plugin('pages').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${PageConstants.PAGE_ENDPOINT}`
     );
 
+
+    const basePlugin = await pluginRepository.findOne({pluginType: PluginTypeEnum.BASE});
+
+    await this.createPlugin(
+      clientCredentialsDefault.id,
+      "redirector_api",
+      "Redirector Info Endpoint",
+      basePlugin.componentsUrl,null,null,null,null,PluginTypeEnum.REDIRECTOR
+    );
+
     await this.createPlugin(
       clientCredentialsDefault.id,
       "scopes_api",
       "API for retrieving Scopes",
-      `{plugin('pages').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.SCOPE_ENDPOINT}`
+      `{plugin('authentication').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.SCOPE_ENDPOINT}`
+    );
+
+    await this.createPlugin(
+      clientCredentialsDefault.id,
+      "credentials_api",
+      "API for retrieving Credentials",
+      `{plugin('authentication').apiUrl}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}/${SecurityConstants.CLIENT_CREDENTIALS_ENDPOINT}`
     );
 
   }

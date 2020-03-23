@@ -6,6 +6,7 @@ import { Plugin } from './../entity/plugin.entity';
 import {GenericService} from "../../commons/services/generic.service";
 import { Injectable, Inject, forwardRef, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PluginService extends GenericService<
@@ -18,8 +19,9 @@ export class PluginService extends GenericService<
     @Inject(forwardRef(() => PluginRepository))
     public readonly pluginRepository: PluginRepository,
     @Inject(forwardRef(() => AuthenticationService))
-    protected readonly authenticationService: AuthenticationService
-
+    protected readonly authenticationService: AuthenticationService,
+    @Inject(forwardRef(() => ConfigService))
+    protected readonly configService: ConfigService
     ) {
     super(pluginRepository, "Plugin");
   }
@@ -30,6 +32,14 @@ export class PluginService extends GenericService<
 
   public async validateParent(clientId:string, id:string): Promise<boolean>{
     return true;
+  }
+
+
+  public async add(item: NewPluginDto, clientId: string): Promise<Plugin> {
+    if (!item.environment){
+      item.environment === this.configService.get("env");
+    }
+    return super.add(item,clientId)
   }
 
   protected getRelations(): Array<string> {

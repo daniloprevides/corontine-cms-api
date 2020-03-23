@@ -126,6 +126,34 @@ export class ClientCredentialsController {
     return this.mapper.toDto(await this.service.add(newItem));
   }
 
+
+  @Post("/generate/new")
+  @HttpCode(201)
+  @ApiCreatedResponse({
+    type: NewClientCredentialsDTO,
+    description: "Credential created"
+  })
+  @ApiOperation({ summary: "Add Client Credentials", description: "Creates a client Credential" })
+  @ApiBody({ type: NewClientCredentialsDTO })
+  @ApiUnauthorizedResponse({
+    description:
+      "thrown if there is not an authorization token or if authorization token does not have needed scopes"
+  })
+  @NeedScope(ScopeEnum.CLIENT_CREDENTIALS_CREATE)
+  @UseGuards(ScopeGuard)
+  async generate(
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    @Body() newItem: NewClientCredentialsDTO,
+    @Headers("authorization") authorization: string
+  ): Promise<ClientCredentialsDTO> {
+    if (!authorization) {
+      throw new UnauthorizedException();
+    }
+    return this.mapper.toDto(await this.service.generate(newItem,true));
+  }
+
+
+
   @Put(":id")
   @HttpCode(200)
   @ApiOkResponse({ type: ClientCredentialsDTO })

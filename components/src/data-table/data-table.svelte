@@ -47,13 +47,14 @@
           {#if selectable}
             <td on:click={() => {
               row.selected = !row.selected
+              openItem(items);
             }}>
               <input
                 class="form-group btn btn-primary"
                 type="checkbox"
                 bind:checked={row.selected}
                 on:change={event => {
-                  openItem(items);
+                  //openItem(items);
                 }} />
             </td>
           {/if}

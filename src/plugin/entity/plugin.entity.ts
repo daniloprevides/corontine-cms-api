@@ -28,7 +28,7 @@ export class Plugin extends BasicEntity {
   @Expose()
   description: string;
 
-  @Column({ nullable: false, name: "components_url" })
+  @Column({ nullable: true, name: "components_url" })
   @Expose()
   componentsUrl: string;
 

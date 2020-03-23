@@ -12,9 +12,11 @@ import {
   UseInterceptors,
   Get,
   Render,
-  Query,
   UseGuards,
   Req,
+  Param,
+  Query,
+  Redirect,
 } from '@nestjs/common';
 import { Constants } from '../../commons';
 
@@ -33,7 +35,9 @@ import { ScopeEnum } from '../enum/scope.enum';
 import { ScopeGuard } from '../guard/scope.guard';
 import { IsOptional } from 'class-validator';
 import { ApiParam, ApiHeader, ApiOAuth2 } from '@nestjs/swagger';
-const {Request} = require("request");
+import { RequestCodeDTO } from '../dto/request-code.dto';
+import Request = require("request");
+
 @Controller(`/${SecurityConstants.OAUTH_ENDPOINT}`)
 export class SecurityController {
   private readonly logger = new Logger(SecurityController.name);
@@ -108,18 +112,31 @@ export class SecurityController {
     return this.service.decodeToken(jwt);
   }
 
-
-  @Get('')
+  @Get("")
   @Render('oauth')
-  async root(@Query() authorizationCode:RequestAuthorizationCodeDTO) {
-    let data = await this.auhtorizationCodeService.add(authorizationCode);
-    return data;
-  }
-
-  @Get("/code")
-  @HttpCode(200)
   async getCode(@Query() authorizationCode:RequestAuthorizationCodeDTO) {
     return await this.auhtorizationCodeService.add(authorizationCode);
+  }
+
+
+  @Get("/code")
+  //@Redirect("", 302)
+  async addCode(@Query() authorizationCode:RequestAuthorizationCodeDTO,  @Req() req : Request) {
+    return await this.auhtorizationCodeService.add(authorizationCode);
+
+    // const newCode =  await this.auhtorizationCodeService.addNewCode(requestCode.app_name, requestCode.state, requestCode.redirect_uri);
+    // const redirectUri = req.protocol + "://" + req.get("host");
+    // const uri = `${requestCode.redirect_uri}?code=${newCode.code}&state=${requestCode.state}&redirect_uri=${redirectUri}`;
+    // return {url: uri};
+  }
+
+  @Post("/credential")
+  @Redirect("", 302)
+  async addCredential(@Body() requestCode:RequestCodeDTO,  @Req() req : Request) {
+    const newCode =  await this.auhtorizationCodeService.addNewCode(requestCode.app_name, requestCode.state, requestCode.redirect_uri);
+    const redirectUri = req.protocol + "://" + req.get("host");
+    const uri = `${requestCode.redirect_uri}?code=${newCode.code}&state=${requestCode.state}&redirect_uri=${redirectUri}`;
+    return {url: uri};
   }
 
 

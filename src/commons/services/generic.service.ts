@@ -4,7 +4,7 @@ import { GenericFilterService } from "./generic-filter.service";
 import { FindParamsDto } from "./../dto/find-params.dto";
 import { GenericServiceInterface } from "./interface.generic.service";
 import { BasicEntity } from "./../entity/basic.entity";
-import { Repository, FindManyOptions, FindOneOptions } from "typeorm";
+import { Repository, FindManyOptions, FindOneOptions, In } from "typeorm";
 import { Transactional } from "typeorm-transactional-cls-hooked";
 import {
   paginate,
@@ -83,7 +83,7 @@ export abstract class GenericService<
       options.order = sortOption;
     }
 
-    if (clientId) options.where = [{ clientId: clientId }];
+    if (clientId) options.where = [{ clientId: In(["default",clientId]) }];
 
     if (whereQuery && whereQuery.length) options.where = whereQuery;
 
@@ -106,7 +106,7 @@ export abstract class GenericService<
     if (relations) options.relations = relations;
 
     if (clientId){
-      options.where['clientId'] = clientId;
+      options.where['clientId'] = In(["default",clientId]);
     }
 
     //FindOne is not retrieving relations (Seems to be a bug)

@@ -12,8 +12,10 @@
   import Page from "./routes/page/page.svelte";
   import UserManagerPage from "./routes/user-manager/user-manager-page.svelte";
   import GroupManagerPage from "./routes/group-manager/group-manager-page.svelte";
+  import AddonManagerPage from "./routes/addon-manager/addon-manager.svelte";
 
   import MenuManagerPage from "./routes/manager-menu.svelte";
+  import StorePage from "./routes/store.svelte";
 
   import Modal from "./modals/modal.svelte";
   import "nprogress/nprogress.css";
@@ -52,10 +54,12 @@
     "/manager/pages": ViewPagePage,
     "/manager/user": UserManagerPage,
     "/manager/group": GroupManagerPage,
+    "/manager/addon": AddonManagerPage,
     "/add/page": EditPagePage,
     "/edit/page/:id": EditPagePage,
     "/pages/:name": Page,
     "/view/page/:name/:id": Page,
+    "/test": StorePage,
     "*": LoginPage
   };
 

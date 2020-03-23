@@ -137,7 +137,6 @@ export class PageModel extends BasePage {
           this.loadItem(params.id);
         }
       }
-
       ready = true;
     } catch (error) {
       this.showErrorMessage(error);
@@ -193,6 +192,68 @@ webcomponentDataStorage.subscribe(async ok => {
   }
 });
 
+const populateCustomElementsValues = component => {
+  //applying default data
+  const page = data.content;
+  const defaultUrl = page.apiData.apiUrl;
+  const userData = userDataStorage.get();
+  
+  component.custom_plugins = pluginDataStorage.get();
+  component.custom_api = page.apiData;
+  component.custom_scopes = userData.scope.split(" ");
+  component.custom_page = page;
+
+  //Defining data functions
+  component.custom_getList = async (params: any, url?: string) => {
+    const appUrl = url
+      ? url
+      : page.apiData.getAllUrl
+      ? page.apiData.getAllUrl
+      : defaultUrl;
+    return await baseService.getListByUrl(appUrl, params);
+  };
+
+  component.custom_getOne = async (url?: string) => {
+    let appUrl = url
+      ? url
+      : page.apiData.getUrl
+      ? page.apiData.getUrl
+      : defaultUrl;
+    appUrl = `${appUrl}`;
+    return await baseService.getItemByUrl(appUrl);
+  };
+
+  component.custom_createItem = async (item: any, url?: string) => {
+    let appUrl = url
+      ? url
+      : page.apiData.addUrl
+      ? page.apiData.addUrl
+      : defaultUrl;
+    return await baseService.postByUrl(appUrl, item);
+  };
+
+  component.custom_updateItem = async (item: any, url?: string) => {
+    let appUrl = url
+      ? url
+      : page.apiData.addUrl
+      ? page.apiData.addUrl
+      : defaultUrl;
+    appUrl = `${appUrl}`;
+
+    return await baseService.putByUrl(appUrl, item);
+  };
+
+  component.custom_deleteItem = async (id: string, url?: string) => {
+    let appUrl = url
+      ? url
+      : page.apiData.addUrl
+      ? page.apiData.addUrl
+      : defaultUrl;
+
+    return await baseService.deleteByUrl(id, appUrl);
+  };
+};
+
 const initialize = () => {
   permissions = userDataStorage.get().scope.split(" ");
 
@@ -209,6 +270,8 @@ const initialize = () => {
         });
     });
   };
+
+  
 
   customElements.whenDefined("page-view").then(() => {
     component.addEventListener("item-clicked", async event => {
@@ -238,6 +301,7 @@ const initialize = () => {
         model.showErrorMessage(error);
       }
     });
+    populateCustomElementsValues(component);
     initialized = true;
   });
 };

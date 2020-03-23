@@ -14,6 +14,11 @@ export class ClientCredentialsDTO {
   @Expose()
   name: ClientCredentials['name'];
 
+  @ApiProperty({type: String})
+  @IsOptional()
+  @Expose()
+  secret?: ClientCredentials['secret'];
+
   @ApiProperty({type: () => NewScopeDTO})
   @IsArray()
   @IsOptional()

@@ -262,7 +262,7 @@ describe("Attributes (e2e)", () => {
     const newFieldResponse = await createRequest(
       newField,
       tokenField,
-      componentUrl
+      fieldsUrl
     );
     const field = newFieldResponse.body as FieldsDto;
     let newAttribute = {
@@ -277,7 +277,7 @@ describe("Attributes (e2e)", () => {
       .expect(201)
       .then(async data => {
         expect(data.body.name).toBe(newAttribute.name);
-        expect(data.body.field).toBe(newAttribute.field);
+        expect(data.body.field.name).toBe(newAttribute.field.name);
         done();
       });
   });

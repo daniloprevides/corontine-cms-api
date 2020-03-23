@@ -25301,7 +25301,7 @@ var app = (function (exports) {
     const { Object: Object_1, console: console_1, customElements: customElements_1 } = globals;
     const file$6 = "src/page-view/page-view.svelte";
 
-    // (372:2) {#if !permissionDenied}
+    // (393:2) {#if !permissionDenied}
     function create_if_block_1$3(ctx) {
     	let div;
     	let dispose;
@@ -25310,8 +25310,8 @@ var app = (function (exports) {
     		c: function create() {
     			div = element("div");
     			attr_dev(div, "contenteditable", "true");
-    			if (/*content*/ ctx[4] === void 0) add_render_callback(() => /*div_input_handler*/ ctx[19].call(div));
-    			add_location(div, file$6, 372, 4, 14902);
+    			if (/*content*/ ctx[4] === void 0) add_render_callback(() => /*div_input_handler*/ ctx[28].call(div));
+    			add_location(div, file$6, 393, 4, 15769);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25320,17 +25320,17 @@ var app = (function (exports) {
     				div.innerHTML = /*content*/ ctx[4];
     			}
 
-    			/*div_binding*/ ctx[20](div);
-    			dispose = listen_dev(div, "input", /*div_input_handler*/ ctx[19]);
+    			/*div_binding*/ ctx[29](div);
+    			dispose = listen_dev(div, "input", /*div_input_handler*/ ctx[28]);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*content*/ 16 && /*content*/ ctx[4] !== div.innerHTML) {
+    			if (dirty[0] & /*content*/ 16 && /*content*/ ctx[4] !== div.innerHTML) {
     				div.innerHTML = /*content*/ ctx[4];
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			/*div_binding*/ ctx[20](null);
+    			/*div_binding*/ ctx[29](null);
     			dispose();
     		}
     	};
@@ -25339,14 +25339,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_1$3.name,
     		type: "if",
-    		source: "(372:2) {#if !permissionDenied}",
+    		source: "(393:2) {#if !permissionDenied}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (379:2) {#if permissionDenied}
+    // (400:2) {#if permissionDenied}
     function create_if_block$4(ctx) {
     	let div;
 
@@ -25354,7 +25354,7 @@ var app = (function (exports) {
     		c: function create() {
     			div = element("div");
     			div.textContent = "You dont have enough permissions to open this page";
-    			add_location(div, file$6, 379, 4, 15036);
+    			add_location(div, file$6, 400, 4, 15903);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25368,7 +25368,7 @@ var app = (function (exports) {
     		block,
     		id: create_if_block$4.name,
     		type: "if",
-    		source: "(379:2) {#if permissionDenied}",
+    		source: "(400:2) {#if permissionDenied}",
     		ctx
     	});
 
@@ -25397,12 +25397,12 @@ var app = (function (exports) {
     			span = element("span");
     			this.c = noop;
     			attr_dev(div, "class", "main-container");
-    			add_location(div, file$6, 370, 0, 14817);
+    			add_location(div, file$6, 391, 0, 15684);
     			set_custom_element_data(vaadin_dialog, "aria-label", "simple");
-    			add_location(vaadin_dialog, file$6, 383, 0, 15114);
+    			add_location(vaadin_dialog, file$6, 404, 0, 15981);
     			span.hidden = true;
     			attr_dev(span, "class", "dynamic-element error");
-    			add_location(span, file$6, 385, 0, 15181);
+    			add_location(span, file$6, 406, 0, 16048);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -25412,14 +25412,14 @@ var app = (function (exports) {
     			if (if_block0) if_block0.m(div, null);
     			append_dev(div, t0);
     			if (if_block1) if_block1.m(div, null);
-    			/*div_binding_1*/ ctx[21](div);
+    			/*div_binding_1*/ ctx[30](div);
     			insert_dev(target, t1, anchor);
     			insert_dev(target, vaadin_dialog, anchor);
-    			/*vaadin_dialog_binding*/ ctx[22](vaadin_dialog);
+    			/*vaadin_dialog_binding*/ ctx[31](vaadin_dialog);
     			insert_dev(target, t2, anchor);
     			insert_dev(target, span, anchor);
     		},
-    		p: function update(ctx, [dirty]) {
+    		p: function update(ctx, dirty) {
     			if (!/*permissionDenied*/ ctx[1]) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
@@ -25450,10 +25450,10 @@ var app = (function (exports) {
     			if (detaching) detach_dev(div);
     			if (if_block0) if_block0.d();
     			if (if_block1) if_block1.d();
-    			/*div_binding_1*/ ctx[21](null);
+    			/*div_binding_1*/ ctx[30](null);
     			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(vaadin_dialog);
-    			/*vaadin_dialog_binding*/ ctx[22](null);
+    			/*vaadin_dialog_binding*/ ctx[31](null);
     			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(span);
     		}
@@ -25477,6 +25477,15 @@ var app = (function (exports) {
     	let dialogComponent;
     	let permissionDenied = false;
     	let mainComponent;
+    	let { custom_plugins } = $$props;
+    	let { custom_api } = $$props;
+    	let { custom_scopes } = $$props;
+    	let { custom_page } = $$props;
+    	let { custom_getList } = $$props;
+    	let { custom_getOne } = $$props;
+    	let { custom_createItem } = $$props;
+    	let { custom_updateItem } = $$props;
+    	let { custom_deleteItem } = $$props;
 
     	const isObject = val => {
     		if (val === null) {
@@ -25717,18 +25726,30 @@ var app = (function (exports) {
     				return;
     			}
 
-    			element.getData = getData;
-    			element.api = apiData;
-    			console.debug(`Acquiring data for `, apiData);
-    			let options = {};
-    			let size = selectedItem.attributes.find(a => a.name === "size");
-    			if (size && size.value) options.limit = size.value;
-    			const childrenData = await getData(apiData.value.apiUrl, options, apiData.value.id);
-    			console.debug(`Data acquired for ${apiData.value.apiUrl}`, childrenData);
+    			customElements.whenDefined(selectedItem.name).then(async () => {
+    				element.getData = getData;
+    				element.api = apiData;
+    				element.plugins = custom_plugins;
+    				element.page_api = custom_api;
+    				element.scopes = custom_scopes;
+    				element.page = custom_page;
+    				element.getList = custom_getList;
+    				element.getOne = custom_getOne;
+    				element.createItem = custom_createItem;
+    				element.updateItem = custom_updateItem;
+    				element.deleteItem = custom_deleteItem;
+    				console.debug(`Populated element `, element, custom_scopes);
+    				console.debug(`Acquiring data for `, apiData);
+    				let options = {};
+    				let size = selectedItem.attributes.find(a => a.name === "size");
+    				if (size && size.value) options.limit = size.value;
+    				const childrenData = await getData(apiData.value.apiUrl, options, apiData.value.id);
+    				console.debug(`Data acquired for ${apiData.value.apiUrl}`, childrenData);
 
-    			if (childrenData && childrenData.items) {
-    				element.data = childrenData;
-    			}
+    				if (childrenData && childrenData.items) {
+    					element.data = childrenData;
+    				}
+    			});
     		}
 
     		showMessage(text, ok = () => {
@@ -25870,7 +25891,21 @@ var app = (function (exports) {
     	}
 
     	const model = new PageViewModel();
-    	const writable_props = ["data", "permissions", "getData"];
+
+    	const writable_props = [
+    		"data",
+    		"permissions",
+    		"custom_plugins",
+    		"custom_api",
+    		"custom_scopes",
+    		"custom_page",
+    		"custom_getList",
+    		"custom_getOne",
+    		"custom_createItem",
+    		"custom_updateItem",
+    		"custom_deleteItem",
+    		"getData"
+    	];
 
     	Object_1.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<page-view> was created with unknown prop '${key}'`);
@@ -25905,7 +25940,16 @@ var app = (function (exports) {
     	$$self.$set = $$props => {
     		if ("data" in $$props) $$invalidate(6, data = $$props.data);
     		if ("permissions" in $$props) $$invalidate(7, permissions = $$props.permissions);
-    		if ("getData" in $$props) $$invalidate(13, getData = $$props.getData);
+    		if ("custom_plugins" in $$props) $$invalidate(8, custom_plugins = $$props.custom_plugins);
+    		if ("custom_api" in $$props) $$invalidate(9, custom_api = $$props.custom_api);
+    		if ("custom_scopes" in $$props) $$invalidate(10, custom_scopes = $$props.custom_scopes);
+    		if ("custom_page" in $$props) $$invalidate(11, custom_page = $$props.custom_page);
+    		if ("custom_getList" in $$props) $$invalidate(12, custom_getList = $$props.custom_getList);
+    		if ("custom_getOne" in $$props) $$invalidate(13, custom_getOne = $$props.custom_getOne);
+    		if ("custom_createItem" in $$props) $$invalidate(14, custom_createItem = $$props.custom_createItem);
+    		if ("custom_updateItem" in $$props) $$invalidate(15, custom_updateItem = $$props.custom_updateItem);
+    		if ("custom_deleteItem" in $$props) $$invalidate(16, custom_deleteItem = $$props.custom_deleteItem);
+    		if ("getData" in $$props) $$invalidate(22, getData = $$props.getData);
     	};
 
     	$$self.$capture_state = () => ({
@@ -25916,6 +25960,15 @@ var app = (function (exports) {
     		dialogComponent,
     		permissionDenied,
     		mainComponent,
+    		custom_plugins,
+    		custom_api,
+    		custom_scopes,
+    		custom_page,
+    		custom_getList,
+    		custom_getOne,
+    		custom_createItem,
+    		custom_updateItem,
+    		custom_deleteItem,
     		isObject,
     		hideItems,
     		applyValuesChanged,
@@ -25934,12 +25987,21 @@ var app = (function (exports) {
     	$$self.$inject_state = $$props => {
     		if ("data" in $$props) $$invalidate(6, data = $$props.data);
     		if ("permissions" in $$props) $$invalidate(7, permissions = $$props.permissions);
-    		if ("loading" in $$props) $$invalidate(16, loading = $$props.loading);
+    		if ("loading" in $$props) $$invalidate(25, loading = $$props.loading);
     		if ("dialogComponent" in $$props) $$invalidate(0, dialogComponent = $$props.dialogComponent);
     		if ("permissionDenied" in $$props) $$invalidate(1, permissionDenied = $$props.permissionDenied);
     		if ("mainComponent" in $$props) $$invalidate(2, mainComponent = $$props.mainComponent);
-    		if ("getData" in $$props) $$invalidate(13, getData = $$props.getData);
-    		if ("ready" in $$props) $$invalidate(17, ready = $$props.ready);
+    		if ("custom_plugins" in $$props) $$invalidate(8, custom_plugins = $$props.custom_plugins);
+    		if ("custom_api" in $$props) $$invalidate(9, custom_api = $$props.custom_api);
+    		if ("custom_scopes" in $$props) $$invalidate(10, custom_scopes = $$props.custom_scopes);
+    		if ("custom_page" in $$props) $$invalidate(11, custom_page = $$props.custom_page);
+    		if ("custom_getList" in $$props) $$invalidate(12, custom_getList = $$props.custom_getList);
+    		if ("custom_getOne" in $$props) $$invalidate(13, custom_getOne = $$props.custom_getOne);
+    		if ("custom_createItem" in $$props) $$invalidate(14, custom_createItem = $$props.custom_createItem);
+    		if ("custom_updateItem" in $$props) $$invalidate(15, custom_updateItem = $$props.custom_updateItem);
+    		if ("custom_deleteItem" in $$props) $$invalidate(16, custom_deleteItem = $$props.custom_deleteItem);
+    		if ("getData" in $$props) $$invalidate(22, getData = $$props.getData);
+    		if ("ready" in $$props) $$invalidate(26, ready = $$props.ready);
     		if ("component" in $$props) $$invalidate(3, component = $$props.component);
     		if ("content" in $$props) $$invalidate(4, content = $$props.content);
     	};
@@ -25949,14 +26011,14 @@ var app = (function (exports) {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*ready, data, loading, model, permissions*/ 196832) {
+    		if ($$self.$$.dirty[0] & /*ready, data, loading, model, permissions*/ 100663520) {
     			 {
     				if (!ready && data && !loading) {
-    					$$invalidate(16, loading = true);
+    					$$invalidate(25, loading = true);
 
     					model.createPage().then(isOk => {
-    						$$invalidate(17, ready = isOk);
-    						$$invalidate(16, loading = false);
+    						$$invalidate(26, ready = isOk);
+    						$$invalidate(25, loading = false);
     					});
     				}
 
@@ -25988,6 +26050,15 @@ var app = (function (exports) {
     		model,
     		data,
     		permissions,
+    		custom_plugins,
+    		custom_api,
+    		custom_scopes,
+    		custom_page,
+    		custom_getList,
+    		custom_getOne,
+    		custom_createItem,
+    		custom_updateItem,
+    		custom_deleteItem,
     		hideItems,
     		applyValuesChanged,
     		applyValues,
@@ -26011,25 +26082,78 @@ var app = (function (exports) {
     		super();
     		this.shadowRoot.innerHTML = `<style>.dynamic-element{margin:var(--cms-dynamic-element-margin)}.error{border:1px dotted var(--cms-validation-error-color)}.main-container{padding:10px}</style>`;
 
-    		init(this, { target: this.shadowRoot }, instance$6, create_fragment$6, safe_not_equal, {
-    			data: 6,
-    			permissions: 7,
-    			hideItems: 8,
-    			applyValuesChanged: 9,
-    			applyValues: 10,
-    			getValidationData: 11,
-    			validate: 12,
-    			getData: 13,
-    			getDataForSave: 14,
-    			PageViewModel: 15,
-    			model: 5
-    		});
+    		init(
+    			this,
+    			{ target: this.shadowRoot },
+    			instance$6,
+    			create_fragment$6,
+    			safe_not_equal,
+    			{
+    				data: 6,
+    				permissions: 7,
+    				custom_plugins: 8,
+    				custom_api: 9,
+    				custom_scopes: 10,
+    				custom_page: 11,
+    				custom_getList: 12,
+    				custom_getOne: 13,
+    				custom_createItem: 14,
+    				custom_updateItem: 15,
+    				custom_deleteItem: 16,
+    				hideItems: 17,
+    				applyValuesChanged: 18,
+    				applyValues: 19,
+    				getValidationData: 20,
+    				validate: 21,
+    				getData: 22,
+    				getDataForSave: 23,
+    				PageViewModel: 24,
+    				model: 5
+    			},
+    			[-1, -1]
+    		);
 
     		const { ctx } = this.$$;
     		const props = this.attributes;
 
     		if (/*data*/ ctx[6] === undefined && !("data" in props)) {
     			console_1.warn("<page-view> was created without expected prop 'data'");
+    		}
+
+    		if (/*custom_plugins*/ ctx[8] === undefined && !("custom_plugins" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_plugins'");
+    		}
+
+    		if (/*custom_api*/ ctx[9] === undefined && !("custom_api" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_api'");
+    		}
+
+    		if (/*custom_scopes*/ ctx[10] === undefined && !("custom_scopes" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_scopes'");
+    		}
+
+    		if (/*custom_page*/ ctx[11] === undefined && !("custom_page" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_page'");
+    		}
+
+    		if (/*custom_getList*/ ctx[12] === undefined && !("custom_getList" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_getList'");
+    		}
+
+    		if (/*custom_getOne*/ ctx[13] === undefined && !("custom_getOne" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_getOne'");
+    		}
+
+    		if (/*custom_createItem*/ ctx[14] === undefined && !("custom_createItem" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_createItem'");
+    		}
+
+    		if (/*custom_updateItem*/ ctx[15] === undefined && !("custom_updateItem" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_updateItem'");
+    		}
+
+    		if (/*custom_deleteItem*/ ctx[16] === undefined && !("custom_deleteItem" in props)) {
+    			console_1.warn("<page-view> was created without expected prop 'custom_deleteItem'");
     		}
 
     		if (options) {
@@ -26048,6 +26172,15 @@ var app = (function (exports) {
     		return [
     			"data",
     			"permissions",
+    			"custom_plugins",
+    			"custom_api",
+    			"custom_scopes",
+    			"custom_page",
+    			"custom_getList",
+    			"custom_getOne",
+    			"custom_createItem",
+    			"custom_updateItem",
+    			"custom_deleteItem",
     			"hideItems",
     			"applyValuesChanged",
     			"applyValues",
@@ -26078,8 +26211,89 @@ var app = (function (exports) {
     		flush();
     	}
 
-    	get hideItems() {
+    	get custom_plugins() {
     		return this.$$.ctx[8];
+    	}
+
+    	set custom_plugins(custom_plugins) {
+    		this.$set({ custom_plugins });
+    		flush();
+    	}
+
+    	get custom_api() {
+    		return this.$$.ctx[9];
+    	}
+
+    	set custom_api(custom_api) {
+    		this.$set({ custom_api });
+    		flush();
+    	}
+
+    	get custom_scopes() {
+    		return this.$$.ctx[10];
+    	}
+
+    	set custom_scopes(custom_scopes) {
+    		this.$set({ custom_scopes });
+    		flush();
+    	}
+
+    	get custom_page() {
+    		return this.$$.ctx[11];
+    	}
+
+    	set custom_page(custom_page) {
+    		this.$set({ custom_page });
+    		flush();
+    	}
+
+    	get custom_getList() {
+    		return this.$$.ctx[12];
+    	}
+
+    	set custom_getList(custom_getList) {
+    		this.$set({ custom_getList });
+    		flush();
+    	}
+
+    	get custom_getOne() {
+    		return this.$$.ctx[13];
+    	}
+
+    	set custom_getOne(custom_getOne) {
+    		this.$set({ custom_getOne });
+    		flush();
+    	}
+
+    	get custom_createItem() {
+    		return this.$$.ctx[14];
+    	}
+
+    	set custom_createItem(custom_createItem) {
+    		this.$set({ custom_createItem });
+    		flush();
+    	}
+
+    	get custom_updateItem() {
+    		return this.$$.ctx[15];
+    	}
+
+    	set custom_updateItem(custom_updateItem) {
+    		this.$set({ custom_updateItem });
+    		flush();
+    	}
+
+    	get custom_deleteItem() {
+    		return this.$$.ctx[16];
+    	}
+
+    	set custom_deleteItem(custom_deleteItem) {
+    		this.$set({ custom_deleteItem });
+    		flush();
+    	}
+
+    	get hideItems() {
+    		return this.$$.ctx[17];
     	}
 
     	set hideItems(value) {
@@ -26087,7 +26301,7 @@ var app = (function (exports) {
     	}
 
     	get applyValuesChanged() {
-    		return this.$$.ctx[9];
+    		return this.$$.ctx[18];
     	}
 
     	set applyValuesChanged(value) {
@@ -26095,7 +26309,7 @@ var app = (function (exports) {
     	}
 
     	get applyValues() {
-    		return this.$$.ctx[10];
+    		return this.$$.ctx[19];
     	}
 
     	set applyValues(value) {
@@ -26103,7 +26317,7 @@ var app = (function (exports) {
     	}
 
     	get getValidationData() {
-    		return this.$$.ctx[11];
+    		return this.$$.ctx[20];
     	}
 
     	set getValidationData(value) {
@@ -26111,7 +26325,7 @@ var app = (function (exports) {
     	}
 
     	get validate() {
-    		return this.$$.ctx[12];
+    		return this.$$.ctx[21];
     	}
 
     	set validate(value) {
@@ -26119,7 +26333,7 @@ var app = (function (exports) {
     	}
 
     	get getData() {
-    		return this.$$.ctx[13];
+    		return this.$$.ctx[22];
     	}
 
     	set getData(getData) {
@@ -26128,7 +26342,7 @@ var app = (function (exports) {
     	}
 
     	get getDataForSave() {
-    		return this.$$.ctx[14];
+    		return this.$$.ctx[23];
     	}
 
     	set getDataForSave(value) {
@@ -26136,7 +26350,7 @@ var app = (function (exports) {
     	}
 
     	get PageViewModel() {
-    		return this.$$.ctx[15];
+    		return this.$$.ctx[24];
     	}
 
     	set PageViewModel(value) {
@@ -26161,27 +26375,27 @@ var app = (function (exports) {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[39] = list[i];
+    	child_ctx[38] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[45] = list[i];
+    	child_ctx[44] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[42] = list[i];
-    	child_ctx[43] = list;
-    	child_ctx[44] = i;
+    	child_ctx[41] = list[i];
+    	child_ctx[42] = list;
+    	child_ctx[43] = i;
     	return child_ctx;
     }
 
     function get_each_context_3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[45] = list[i];
+    	child_ctx[44] = list[i];
     	return child_ctx;
     }
 
@@ -26256,7 +26470,7 @@ var app = (function (exports) {
     // (239:8) {#each columns as column}
     function create_each_block_3(ctx) {
     	let th;
-    	let t_value = /*column*/ ctx[45].label + "";
+    	let t_value = /*column*/ ctx[44].label + "";
     	let t;
 
     	const block = {
@@ -26270,7 +26484,7 @@ var app = (function (exports) {
     			append_dev(th, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*columns*/ 2 && t_value !== (t_value = /*column*/ ctx[45].label + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*columns*/ 2 && t_value !== (t_value = /*column*/ ctx[44].label + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(th);
@@ -26295,11 +26509,11 @@ var app = (function (exports) {
     	let dispose;
 
     	function input_change_handler() {
-    		/*input_change_handler*/ ctx[30].call(input, /*row*/ ctx[42]);
+    		/*input_change_handler*/ ctx[30].call(input, /*row*/ ctx[41]);
     	}
 
     	function click_handler_1(...args) {
-    		return /*click_handler_1*/ ctx[32](/*row*/ ctx[42], ...args);
+    		return /*click_handler_1*/ ctx[31](/*row*/ ctx[41], ...args);
     	}
 
     	const block = {
@@ -26308,17 +26522,17 @@ var app = (function (exports) {
     			input = element("input");
     			attr_dev(input, "class", "form-group btn btn-primary");
     			attr_dev(input, "type", "checkbox");
-    			add_location(input, file$7, 250, 14, 7195);
+    			add_location(input, file$7, 251, 14, 7226);
     			add_location(td, file$7, 247, 12, 7100);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, td, anchor);
     			append_dev(td, input);
-    			input.checked = /*row*/ ctx[42].selected;
+    			input.checked = /*row*/ ctx[41].selected;
 
     			dispose = [
     				listen_dev(input, "change", input_change_handler),
-    				listen_dev(input, "change", /*change_handler*/ ctx[31], false, false, false),
+    				listen_dev(input, "change", change_handler, false, false, false),
     				listen_dev(td, "click", click_handler_1, false, false, false)
     			];
     		},
@@ -26326,7 +26540,7 @@ var app = (function (exports) {
     			ctx = new_ctx;
 
     			if (dirty[0] & /*items*/ 128) {
-    				input.checked = /*row*/ ctx[42].selected;
+    				input.checked = /*row*/ ctx[41].selected;
     			}
     		},
     		d: function destroy(detaching) {
@@ -26346,7 +26560,7 @@ var app = (function (exports) {
     	return block;
     }
 
-    // (261:10) {#each columns as column}
+    // (262:10) {#each columns as column}
     function create_each_block_2(ctx) {
     	let td;
     	let current;
@@ -26354,22 +26568,22 @@ var app = (function (exports) {
 
     	const componentwrapper = new Component_wrapper({
     			props: {
-    				name: /*column*/ ctx[45].detail.component,
-    				value: /*row*/ ctx[42][/*column*/ ctx[45].field],
-    				properties: /*column*/ ctx[45].detail.params
+    				name: /*column*/ ctx[44].detail.component,
+    				value: /*row*/ ctx[41][/*column*/ ctx[44].field],
+    				properties: /*column*/ ctx[44].detail.params
     			},
     			$$inline: true
     		});
 
     	function click_handler_2(...args) {
-    		return /*click_handler_2*/ ctx[33](/*row*/ ctx[42], ...args);
+    		return /*click_handler_2*/ ctx[32](/*row*/ ctx[41], ...args);
     	}
 
     	const block = {
     		c: function create() {
     			td = element("td");
     			create_component(componentwrapper.$$.fragment);
-    			add_location(td, file$7, 261, 12, 7507);
+    			add_location(td, file$7, 262, 12, 7540);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, td, anchor);
@@ -26380,9 +26594,9 @@ var app = (function (exports) {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
     			const componentwrapper_changes = {};
-    			if (dirty[0] & /*columns*/ 2) componentwrapper_changes.name = /*column*/ ctx[45].detail.component;
-    			if (dirty[0] & /*items, columns*/ 130) componentwrapper_changes.value = /*row*/ ctx[42][/*column*/ ctx[45].field];
-    			if (dirty[0] & /*columns*/ 2) componentwrapper_changes.properties = /*column*/ ctx[45].detail.params;
+    			if (dirty[0] & /*columns*/ 2) componentwrapper_changes.name = /*column*/ ctx[44].detail.component;
+    			if (dirty[0] & /*items, columns*/ 130) componentwrapper_changes.value = /*row*/ ctx[41][/*column*/ ctx[44].field];
+    			if (dirty[0] & /*columns*/ 2) componentwrapper_changes.properties = /*column*/ ctx[44].detail.params;
     			componentwrapper.$set(componentwrapper_changes);
     		},
     		i: function intro(local) {
@@ -26405,7 +26619,7 @@ var app = (function (exports) {
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(261:10) {#each columns as column}",
+    		source: "(262:10) {#each columns as column}",
     		ctx
     	});
 
@@ -26534,7 +26748,7 @@ var app = (function (exports) {
     	return block;
     }
 
-    // (282:0) {#if pagination && !itemmodel}
+    // (283:0) {#if pagination && !itemmodel}
     function create_if_block$5(ctx) {
     	let ul;
     	let li0;
@@ -26577,19 +26791,19 @@ var app = (function (exports) {
     			? "disabled"
     			: ""));
 
-    			add_location(span0, file$7, 284, 6, 8023);
+    			add_location(span0, file$7, 285, 6, 8056);
     			attr_dev(li0, "class", "page-item ");
-    			add_location(li0, file$7, 283, 4, 7993);
+    			add_location(li0, file$7, 284, 4, 8026);
 
     			attr_dev(span1, "class", span1_class_value = "page-link " + (!/*pageData*/ ctx[9].length || /*model*/ ctx[11].params.page + 1 > /*pages*/ ctx[8]
     			? "disabled"
     			: ""));
 
-    			add_location(span1, file$7, 304, 6, 8548);
+    			add_location(span1, file$7, 305, 6, 8581);
     			attr_dev(li1, "class", "page-item");
-    			add_location(li1, file$7, 303, 4, 8519);
+    			add_location(li1, file$7, 304, 4, 8552);
     			attr_dev(ul, "class", "pagination pagination-sm");
-    			add_location(ul, file$7, 282, 2, 7951);
+    			add_location(ul, file$7, 283, 2, 7984);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, ul, anchor);
@@ -26608,8 +26822,8 @@ var app = (function (exports) {
     			append_dev(span1, t3);
 
     			dispose = [
-    				listen_dev(span0, "click", /*click_handler_3*/ ctx[36], false, false, false),
-    				listen_dev(span1, "click", /*click_handler_5*/ ctx[38], false, false, false)
+    				listen_dev(span0, "click", /*click_handler_3*/ ctx[35], false, false, false),
+    				listen_dev(span1, "click", /*click_handler_5*/ ctx[37], false, false, false)
     			];
     		},
     		p: function update(ctx, dirty) {
@@ -26660,24 +26874,24 @@ var app = (function (exports) {
     		block,
     		id: create_if_block$5.name,
     		type: "if",
-    		source: "(282:0) {#if pagination && !itemmodel}",
+    		source: "(283:0) {#if pagination && !itemmodel}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (293:4) {#each pageData as page}
+    // (294:4) {#each pageData as page}
     function create_each_block(ctx) {
     	let li;
     	let span;
-    	let t_value = /*page*/ ctx[39] + "";
+    	let t_value = /*page*/ ctx[38] + "";
     	let t;
     	let li_class_value;
     	let dispose;
 
     	function click_handler_4(...args) {
-    		return /*click_handler_4*/ ctx[37](/*page*/ ctx[39], ...args);
+    		return /*click_handler_4*/ ctx[36](/*page*/ ctx[38], ...args);
     	}
 
     	const block = {
@@ -26686,13 +26900,13 @@ var app = (function (exports) {
     			span = element("span");
     			t = text(t_value);
     			attr_dev(span, "class", "page-link");
-    			add_location(span, file$7, 294, 8, 8354);
+    			add_location(span, file$7, 295, 8, 8387);
 
-    			attr_dev(li, "class", li_class_value = "page-item " + (/*page*/ ctx[39] === /*model*/ ctx[11].params.page
+    			attr_dev(li, "class", li_class_value = "page-item " + (/*page*/ ctx[38] === /*model*/ ctx[11].params.page
     			? "active"
     			: ""));
 
-    			add_location(li, file$7, 293, 6, 8278);
+    			add_location(li, file$7, 294, 6, 8311);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -26702,9 +26916,9 @@ var app = (function (exports) {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty[0] & /*pageData*/ 512 && t_value !== (t_value = /*page*/ ctx[39] + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*pageData*/ 512 && t_value !== (t_value = /*page*/ ctx[38] + "")) set_data_dev(t, t_value);
 
-    			if (dirty[0] & /*pageData, model*/ 2560 && li_class_value !== (li_class_value = "page-item " + (/*page*/ ctx[39] === /*model*/ ctx[11].params.page
+    			if (dirty[0] & /*pageData, model*/ 2560 && li_class_value !== (li_class_value = "page-item " + (/*page*/ ctx[38] === /*model*/ ctx[11].params.page
     			? "active"
     			: ""))) {
     				attr_dev(li, "class", li_class_value);
@@ -26720,7 +26934,7 @@ var app = (function (exports) {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(293:4) {#each pageData as page}",
+    		source: "(294:4) {#each pageData as page}",
     		ctx
     	});
 
@@ -26814,7 +27028,7 @@ var app = (function (exports) {
     			set_style(div, "max-height", /*maxheight*/ ctx[0]);
     			add_location(div, file$7, 228, 0, 6707);
     			set_custom_element_data(vaadin_dialog, "aria-label", "");
-    			add_location(vaadin_dialog, file$7, 279, 0, 7867);
+    			add_location(vaadin_dialog, file$7, 280, 0, 7900);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -26843,10 +27057,10 @@ var app = (function (exports) {
     				each_blocks[i].m(tbody, null);
     			}
 
-    			/*div_binding*/ ctx[34](div);
+    			/*div_binding*/ ctx[33](div);
     			insert_dev(target, t4, anchor);
     			insert_dev(target, vaadin_dialog, anchor);
-    			/*vaadin_dialog_binding*/ ctx[35](vaadin_dialog);
+    			/*vaadin_dialog_binding*/ ctx[34](vaadin_dialog);
     			insert_dev(target, t5, anchor);
     			if (if_block2) if_block2.m(target, anchor);
     			insert_dev(target, if_block2_anchor, anchor);
@@ -26973,10 +27187,10 @@ var app = (function (exports) {
     			if (if_block1) if_block1.d();
     			destroy_each(each_blocks_1, detaching);
     			destroy_each(each_blocks, detaching);
-    			/*div_binding*/ ctx[34](null);
+    			/*div_binding*/ ctx[33](null);
     			if (detaching) detach_dev(t4);
     			if (detaching) detach_dev(vaadin_dialog);
-    			/*vaadin_dialog_binding*/ ctx[35](null);
+    			/*vaadin_dialog_binding*/ ctx[34](null);
     			if (detaching) detach_dev(t5);
     			if (if_block2) if_block2.d(detaching);
     			if (detaching) detach_dev(if_block2_anchor);
@@ -26993,6 +27207,10 @@ var app = (function (exports) {
 
     	return block;
     }
+
+    const change_handler = event => {
+    	
+    }; //openItem(items);
 
     function instance$7($$self, $$props, $$invalidate) {
     	let component = null;
@@ -27195,12 +27413,9 @@ var app = (function (exports) {
     		((((((((($$invalidate(7, items), $$invalidate(14, data)), $$invalidate(27, total)), $$invalidate(26, count)), $$invalidate(8, pages)), $$invalidate(9, pageData)), $$invalidate(15, size)), $$invalidate(1, columns)), $$invalidate(4, itemmodel)), $$invalidate(18, sourcefield));
     	}
 
-    	const change_handler = event => {
-    		openItem(items);
-    	};
-
     	const click_handler_1 = row => {
     		$$invalidate(7, row.selected = !row.selected, items);
+    		openItem(items);
     	};
 
     	const click_handler_2 = (row, event) => {
@@ -27393,7 +27608,6 @@ var app = (function (exports) {
     		paginationComponent,
     		click_handler,
     		input_change_handler,
-    		change_handler,
     		click_handler_1,
     		click_handler_2,
     		div_binding,
@@ -36022,7 +36236,7 @@ var app = (function (exports) {
         return html2canvas;
 
     }));
-
+    //# sourceMappingURL=html2canvas.js.map
     });
 
     class PageBuilderModel {
@@ -44889,7 +45103,7 @@ var app = (function (exports) {
     			dispose = [
     				listen_dev(input, "change", /*input_change_handler*/ ctx[21]),
     				listen_dev(select0, "change", /*select0_change_handler*/ ctx[22]),
-    				listen_dev(select0, "change", change_handler, false, false, false),
+    				listen_dev(select0, "change", change_handler$1, false, false, false),
     				listen_dev(select1, "change", /*select1_change_handler*/ ctx[23]),
     				listen_dev(select1, "change", change_handler_1, false, false, false),
     				listen_dev(select2, "change", /*select2_change_handler*/ ctx[26]),
@@ -45070,7 +45284,7 @@ var app = (function (exports) {
     	return block;
     }
 
-    const change_handler = event => {
+    const change_handler$1 = event => {
     	
     };
 
@@ -74560,6 +74774,851 @@ var app = (function (exports) {
 
     customElements.define("viewer-data", Viewer_data);
 
+    /* src/custom-data/custom-data.svelte generated by Svelte v3.19.2 */
+
+    const { customElements: customElements_1$6 } = globals;
+    const file$s = "src/custom-data/custom-data.svelte";
+
+    function create_fragment$s(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			this.c = noop;
+    			attr_dev(div, "class", "form-group");
+    			add_location(div, file$s, 82, 0, 2164);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			/*div_binding*/ ctx[16](div);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			/*div_binding*/ ctx[16](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$s.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$s($$self, $$props, $$invalidate) {
+    	let { element } = $$props;
+    	let { plugins } = $$props;
+    	let { api } = $$props;
+    	let { page_api } = $$props;
+    	let { scopes } = $$props;
+    	let { page } = $$props;
+    	let { getList } = $$props;
+    	let { getOne } = $$props;
+    	let { createItem } = $$props;
+    	let { updateItem } = $$props;
+    	let { deleteItem } = $$props;
+    	let component;
+
+    	class CustomDataModel {
+    		initialize() {
+    			const customElement = document.createElement(element);
+    			$$invalidate(0, component.innerHTML = null, component);
+    			component.appendChild(customElement);
+
+    			customElements.whenDefined(element).then(d => {
+    				if (plugins) customElement.plugins = plugins;
+    				if (api) customElement.api = api;
+    				if (scopes) customElement.scopes = scopes;
+    				if (page) customElement.page = page;
+    				if (page_api) customElement.pageapi = page_api;
+    				if (getList) customElement.getList = getList;
+    				if (getOne) customElement.getOne = getOne;
+    				if (createItem) customElement.createItem = createItem;
+    				if (updateItem) customElement.updateItem = updateItem;
+    				if (deleteItem) customElement.deleteItem = deleteItem;
+    			});
+    		}
+
+    		changed(value) {
+    			if (this.validate()) {
+    				this.dispatchEvent("changed", value);
+    			}
+    		}
+
+    		validate() {
+    			return true;
+    		}
+
+    		getErrorMessage() {
+    			return null;
+    		}
+
+    		dispatchEvent(name, detail) {
+    			component.dispatchEvent(new CustomEvent(name,
+    			{
+    					composed: true,
+    					cancelable: false,
+    					detail
+    				}));
+    		}
+    	}
+
+    	const model = new CustomDataModel();
+    	const validateData = model.validate;
+    	const getErrorMessage = model.getErrorMessage;
+
+    	onMount(async () => {
+    		
+    	});
+
+    	const writable_props = [
+    		"element",
+    		"plugins",
+    		"api",
+    		"page_api",
+    		"scopes",
+    		"page",
+    		"getList",
+    		"getOne",
+    		"createItem",
+    		"updateItem",
+    		"deleteItem"
+    	];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<custom-data> was created with unknown prop '${key}'`);
+    	});
+
+    	let { $$slots = {}, $$scope } = $$props;
+    	validate_slots("custom-data", $$slots, []);
+
+    	function div_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			$$invalidate(0, component = $$value);
+    		});
+    	}
+
+    	$$self.$set = $$props => {
+    		if ("element" in $$props) $$invalidate(1, element = $$props.element);
+    		if ("plugins" in $$props) $$invalidate(2, plugins = $$props.plugins);
+    		if ("api" in $$props) $$invalidate(3, api = $$props.api);
+    		if ("page_api" in $$props) $$invalidate(4, page_api = $$props.page_api);
+    		if ("scopes" in $$props) $$invalidate(5, scopes = $$props.scopes);
+    		if ("page" in $$props) $$invalidate(6, page = $$props.page);
+    		if ("getList" in $$props) $$invalidate(7, getList = $$props.getList);
+    		if ("getOne" in $$props) $$invalidate(8, getOne = $$props.getOne);
+    		if ("createItem" in $$props) $$invalidate(9, createItem = $$props.createItem);
+    		if ("updateItem" in $$props) $$invalidate(10, updateItem = $$props.updateItem);
+    		if ("deleteItem" in $$props) $$invalidate(11, deleteItem = $$props.deleteItem);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		element,
+    		plugins,
+    		api,
+    		page_api,
+    		scopes,
+    		page,
+    		getList,
+    		getOne,
+    		createItem,
+    		updateItem,
+    		deleteItem,
+    		component,
+    		CustomDataModel,
+    		model,
+    		validateData,
+    		getErrorMessage
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("element" in $$props) $$invalidate(1, element = $$props.element);
+    		if ("plugins" in $$props) $$invalidate(2, plugins = $$props.plugins);
+    		if ("api" in $$props) $$invalidate(3, api = $$props.api);
+    		if ("page_api" in $$props) $$invalidate(4, page_api = $$props.page_api);
+    		if ("scopes" in $$props) $$invalidate(5, scopes = $$props.scopes);
+    		if ("page" in $$props) $$invalidate(6, page = $$props.page);
+    		if ("getList" in $$props) $$invalidate(7, getList = $$props.getList);
+    		if ("getOne" in $$props) $$invalidate(8, getOne = $$props.getOne);
+    		if ("createItem" in $$props) $$invalidate(9, createItem = $$props.createItem);
+    		if ("updateItem" in $$props) $$invalidate(10, updateItem = $$props.updateItem);
+    		if ("deleteItem" in $$props) $$invalidate(11, deleteItem = $$props.deleteItem);
+    		if ("component" in $$props) $$invalidate(0, component = $$props.component);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*scopes, component*/ 33) {
+    			 {
+    				if (scopes && component) {
+    					model.initialize();
+    				}
+    			}
+    		}
+    	};
+
+    	return [
+    		component,
+    		element,
+    		plugins,
+    		api,
+    		page_api,
+    		scopes,
+    		page,
+    		getList,
+    		getOne,
+    		createItem,
+    		updateItem,
+    		deleteItem,
+    		CustomDataModel,
+    		model,
+    		validateData,
+    		getErrorMessage,
+    		div_binding
+    	];
+    }
+
+    class Custom_data extends SvelteElement {
+    	constructor(options) {
+    		super();
+    		
+
+    		init(this, { target: this.shadowRoot }, instance$s, create_fragment$s, safe_not_equal, {
+    			element: 1,
+    			plugins: 2,
+    			api: 3,
+    			page_api: 4,
+    			scopes: 5,
+    			page: 6,
+    			getList: 7,
+    			getOne: 8,
+    			createItem: 9,
+    			updateItem: 10,
+    			deleteItem: 11,
+    			CustomDataModel: 12,
+    			model: 13,
+    			validateData: 14,
+    			getErrorMessage: 15
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = this.attributes;
+
+    		if (/*element*/ ctx[1] === undefined && !("element" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'element'");
+    		}
+
+    		if (/*plugins*/ ctx[2] === undefined && !("plugins" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'plugins'");
+    		}
+
+    		if (/*api*/ ctx[3] === undefined && !("api" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'api'");
+    		}
+
+    		if (/*page_api*/ ctx[4] === undefined && !("page_api" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'page_api'");
+    		}
+
+    		if (/*scopes*/ ctx[5] === undefined && !("scopes" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'scopes'");
+    		}
+
+    		if (/*page*/ ctx[6] === undefined && !("page" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'page'");
+    		}
+
+    		if (/*getList*/ ctx[7] === undefined && !("getList" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'getList'");
+    		}
+
+    		if (/*getOne*/ ctx[8] === undefined && !("getOne" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'getOne'");
+    		}
+
+    		if (/*createItem*/ ctx[9] === undefined && !("createItem" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'createItem'");
+    		}
+
+    		if (/*updateItem*/ ctx[10] === undefined && !("updateItem" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'updateItem'");
+    		}
+
+    		if (/*deleteItem*/ ctx[11] === undefined && !("deleteItem" in props)) {
+    			console.warn("<custom-data> was created without expected prop 'deleteItem'");
+    		}
+
+    		if (options) {
+    			if (options.target) {
+    				insert_dev(options.target, this, options.anchor);
+    			}
+
+    			if (options.props) {
+    				this.$set(options.props);
+    				flush();
+    			}
+    		}
+    	}
+
+    	static get observedAttributes() {
+    		return [
+    			"element",
+    			"plugins",
+    			"api",
+    			"page_api",
+    			"scopes",
+    			"page",
+    			"getList",
+    			"getOne",
+    			"createItem",
+    			"updateItem",
+    			"deleteItem",
+    			"CustomDataModel",
+    			"model",
+    			"validateData",
+    			"getErrorMessage"
+    		];
+    	}
+
+    	get element() {
+    		return this.$$.ctx[1];
+    	}
+
+    	set element(element) {
+    		this.$set({ element });
+    		flush();
+    	}
+
+    	get plugins() {
+    		return this.$$.ctx[2];
+    	}
+
+    	set plugins(plugins) {
+    		this.$set({ plugins });
+    		flush();
+    	}
+
+    	get api() {
+    		return this.$$.ctx[3];
+    	}
+
+    	set api(api) {
+    		this.$set({ api });
+    		flush();
+    	}
+
+    	get page_api() {
+    		return this.$$.ctx[4];
+    	}
+
+    	set page_api(page_api) {
+    		this.$set({ page_api });
+    		flush();
+    	}
+
+    	get scopes() {
+    		return this.$$.ctx[5];
+    	}
+
+    	set scopes(scopes) {
+    		this.$set({ scopes });
+    		flush();
+    	}
+
+    	get page() {
+    		return this.$$.ctx[6];
+    	}
+
+    	set page(page) {
+    		this.$set({ page });
+    		flush();
+    	}
+
+    	get getList() {
+    		return this.$$.ctx[7];
+    	}
+
+    	set getList(getList) {
+    		this.$set({ getList });
+    		flush();
+    	}
+
+    	get getOne() {
+    		return this.$$.ctx[8];
+    	}
+
+    	set getOne(getOne) {
+    		this.$set({ getOne });
+    		flush();
+    	}
+
+    	get createItem() {
+    		return this.$$.ctx[9];
+    	}
+
+    	set createItem(createItem) {
+    		this.$set({ createItem });
+    		flush();
+    	}
+
+    	get updateItem() {
+    		return this.$$.ctx[10];
+    	}
+
+    	set updateItem(updateItem) {
+    		this.$set({ updateItem });
+    		flush();
+    	}
+
+    	get deleteItem() {
+    		return this.$$.ctx[11];
+    	}
+
+    	set deleteItem(deleteItem) {
+    		this.$set({ deleteItem });
+    		flush();
+    	}
+
+    	get CustomDataModel() {
+    		return this.$$.ctx[12];
+    	}
+
+    	set CustomDataModel(value) {
+    		throw new Error("<custom-data>: Cannot set read-only property 'CustomDataModel'");
+    	}
+
+    	get model() {
+    		return this.$$.ctx[13];
+    	}
+
+    	set model(value) {
+    		throw new Error("<custom-data>: Cannot set read-only property 'model'");
+    	}
+
+    	get validateData() {
+    		return this.$$.ctx[14];
+    	}
+
+    	set validateData(value) {
+    		throw new Error("<custom-data>: Cannot set read-only property 'validateData'");
+    	}
+
+    	get getErrorMessage() {
+    		return this.$$.ctx[15];
+    	}
+
+    	set getErrorMessage(value) {
+    		throw new Error("<custom-data>: Cannot set read-only property 'getErrorMessage'");
+    	}
+    }
+
+    customElements_1$6.define("custom-data", Custom_data);
+
+    /* src/permission-screen/permission-screen.svelte generated by Svelte v3.19.2 */
+    const file$t = "src/permission-screen/permission-screen.svelte";
+
+    function get_each_context$a(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[11] = list[i];
+    	return child_ctx;
+    }
+
+    // (61:6) {#each scopes as scope}
+    function create_each_block$a(ctx) {
+    	let div2;
+    	let div0;
+    	let t0_value = /*scope*/ ctx[11].name + "";
+    	let t0;
+    	let t1;
+    	let div1;
+    	let t2_value = /*scope*/ ctx[11].description + "";
+    	let t2;
+    	let t3;
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div1 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			attr_dev(div0, "class", "col-md-5");
+    			add_location(div0, file$t, 62, 10, 1605);
+    			attr_dev(div1, "class", "col-md-7");
+    			add_location(div1, file$t, 63, 10, 1656);
+    			attr_dev(div2, "class", "row");
+    			add_location(div2, file$t, 61, 8, 1577);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div0);
+    			append_dev(div0, t0);
+    			append_dev(div2, t1);
+    			append_dev(div2, div1);
+    			append_dev(div1, t2);
+    			append_dev(div2, t3);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*scopes*/ 1 && t0_value !== (t0_value = /*scope*/ ctx[11].name + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*scopes*/ 1 && t2_value !== (t2_value = /*scope*/ ctx[11].description + "")) set_data_dev(t2, t2_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$a.name,
+    		type: "each",
+    		source: "(61:6) {#each scopes as scope}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$t(ctx) {
+    	let head;
+    	let link;
+    	let t0;
+    	let div2;
+    	let nav;
+    	let a;
+    	let t2;
+    	let div1;
+    	let h5;
+    	let t3;
+    	let t4_value = /*permission*/ ctx[1].name + "";
+    	let t4;
+    	let t5;
+    	let t6;
+    	let br0;
+    	let t7;
+    	let div0;
+    	let t8;
+    	let br1;
+    	let t9;
+    	let button0;
+    	let t11;
+    	let button1;
+    	let dispose;
+    	let each_value = /*scopes*/ ctx[0];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$a(get_each_context$a(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			head = element("head");
+    			link = element("link");
+    			t0 = space();
+    			div2 = element("div");
+    			nav = element("nav");
+    			a = element("a");
+    			a.textContent = "Permission Request";
+    			t2 = space();
+    			div1 = element("div");
+    			h5 = element("h5");
+    			t3 = text("The app ");
+    			t4 = text(t4_value);
+    			t5 = text(" is requesting access to the following resources:");
+    			t6 = space();
+    			br0 = element("br");
+    			t7 = space();
+    			div0 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t8 = space();
+    			br1 = element("br");
+    			t9 = space();
+    			button0 = element("button");
+    			button0.textContent = "Allow";
+    			t11 = space();
+    			button1 = element("button");
+    			button1.textContent = "Cancel";
+    			this.c = noop;
+    			attr_dev(link, "rel", "stylesheet");
+    			attr_dev(link, "href", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css");
+    			attr_dev(link, "integrity", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T");
+    			attr_dev(link, "crossorigin", "anonymous");
+    			add_location(link, file$t, 42, 2, 954);
+    			add_location(head, file$t, 41, 0, 945);
+    			attr_dev(a, "class", "navbar-brand");
+    			attr_dev(a, "href", "#");
+    			add_location(a, file$t, 51, 4, 1302);
+    			attr_dev(nav, "class", "navbar navbar-expand-lg navbar-light bg-light");
+    			add_location(nav, file$t, 50, 2, 1238);
+    			add_location(h5, file$t, 54, 4, 1397);
+    			add_location(br0, file$t, 57, 4, 1497);
+    			attr_dev(div0, "class", "items-container");
+    			add_location(div0, file$t, 59, 4, 1509);
+    			add_location(br1, file$t, 68, 4, 1749);
+    			attr_dev(button0, "type", "button");
+    			attr_dev(button0, "id", "allow");
+    			attr_dev(button0, "class", "btn btn-success");
+    			add_location(button0, file$t, 69, 4, 1760);
+    			attr_dev(button1, "type", "button");
+    			attr_dev(button1, "id", "cancel");
+    			attr_dev(button1, "class", "btn btn-warning");
+    			add_location(button1, file$t, 78, 4, 1916);
+    			attr_dev(div1, "class", "container");
+    			add_location(div1, file$t, 53, 2, 1369);
+    			attr_dev(div2, "id", "main-form");
+    			add_location(div2, file$t, 49, 0, 1193);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, head, anchor);
+    			append_dev(head, link);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, nav);
+    			append_dev(nav, a);
+    			append_dev(div2, t2);
+    			append_dev(div2, div1);
+    			append_dev(div1, h5);
+    			append_dev(h5, t3);
+    			append_dev(h5, t4);
+    			append_dev(h5, t5);
+    			append_dev(div1, t6);
+    			append_dev(div1, br0);
+    			append_dev(div1, t7);
+    			append_dev(div1, div0);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div0, null);
+    			}
+
+    			append_dev(div1, t8);
+    			append_dev(div1, br1);
+    			append_dev(div1, t9);
+    			append_dev(div1, button0);
+    			append_dev(div1, t11);
+    			append_dev(div1, button1);
+    			/*div2_binding*/ ctx[10](div2);
+
+    			dispose = [
+    				listen_dev(button0, "click", /*click_handler*/ ctx[8], false, false, false),
+    				listen_dev(button1, "click", /*click_handler_1*/ ctx[9], false, false, false)
+    			];
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*permission*/ 2 && t4_value !== (t4_value = /*permission*/ ctx[1].name + "")) set_data_dev(t4, t4_value);
+
+    			if (dirty & /*scopes*/ 1) {
+    				each_value = /*scopes*/ ctx[0];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$a(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$a(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div0, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(head);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div2);
+    			destroy_each(each_blocks, detaching);
+    			/*div2_binding*/ ctx[10](null);
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$t.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$t($$self, $$props, $$invalidate) {
+    	let component = null;
+    	let modal;
+    	let { scopes = [] } = $$props;
+    	let { permission = {} } = $$props;
+
+    	const dispatchEvent = (name, detail) => {
+    		component.dispatchEvent(new CustomEvent(name,
+    		{
+    				composed: true,
+    				cancelable: false,
+    				detail
+    			}));
+    	};
+
+    	const allow = () => {
+    		dispatchEvent("permission-allowed", {});
+    	};
+
+    	const cancel = () => {
+    		dispatchEvent("permission-denied", {});
+    	};
+
+    	const init = () => {
+    		
+    	};
+
+    	onMount(async () => {
+    		
+    	});
+
+    	const writable_props = ["scopes", "permission"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<permission-screen> was created with unknown prop '${key}'`);
+    	});
+
+    	let { $$slots = {}, $$scope } = $$props;
+    	validate_slots("permission-screen", $$slots, []);
+
+    	const click_handler = () => {
+    		allow();
+    	};
+
+    	const click_handler_1 = () => {
+    		cancel();
+    	};
+
+    	function div2_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			$$invalidate(2, component = $$value);
+    		});
+    	}
+
+    	$$self.$set = $$props => {
+    		if ("scopes" in $$props) $$invalidate(0, scopes = $$props.scopes);
+    		if ("permission" in $$props) $$invalidate(1, permission = $$props.permission);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		Chart,
+    		component,
+    		modal,
+    		scopes,
+    		permission,
+    		dispatchEvent,
+    		allow,
+    		cancel,
+    		init
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("component" in $$props) $$invalidate(2, component = $$props.component);
+    		if ("modal" in $$props) modal = $$props.modal;
+    		if ("scopes" in $$props) $$invalidate(0, scopes = $$props.scopes);
+    		if ("permission" in $$props) $$invalidate(1, permission = $$props.permission);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		scopes,
+    		permission,
+    		component,
+    		allow,
+    		cancel,
+    		modal,
+    		dispatchEvent,
+    		init,
+    		click_handler,
+    		click_handler_1,
+    		div2_binding
+    	];
+    }
+
+    class Permission_screen extends SvelteElement {
+    	constructor(options) {
+    		super();
+    		this.shadowRoot.innerHTML = `<style>.btn-warning{background-color:var(--cms-options-disabled) !important;border:none !important}.items-container{max-height:30vh;overflow:auto}</style>`;
+    		init(this, { target: this.shadowRoot }, instance$t, create_fragment$t, safe_not_equal, { scopes: 0, permission: 1 });
+
+    		if (options) {
+    			if (options.target) {
+    				insert_dev(options.target, this, options.anchor);
+    			}
+
+    			if (options.props) {
+    				this.$set(options.props);
+    				flush();
+    			}
+    		}
+    	}
+
+    	static get observedAttributes() {
+    		return ["scopes", "permission"];
+    	}
+
+    	get scopes() {
+    		return this.$$.ctx[0];
+    	}
+
+    	set scopes(scopes) {
+    		this.$set({ scopes });
+    		flush();
+    	}
+
+    	get permission() {
+    		return this.$$.ctx[1];
+    	}
+
+    	set permission(permission) {
+    		this.$set({ permission });
+    		flush();
+    	}
+    }
+
+    customElements.define("permission-screen", Permission_screen);
+
     const $_documentContainer$h = document.createElement('template');
 
     $_documentContainer$h.innerHTML = `<dom-module id="lumo-required-field">
@@ -91201,6 +92260,7 @@ var app = (function (exports) {
     customElements.define(DialogElement.is, DialogElement);
 
     exports.CheckboxData = Checkbox_data;
+    exports.CustomData = Custom_data;
     exports.GridList = Grid_list;
     exports.GroupManager = Group_manager;
     exports.InputData = Input_data;

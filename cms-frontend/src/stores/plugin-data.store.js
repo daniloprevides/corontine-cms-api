@@ -54,6 +54,15 @@ const createWritableStore = (key, startValue) => {
       }         
       return basePlugin;
     },  
+    getRedirectorPlugin: () => {
+      const data = JSON.parse(localStorage.getItem(key));       
+
+      let basePlugin = null;
+      if (data && data.find) {
+        basePlugin = data.find(d => d.pluginType === "REDIRECTOR");
+      }         
+      return basePlugin;
+    },  
     getPagePlugin: () => {
       const data = JSON.parse(localStorage.getItem(key));       
 

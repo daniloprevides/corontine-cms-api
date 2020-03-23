@@ -14,7 +14,8 @@ import { NewMenuDto } from "../dto/new-menu.dto";
 import { UpdateMenuDto } from "../dto/update-menu.dto";
 import { MenuDto } from "../dto/menu.dto";
 import Request = require("request");
-import { In, QueryBuilder, SelectQueryBuilder } from "typeorm";
+import { MenuAddEntryDTO } from "../dto/menu-add-entry.dto";
+import { Transactional } from "typeorm-transactional-cls-hooked";
 
 @Injectable()
 export class MenuService extends GenericService<
@@ -23,6 +24,7 @@ export class MenuService extends GenericService<
   NewMenuDto,
   UpdateMenuDto
 > {
+
   public async validateParent(clientId: string, id: string): Promise<boolean> {
     return (
       (await this.repository.findOne({
@@ -38,6 +40,42 @@ export class MenuService extends GenericService<
     public readonly authenticationService: AuthenticationService
   ) {
     super(MenuRepository, "Menu");
+  }
+
+
+  @Transactional()
+  async addNewEntry(newEntry: MenuAddEntryDTO): Promise<Menu>{
+    console.log("Entry",newEntry);
+
+    let menu = await this.repository.findOne({ where: { name: "default" } });
+    let customMenu = menu.content?.find(m => m.id === "custom");
+    if (!customMenu){      
+      menu.content.push({
+        id: "custom",
+        text: "Addons",
+        description: "Custom Menu",
+        children: [],
+        requiredPermission: "cms"
+      });
+    }
+    customMenu = menu.content.find(m => m.id === "custom");
+
+    //Adding new Entry
+    customMenu.children.push({
+      "id": newEntry.requiredPermission,
+      "text": newEntry.name,
+      "children": null,
+      "page": newEntry.pageName,
+      "idPage": newEntry.pageId,
+      "parentId": "custom",
+      "requiredPermission": newEntry.requiredPermission
+    })
+
+    console.log(customMenu);
+    console.log(menu);
+
+    return await this.repository.save(menu);
+
   }
 
   public async getMyMenu(request: Request): Promise<MenuDto> {

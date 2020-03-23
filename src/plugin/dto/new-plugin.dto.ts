@@ -29,7 +29,7 @@ export class NewPluginDto {
   @Expose()
   @ExposeFieldName
   @ExposeFieldNamesForPage(new ComponentDefinition("input-data", {type: "text"}))
-  componentsUrl: Plugin["componentsUrl"];
+  componentsUrl?: Plugin["componentsUrl"];
   
   @ApiProperty()
   @IsString()
@@ -105,6 +105,7 @@ export class NewPluginDto {
   @ApiProperty()
   @IsString()
   @Expose()
+  @IsOptional()
   @ExposeFieldName
   @ExposeFieldNamesForPage(new ComponentDefinition("input-data"))
   environment: Plugin["environment"];

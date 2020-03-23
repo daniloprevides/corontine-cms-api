@@ -19,6 +19,7 @@ import { Transactional } from 'typeorm-transactional-cls-hooked';
 import { Scope } from '../entity/scope.entity';
 import { InvalidClientCredentialsError } from '../exception/invalid-client-credentials.error';
 import { UpdateClientCredentialsDTO } from '../dto/update-client-credentials.dto';
+import {v4} from 'uuid';
 
 @Injectable()
 export class ClientCredentialsService {
@@ -46,6 +47,36 @@ export class ClientCredentialsService {
       throw new NotFoundException('Credentials not found');
     }
     return credentials;
+  }
+
+  public async generate(credential: NewClientCredentialsDTO, update = false): Promise<ClientCredentials> {
+    //Creating the scopes
+    try {
+      //checking if plugin name already exists
+      const addon = await this.repository.findOne({name: credential.name});
+      let item = {
+        name: credential.name,
+        secret: v4(),
+        scopes: credential.scopes
+      } as ClientCredentials
+      if (addon){
+        console.debug(`Addon ${credential.name} already exists, updating ${update}`);
+        if (update){
+          item.id = addon.id;
+          //Generating new secret, so if someone try to get secret that already exists wont be able
+          item.scopes = credential.scopes as any;
+        }
+      }
+
+      const savedItem = await this.repository.save(item);
+
+      return savedItem;
+    } catch (e) {
+      if (e.code === 'ER_DUP_ENTRY' || e.code === "SQLITE_CONSTRAINT") {
+        throw new ConflictException('Client Credential Already Exists');
+      }
+      throw new InternalServerErrorException(e.message);
+    }
   }
 
   @Transactional()

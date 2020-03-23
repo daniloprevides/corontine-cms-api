@@ -4,7 +4,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  OneToMany,
+  JoinColumn
 } from "typeorm";
 import { Audit } from "../../commons";
 import { Expose } from "class-transformer";
@@ -31,13 +33,14 @@ export class ClientCredentials extends Audit {
   name: string;
 
   @Column({ type: "varchar" })
+  @Expose()
   secret: string;
 
   @ManyToMany<Scope>(
     () => Scope,
     (scope: Scope) => scope.credentials
   )
-  @JoinTable({ name: "client-credentials_scopes" })
+  @JoinTable({name: "client-credentials_scopes"})
   @Expose()
   scopes: Scope[];
 }

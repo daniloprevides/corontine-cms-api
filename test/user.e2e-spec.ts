@@ -150,12 +150,14 @@ describe('UserController', () => {
       app.use(RequestContextMiddleware);
       await app.init();
 
-      const groupRepository: Repository<Group> = moduleFixture.get<Repository<Group>>(getRepositoryToken(Group));
-      const adminGroup = await groupRepository.findOne({name: "admin"});
-      groupDto = adminGroup as GroupDTO;
+
     
   
       setTimeout(async () => {
+        const groupRepository: Repository<Group> = moduleFixture.get<Repository<Group>>(getRepositoryToken(Group));
+        const adminGroup = await groupRepository.findOne({name: "admin"});
+        groupDto = adminGroup as GroupDTO;
+        
         await createDefaultClientCredentialsForTesting();
         authorization  = await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]);    
         server = app.getHttpServer();  

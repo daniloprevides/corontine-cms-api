@@ -2,7 +2,7 @@ import { Group } from './group.entity';
 import { AuthorizationCode } from './authorization-code.entity';
 import { ScopeEnum } from './../enum/scope.enum';
 import { ClientCredentials } from './client-credentials.entity';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinColumn, ManyToOne } from 'typeorm';
 import { Audit } from '../../commons/entity';
 import { Expose } from 'class-transformer';
 import { BasicEntity } from '../../commons/entity/basic.entity';
@@ -24,14 +24,7 @@ export class Scope extends BasicEntity {
   })
   description: string;
 
-  @ManyToMany<ClientCredentials>(
-    () => ClientCredentials,
-    (credentials: ClientCredentials) => credentials.scopes,
-  )
   @Expose()
-  credentials: ClientCredentials[];
-
-
   @ManyToMany<AuthorizationCode>(
     () => AuthorizationCode,
     (authorizationCodes: AuthorizationCode) => authorizationCodes.scopes,
@@ -46,5 +39,14 @@ export class Scope extends BasicEntity {
   @Expose()
   @JoinColumn()
   groups: Group[];
+
+
+  @ManyToMany<ClientCredentials>(
+    () => ClientCredentials,
+    (clientCredentials: ClientCredentials) => clientCredentials.scopes,
+  )
+  @Expose()
+  @JoinColumn()
+  credentials: ClientCredentials[];
 
 }

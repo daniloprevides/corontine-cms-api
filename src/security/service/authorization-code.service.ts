@@ -42,12 +42,25 @@ export class AuthorizationCodeService {
     });
   }
 
+  @Transactional()
+  public async addNewCode(name:string, state:string, url:string): Promise<AuthorizationCode> {
+    const authorizationCode = new AuthorizationCode();
+    authorizationCode.app_name = name;
+    authorizationCode.code = uuidv4();
+    authorizationCode.consumed = false;
+    authorizationCode.redirect_uri = url;
+    authorizationCode.state = state;
+    return this.repository.save(authorizationCode);
+  }
+
+
+
 
   @Transactional()
   public async add(authorizationCode:RequestAuthorizationCodeDTO): Promise<AuthorizationCode> {
     const code = uuidv4();
     let clientCredential = await this.clientCredentialRepository.findOne({where: {name: authorizationCode.client_id}});
-    if (!clientCredential) throw new BadRequestException();
+    if (!clientCredential) throw new BadRequestException("Client credentials not found");
     let scopesArray = authorizationCode.scope.split(" ");
     
     //finding all scopes by name

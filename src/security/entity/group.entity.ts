@@ -37,6 +37,12 @@ export class Group extends BasicEntity {
   @Expose()
   description: string;
 
+  @Column({
+    nullable: false, default: false
+  })
+  @Expose()
+  isAdmin: boolean;
+
   @ManyToMany<Scope>(
     () => Scope,
     (scope: Scope) => scope.groups

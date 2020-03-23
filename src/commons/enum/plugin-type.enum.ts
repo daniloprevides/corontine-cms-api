@@ -6,4 +6,5 @@ export enum PluginTypeEnum{
     MENU="MENU",
     PAGES="PAGES",
     API="API",
+    REDIRECTOR="REDIRECTOR"
 }

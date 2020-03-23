@@ -1,0 +1,15 @@
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border: none !important;
+}
+
+.btn-warning {
+  background-color: var(--cms-options-disabled) !important;
+  border: none !important;
+}
+
+
+.items-container {
+    max-height: 30vh;
+    overflow: auto;
+}

@@ -27,6 +27,16 @@ export class MenuHelper {
         visible: this.isVisible(userPermissions, "cms"),
         children: [
           {
+            id: 99990,
+            text: "Addon Manager",
+            route: "/manager/addon",
+            parentId: 9999,
+            visible: this.isVisible(
+              userPermissions,
+              "plugin_create|plugin_update"
+            )
+          },
+          {
             id: 99991,
             text: "Menu Manager",
             route: "/manager/menu",

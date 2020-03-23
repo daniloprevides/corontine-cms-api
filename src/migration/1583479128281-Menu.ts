@@ -42,6 +42,7 @@ export class Menu1583479128281 implements MigrationInterface {
     const menuPermission = await createScope(MenuScopeEnum.MENU_READ, "Read menu");
     await createScope(MenuScopeEnum.MENU_DELETE, "Delete menu");
     await createScope(MenuScopeEnum.MENU_UPDATE, "Update menu");
+    await createScope(MenuScopeEnum.MENU_ADD_ENTRY, "Add entry to custom menu");
 
 
     const adminGroup = await groupRepository.findOne({ name: "admin" });
@@ -51,7 +52,6 @@ export class Menu1583479128281 implements MigrationInterface {
     const defaultUserGroup = await groupRepository.findOne({ name: "Default User" }, {relations: ["scopes"]});
     defaultUserGroup.scopes.push(menuPermission);
     groupRepository.save(defaultUserGroup);
-
 
   }
 

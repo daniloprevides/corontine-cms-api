@@ -55,5 +55,5 @@ export class AuthorizationCode extends Audit {
   @JoinTable({name: "authorization-code_scopes"})
   @Expose()
   scopes: Scope[];
-
+  
 }

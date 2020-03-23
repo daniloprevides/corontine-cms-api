@@ -52,14 +52,14 @@ export class PageInfo1583747115654 implements MigrationInterface {
 
     //Creating the components
     const pageComponents = new Components();
-    pageComponents.clientId = pluginBase?.clientId;
+    pageComponents.clientId = "default";
     pageComponents.description = "Page Components";
     pageComponents.name = "page_component";
     pageComponents.plugin = pluginBase;
     pageComponents.url = `{plugin('pluginType','${PluginTypeEnum.BASE}').componentsUrl}/components/components.js`;
     pageComponents.fields = [
       {
-        clientId: pluginBase?.clientId,
+        clientId: "default",
         name: "table-data",
         description: "Data Table",
         type: FieldSelectionTypeEnum.MULTI,        
@@ -69,7 +69,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         needApi: false,
         events: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             name: "load-data",
             description:
               "Event is triggered when user press pagination for loading more data",
@@ -80,7 +80,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             outputType: FieldTypeEnum.ANY
           } as Events,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             name: "item-selected",
             description: "Event triggered when one item is selected",
             outputObjectDefinition: {},
@@ -89,7 +89,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ],
         attributes: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             required: false,
             description: "",
@@ -119,7 +119,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.ANY
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             required: false,
             name: "data",
@@ -137,7 +137,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.ANY
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: 10 },
             required: false,
@@ -146,7 +146,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.NUMBER
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -155,7 +155,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,  
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -164,7 +164,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,     
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -173,7 +173,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes, 
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -182,7 +182,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,               
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -191,7 +191,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,                                         
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -200,7 +200,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: { val: false },
             required: false,
@@ -209,7 +209,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,          
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -218,7 +218,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -229,7 +229,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ]
       } as Fields,
       {
-        clientId: pluginBase?.clientId,
+        clientId: "default",
         name: "select-data",
         description: "Allow user to select an item from specific data",
         type: FieldSelectionTypeEnum.MULTI,
@@ -238,7 +238,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         allowInComposer: true,
         events: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             name: "changed",
             description: "Event triggered when one item is selected",
             outputObjectDefinition: {
@@ -251,7 +251,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ],
         attributes: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: true,
@@ -260,7 +260,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: { val: "label" },
             required: false,
@@ -269,7 +269,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -278,7 +278,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -288,7 +288,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -298,7 +298,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,          
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -308,7 +308,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,          
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -318,7 +318,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: "Field cannot be empty" },
             required: false,
@@ -327,7 +327,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -336,7 +336,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,          
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             applyAfterSetInComposer: false,
@@ -354,7 +354,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ]
       } as Fields,        
       {
-        clientId: pluginBase?.clientId,
+        clientId: "default",
         name: "select-static-data",
         description: "Allow user to select an item from static data",
         type: FieldSelectionTypeEnum.SINGLE,
@@ -363,7 +363,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         allowInComposer: true,
         events: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             name: "changed",
             description: "Event triggered when one item is selected",
             outputObjectDefinition: {
@@ -376,7 +376,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ],
         attributes: [         
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -385,7 +385,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -395,7 +395,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -405,7 +405,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,          
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -415,7 +415,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,          
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -425,7 +425,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: "Field cannot be empty" },
             required: false,
@@ -434,7 +434,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             applyAfterSetInComposer: true,
             defaultValue: [
@@ -452,7 +452,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
       } as Fields,
       
       {
-        clientId: pluginBase?.clientId,
+        clientId: "default",
         name: "input-data",
         description: "Allow user to input data (All input types)",
         type: FieldSelectionTypeEnum.SINGLE,
@@ -461,7 +461,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         allowInComposer: true,
         events: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             name: "changed",
             description: "Event triggered when one item is changed",
             outputObjectDefinition: {
@@ -472,7 +472,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             outputType: FieldTypeEnum.STRING
           } as Events,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             name: "value-changed",
             description: "Event triggered when a value is changed keydown",
             outputObjectDefinition: {
@@ -485,7 +485,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ],
         attributes: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -495,7 +495,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             removeWhenFalse: true
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -504,7 +504,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -514,7 +514,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -524,7 +524,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,          
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -534,7 +534,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,                    
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: true },
             required: false,
@@ -544,7 +544,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: "text" },
             required: true,
@@ -569,7 +569,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.LIST_CONTENT
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -578,7 +578,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: { val: "Field cannot be empty" },
             required: false,
@@ -587,7 +587,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -596,7 +596,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,                    
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             applyAfterSetInComposer: false,
@@ -609,7 +609,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ]
       } as Fields,
       {
-        clientId: pluginBase?.clientId,
+        clientId: "default",
         name: "checkbox-data",
         description: "Allow user to select a boolean value",
         type: FieldSelectionTypeEnum.SINGLE,
@@ -618,7 +618,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         allowInComposer: true,
         events: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             name: "changed",
             description: "Event triggered when one item is changed",
             outputObjectDefinition: {
@@ -631,7 +631,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ],
         attributes: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -641,7 +641,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             removeWhenFalse: true
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             required: false,
@@ -650,7 +650,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -660,7 +660,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,          
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -670,7 +670,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.BOOLEAN
           } as Attributes,      
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.ATTRIBUTE,
             defaultValue: null,
             required: false,
@@ -679,7 +679,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,                                  
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             defaultValue: null,
             applyAfterSetInComposer: false,
@@ -693,7 +693,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ]
       } as Fields,
       {
-        clientId: pluginBase?.clientId,
+        clientId: "default",
         name: "viewer-data",
         description: "Viewer for data",
         type: FieldSelectionTypeEnum.CUSTOM,        
@@ -703,7 +703,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         needApi: false,
         events: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             name: "item-selected",
             description: "Event triggered when one item is selected",
             outputObjectDefinition: {},
@@ -712,7 +712,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
         ],
         attributes: [
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             required: true,
             description: "",
@@ -723,7 +723,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             required: true,
             description: "",
@@ -734,7 +734,7 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.STRING
           } as Attributes,   
           {
-            clientId: pluginBase?.clientId,
+            clientId: "default",
             attributeType: AttributeTypeEnum.PROPERTY,
             required: false,
             description: "",
@@ -745,7 +745,39 @@ export class PageInfo1583747115654 implements MigrationInterface {
             type: FieldTypeEnum.NUMBER
           } as Attributes,                                  
         ]
-      } as Fields,                   
+      } as Fields,
+      {
+        clientId: "default",
+        name: "custom-data",
+        description: "Custom data",
+        type: FieldSelectionTypeEnum.CUSTOM,        
+        defaultEvent: "changed",
+        defaultEventPath: "",
+        allowInComposer: true,        
+        needApi: false,
+        events: [
+          {
+            clientId: "default",
+            name: "changed",
+            description: "Event triggered when something changes",
+            outputObjectDefinition: {},
+            outputType: FieldTypeEnum.ANY
+          } as Events
+        ],
+        attributes: [
+          {
+            clientId: "default",
+            attributeType: AttributeTypeEnum.PROPERTY,
+            required: true,
+            description: "",
+            applyAfterSetInComposer: true,
+            name: "element",
+            value:null,
+            defaultValue: null,
+            type: FieldTypeEnum.STRING
+          } as Attributes,                                     
+        ]
+      } as Fields,                         
     ];
 
     await componentsRepository.save(pageComponents);

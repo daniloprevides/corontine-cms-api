@@ -126,7 +126,7 @@ describe('SecurityController (e2e)', () => {
   }
 
   const authorizationCodeStep1 = (state:string,scope:string,clientId:string,redirectUri:string) => {
-    let url = `/oauth/code?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
+    let url = `/oauth/code?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}&app_name=${clientId}`;
     return request(server)
       .get(url)      
   }
@@ -155,7 +155,7 @@ describe('SecurityController (e2e)', () => {
 
 
   beforeAll(async () => {
-    jest.setTimeout(30000);
+    jest.setTimeout(60000);
     return new Promise(async (resolve, reject) => {
       moduleFixture = await Test.createTestingModule({
         imports: [AppModule]
@@ -171,16 +171,18 @@ describe('SecurityController (e2e)', () => {
 
       await app.init();
 
-      const groupRepository: Repository<Group> = moduleFixture.get<Repository<Group>>(getRepositoryToken(Group));
-      const adminGroup = await groupRepository.findOne({name: "admin"});
-      groupDto = adminGroup as GroupDTO;
+
   
       setTimeout(async () => {
+        const groupRepository: Repository<Group> = moduleFixture.get<Repository<Group>>(getRepositoryToken(Group));
+        const adminGroup = await groupRepository.findOne({name: "admin"});
+        groupDto = adminGroup as GroupDTO;
+
         await createDefaultClientCredentialsForTesting();
         authorization  = await getUserClientCredentials(ClientCredentialsEnum["USER@APP"]);    
         server = app.getHttpServer();  
         resolve();
-      },4000);
+      },9000);
   
     });
     
@@ -312,6 +314,7 @@ describe('SecurityController (e2e)', () => {
     await authorizationCodeStep1(state,scope,clientId,redirectUri)
     .expect(200)
     .then(data => {
+      console.log(data.body);
       let item = data.body;
       expect(item.state).toBe(state);
       expect(item.scopes.length).toBe(2);
@@ -341,6 +344,7 @@ describe('SecurityController (e2e)', () => {
         return authorizationCodeStep2(res.body.accessToken,item.code,item.redirect_uri,clientCredential.name,clientCredential.secret)
         .expect(200)
         .then(data => {
+
           let item = data.body;
           expect(item.accessToken).toBeTruthy();
           expect(item.refreshToken).toBeTruthy();

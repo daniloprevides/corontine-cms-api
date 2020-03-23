@@ -9,10 +9,12 @@ export class NewClientCredentialsDTO {
 
   @ApiProperty()
   @IsString()
-  secret: string;
+  @IsOptional()
+  secret?: string;
 
   @ApiProperty({type: Array})
   @IsArray()
-  scopes: NewScopeDTO[];
+  @IsOptional()
+  scopes?: NewScopeDTO[];
 
 }

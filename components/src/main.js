@@ -20,6 +20,8 @@ import SelectStaticData from "./select-static-data/select-static-data.svelte";
 import UserManager from "./user-manager/user-manager.svelte";
 import GroupManager from "./group-manager/group-manager.svelte";
 import ViewerData from "./viewer-data/viewer-data.svelte";
+import CustomData from "./custom-data/custom-data.svelte";
+import PermissionScreen from "./permission-screen/permission-screen.svelte";
 
 //Vaading components
 import "@vaadin/vaadin-login";
@@ -58,5 +60,6 @@ export {
   SelectStaticData,
   GroupManager,
   UserManager,
-  ViewerData
+  ViewerData,
+  CustomData
 };

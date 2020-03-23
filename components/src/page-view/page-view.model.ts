@@ -8,6 +8,17 @@ let dialogComponent;
 let permissionDenied = false;
 let mainComponent;
 
+//custom elements exports
+export let custom_plugins;
+export let custom_api;
+export let custom_scopes;
+export let custom_page;
+export let custom_getList;
+export let custom_getOne;
+export let custom_createItem;
+export let custom_updateItem;
+export let custom_deleteItem;
+
 const isObject = val => {
   if (val === null) {
     return false;
@@ -42,49 +53,48 @@ export const applyValuesChanged = item => {
 export const applyValues = item => {
   model.model = item;
 
-  //setTimeout(() => {
-    component.childNodes[0]
-      .querySelectorAll(".dynamic-element")
-      .forEach(async el => {
-        let id = el.id;
-        let selectedItem = data.content.items.find(i => i.id === id);
+  component.childNodes[0]
+    .querySelectorAll(".dynamic-element")
+    .forEach(async el => {
+      let id = el.id;
+      let selectedItem = data.content.items.find(i => i.id === id);
 
-        let fieldName = selectedItem.fieldName;
-        let value = model.model[fieldName];
-        //If item is object and defaultPropertyBind is filled
-        if (selectedItem?.component?.defaultPropertyBind && isObject(value)) {
-          value = value[selectedItem.component.defaultPropertyBind];
-        }
-        if (selectedItem.component.type == "API") {
-          let field = selectedItem?.attributes?.find(a => a.name === "field");
-          if (field && field.value) {
-            if (isObject(model.model[fieldName])) {
-              let currentValue = model.model[fieldName][field.value];
-              value = currentValue;
-            }
+      let fieldName = selectedItem.fieldName;
+      let value = model.model[fieldName];
+      //If item is object and defaultPropertyBind is filled
+      if (selectedItem?.component?.defaultPropertyBind && isObject(value)) {
+        value = value[selectedItem.component.defaultPropertyBind];
+      }
+      if (selectedItem.component.type == "API") {
+        let field = selectedItem?.attributes?.find(a => a.name === "field");
+        if (field && field.value) {
+          if (isObject(model.model[fieldName])) {
+            let currentValue = model.model[fieldName][field.value];
+            value = currentValue;
           }
         }
+      }
 
-        if (value != undefined) {
-          customElements.whenDefined(selectedItem?.component.name).then(d => {
-            console.debug(`Applying data ${value} for ${fieldName} of type ${selectedItem.component.name}`);
-            el.data = value;
-          })
-        }
+      if (value != undefined) {
+        customElements.whenDefined(selectedItem?.component.name).then(d => {
+          console.debug(
+            `Applying data ${value} for ${fieldName} of type ${selectedItem.component.name}`
+          );
+          el.data = value;
+        });
+      }
 
-        el.itemmodel = model.model;
-        el.permissions = permissions;
-      });
- // }, 100);
+      el.itemmodel = model.model;
+      el.permissions = permissions;
+    });
 };
 
-
 export const getValidationData = () => {
-  console.debug('Checking validation');
+  console.debug("Checking validation");
   let validationData = {};
-  component.querySelectorAll('.dynamic-element').forEach(async el => {
+  component.querySelectorAll(".dynamic-element").forEach(async el => {
     let isValid = true;
-    let input = el.shadowRoot.querySelector('input');
+    let input = el.shadowRoot.querySelector("input");
     let validationMessage = null;
     if (el.validateData) isValid = el.validateData();
     if (isValid) {
@@ -96,9 +106,9 @@ export const getValidationData = () => {
       validationMessage = el.getErrorMessage();
     }
 
-    validationData[el.getAttribute('id')] = {
+    validationData[el.getAttribute("id")] = {
       isValid: isValid,
-      message: validationMessage,
+      message: validationMessage
     };
   });
 
@@ -135,7 +145,7 @@ export class PageViewModel {
   model = {} as any;
 
   private applyValues(element: any, properties, id) {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       if (id && id.length) {
         if (properties[id]) {
           Object.keys(this.properties[id]).forEach(key => {
@@ -150,9 +160,9 @@ export class PageViewModel {
           });
         }
       }
-      
+
       resolve();
-    })
+    });
   }
 
   private applyColumns(element: any, columns: number) {
@@ -189,7 +199,6 @@ export class PageViewModel {
           element.options = childrenData.items.map(c => {
             return c;
           });
-
         }
       }
     }
@@ -278,25 +287,40 @@ export class PageViewModel {
       return;
     }
     //adding lifeCyckle methods
-    element.getData = getData;
-    element.api = apiData;
-    console.debug(`Acquiring data for `, apiData);
+    customElements.whenDefined(selectedItem.name).then(async () => {
+      element.getData = getData;
+      element.api = apiData;
 
-    //get default size
-    let options = {} as any;
-    let size = selectedItem.attributes.find(a => a.name === "size");
-    if (size && size.value) options.limit = size.value;
+      element.plugins = custom_plugins;
+      element.page_api = custom_api;
 
-    const childrenData = await getData(
-      apiData.value.apiUrl,
-      options,
-      apiData.value.id
-    );
-    console.debug(`Data acquired for ${apiData.value.apiUrl}`, childrenData);
+      element.scopes = custom_scopes;
+      element.page = custom_page;
 
-    if (childrenData && childrenData.items) {
-      element.data = childrenData;
-    }
+      element.getList = custom_getList;
+      element.getOne = custom_getOne;
+      element.createItem = custom_createItem;
+      element.updateItem = custom_updateItem;
+      element.deleteItem = custom_deleteItem;
+      console.debug(`Populated element `, element, custom_scopes);
+      console.debug(`Acquiring data for `, apiData);
+
+      //get default size
+      let options = {} as any;
+      let size = selectedItem.attributes.find(a => a.name === "size");
+      if (size && size.value) options.limit = size.value;
+
+      const childrenData = await getData(
+        apiData.value.apiUrl,
+        options,
+        apiData.value.id
+      );
+      console.debug(`Data acquired for ${apiData.value.apiUrl}`, childrenData);
+
+      if (childrenData && childrenData.items) {
+        element.data = childrenData;
+      }
+    });
   }
 
   showMessage(
@@ -333,13 +357,13 @@ export class PageViewModel {
         });
 
         const footer = document.createElement("div");
-        footer.style.margin = "10px;"
+        footer.style.margin = "10px;";
         footer.appendChild(okButton);
         if (showCancel) footer.appendChild(cancelButton);
 
         root.appendChild(div);
         root.appendChild(br);
-        root.appendChild(footer);        
+        root.appendChild(footer);
       };
       dialogComponent.opened = true;
     });
