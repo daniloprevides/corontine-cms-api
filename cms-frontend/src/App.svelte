@@ -1,38 +1,39 @@
 <script>
-  import { onMount } from "svelte";
-  import Router from "svelte-spa-router";
-  import LoginPage from "./routes/login.svelte";
-  import HomePage from "./routes/home.svelte";
-  import ForgotPasswordPage from "./routes/forgot-password.svelte";
-  import ChangePasswordPage from "./routes/password-change.svelte";
-  import NewPasswordPage from "./routes/new-password.svelte";
-  import EditPagePage from "./routes/page-edit.svelte";
-  import ViewPagePage from "./routes/page-view.svelte";
-  import ListPage from "./routes/list.svelte";
-  import Page from "./routes/page/page.svelte";
-  import UserManagerPage from "./routes/user-manager/user-manager-page.svelte";
-  import GroupManagerPage from "./routes/group-manager/group-manager-page.svelte";
-  import AddonManagerPage from "./routes/addon-manager/addon-manager.svelte";
+  import NProgress from 'nprogress';
+  import { onMount } from 'svelte';
+  import Router from 'svelte-spa-router';
+  import LoginPage from './routes/login.svelte';
+  import HomePage from './routes/home.svelte';
+  import ForgotPasswordPage from './routes/forgot-password.svelte';
+  import ChangePasswordPage from './routes/password-change.svelte';
+  import NewPasswordPage from './routes/new-password.svelte';
+  import EditPagePage from './routes/page-edit.svelte';
+  import ViewPagePage from './routes/page-view.svelte';
+  import ListPage from './routes/list.svelte';
+  import Page from './routes/page/page.svelte';
+  import UserManagerPage from './routes/user-manager/user-manager-page.svelte';
+  import GroupManagerPage from './routes/group-manager/group-manager-page.svelte';
+  import AddonManagerPage from './routes/addon-manager/addon-manager.svelte';
 
-  import MenuManagerPage from "./routes/manager-menu.svelte";
-  import StorePage from "./routes/store.svelte";
+  import MenuManagerPage from './routes/manager-menu.svelte';
+  import StorePage from './routes/store.svelte';
 
-  import Modal from "./modals/modal.svelte";
-  import "nprogress/nprogress.css";
+  import Modal from './modals/modal.svelte';
+  import 'nprogress/nprogress.css';
 
-  import { push, pop, replace } from "svelte-spa-router";
+  import { push, pop, replace } from 'svelte-spa-router';
 
-  import baseService from "./services/base.service";
-  import menuService from "./services/menu.service";
-  import { AuthorizationService } from "./services/authorization.service";
+  import baseService from './services/base.service';
+  import menuService from './services/menu.service';
+  import { AuthorizationService } from './services/authorization.service';
 
-  import WebComponent from "./services/web-component.service";
-  import { userDataStorage } from "./stores/user-data.store";
-  import { webcomponentDataStorage } from "./stores/webcomponents.store";
-  import { appDataStorage } from "./stores/app-flow.store";
-  import Message from "./modals/message.svelte";
-  import {MenuHelper} from './menu-helper';
-  
+  import WebComponent from './services/web-component.service';
+  import { userDataStorage } from './stores/user-data.store';
+  import { webcomponentDataStorage } from './stores/webcomponents.store';
+  import { appDataStorage } from './stores/app-flow.store';
+  import Message from './modals/message.svelte';
+  import { MenuHelper } from './menu-helper';
+
   /**
    * Variables
    */
@@ -45,84 +46,82 @@
 
   const routes = {
     // Exact path
-    "/home": HomePage,
-    "/forgot-password/:username?": ForgotPasswordPage,
-    "/login": LoginPage,
-    "/change-password": ChangePasswordPage,
-    "/new-password/:changeId": NewPasswordPage,
-    "/manager/menu": MenuManagerPage,
-    "/manager/pages": ViewPagePage,
-    "/manager/user": UserManagerPage,
-    "/manager/group": GroupManagerPage,
-    "/manager/addon": AddonManagerPage,
-    "/add/page": EditPagePage,
-    "/edit/page/:id": EditPagePage,
-    "/pages/:name": Page,
-    "/view/page/:name/:id": Page,
-    "/test": StorePage,
-    "*": LoginPage
+    '/home': HomePage,
+    '/forgot-password/:username?': ForgotPasswordPage,
+    '/login': LoginPage,
+    '/change-password': ChangePasswordPage,
+    '/new-password/:changeId': NewPasswordPage,
+    '/manager/menu': MenuManagerPage,
+    '/manager/pages': ViewPagePage,
+    '/manager/user': UserManagerPage,
+    '/manager/group': GroupManagerPage,
+    '/manager/addon': AddonManagerPage,
+    '/add/page': EditPagePage,
+    '/edit/page/:id': EditPagePage,
+    '/pages/:name': Page,
+    '/view/page/:name/:id': Page,
+    '/test': StorePage,
+    '*': LoginPage,
   };
 
   const gotoLogin = () => {
-    if (location.hash.indexOf("#/new-password/") < 0) {
-      push("/login");
+    if (location.hash.indexOf('#/new-password/') < 0) {
+      push('/login');
     }
   };
 
   //Checking if user is authenticated
-  if (!userDataStorage.get() || userDataStorage.get() == "") {
+  if (!userDataStorage.get() || userDataStorage.get() == '') {
     isLoggedIn = false;
     //checking if url is not a new password
     gotoLogin();
   }
 
+  const getMenu = async data => {
+    //Checking permissions for system menu
+    const userPermissions = await userDataStorage.get().scope.split(' ');
+    let menuBuilder = new MenuHelper();
+    const systemMenu = menuBuilder.getVisibleMenu(userPermissions);
 
-  const getMenu = async (data) => {
-          //Checking permissions for system menu
-      const userPermissions = await userDataStorage.get().scope.split(" ");
-      let menuBuilder = new MenuHelper();
-      const systemMenu = menuBuilder.getVisibleMenu(userPermissions);
-
-      if (data && data.content && data.content.length) {
-        let sMenu = data.content.find(m => m.text === systemMenu[0].text);
-        if (sMenu) {
-          menuData = [...data.content];
-        } else {
-          menuData = [...systemMenu, ...data.content];
-        }
+    if (data && data.content && data.content.length) {
+      let sMenu = data.content.find(m => m.text === systemMenu[0].text);
+      if (sMenu) {
+        menuData = [...data.content];
       } else {
-        menuData = [...systemMenu];
+        menuData = [...systemMenu, ...data.content];
       }
+    } else {
+      menuData = [...systemMenu];
+    }
 
-      return menuData;
-
-  }
+    return menuData;
+  };
 
   const loadLoggedData = async () => {
     if (isLoggedIn) {
       const [data, pages] = await Promise.all([
         menuService.getMenu(),
-        baseService.getListData("pages_api")
+        baseService.getListData('pages_api'),
       ]);
 
       const menu = await getMenu(data);
       headerComponent.values = menu;
       pagesData = pages.items;
-      appDataStorage.setProperty("menu", menuData);
-      appDataStorage.setProperty("menu_data", data);
-      appDataStorage.setProperty("pages", pagesData);
-      appDataStorage.setProperty("pages-paginator", pages);
+      appDataStorage.setProperty('menu', menuData);
+      appDataStorage.setProperty('menu_data', data);
+      appDataStorage.setProperty('pages', pagesData);
+      appDataStorage.setProperty('pages-paginator', pages);
     }
 
     if (headerComponent) {
-      headerComponent.addEventListener("item-clicked", event => {
+      headerComponent.addEventListener('item-clicked', event => {
         const itemClicked = event.detail;
         const pageId = itemClicked.idPage;
         const pageItem = pagesData.find(p => p.id === pageId);
         if (itemClicked.action) {
           itemClicked.action(ok => {
             if (ok) {
-              return push("/login");
+              return push('/login');
             }
           });
         } else {
@@ -142,20 +141,25 @@
     const serverInfo = await baseService.getPublicInfo();
     //loading web components
     if (serverInfo.components) {
-      await Promise.all(
-        serverInfo.components.map(c => WebComponent.loadWebComponent(c.url))
-      );
+      try {
+        NProgress.start();
+        await Promise.all(
+          serverInfo.components.map(c => WebComponent.loadWebComponent(c.url)),
+        );
 
-      await loadLoggedData();
+        await loadLoggedData();
 
-      //Afeter plugins loaded
-      webComponentsLoaded = true;
-      webcomponentDataStorage.loaded(true);
+        //Afeter plugins loaded
+        webComponentsLoaded = true;
+        webcomponentDataStorage.loaded(true);
+      } finally {
+        NProgress.done();
+      }
     }
   });
 
   userDataStorage.subscribe(async data => {
-    if (data && data != "") {
+    if (data && data != '') {
       isLoggedIn = true;
       if (webComponentsLoaded) loadLoggedData();
     } else {
