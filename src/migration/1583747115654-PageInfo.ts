@@ -797,11 +797,11 @@ export class PageInfo1583747115654 implements MigrationInterface {
     const pluginRepository = getRepository<Plugin>("plugin");
 
     const pagePlugin = new Plugin();
-    pagePlugin.apiUrl = "http://localhost:3000";
+    pagePlugin.apiUrl = "{serverUrl()}";
     pagePlugin.pluginType = PluginTypeEnum.PAGES;
     pagePlugin.name = "pages";
     pagePlugin.environment = PluginEnvironmentEnum.DEVELOPMENT;
-    pagePlugin.componentsUrl = "http://localhost:3000";
+    pagePlugin.componentsUrl = "{serverUrl()}";
     pagePlugin.clientId = clientCredentialsDefault.id;
 
     return pluginRepository.save(pagePlugin);

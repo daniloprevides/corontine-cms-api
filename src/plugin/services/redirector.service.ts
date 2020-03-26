@@ -28,7 +28,7 @@ export class RedirectorService {
     const globalInfoDto = new GlobalInfoDto();
     const pluginData = await this.pluginRepository.find({
       enabled: true,
-      environment: this.configService.get("env")
+      //environment: this.configService.get("env")
     });
     (globalInfoDto.description = api.description),
       (globalInfoDto.documentation = `${url}${api.path}`);
@@ -38,18 +38,25 @@ export class RedirectorService {
       Plugin,
       PluginInfoDto
     ).toDtoList(pluginData);
-    globalInfoDto.components = await this.getPublicInfoFromComponents(globalInfoDto.plugins); //Access only to public fields
+    globalInfoDto.components = await this.getPublicInfoFromComponents(globalInfoDto.plugins, url); //Access only to public fields
     globalInfoDto.plugins = await this.getPublicInfoFromPlugins(globalInfoDto.plugins, url)
     return globalInfoDto;
   }
 
-  private async getPublicInfoFromComponents(plugins:PluginInfoDto[]): Promise<ComponentInfoDto[]> {
+  private async getPublicInfoFromComponents(plugins:PluginInfoDto[], url:string): Promise<ComponentInfoDto[]> {
     const context = {
       plugin : (fieldName:string, fieldValue:any) => {
         try {
           return plugins.find(p => p[fieldName] == fieldValue);
         }catch(ex){ console.error(ex);}
         return null;
+      },
+      serverUrl: () => {
+        if (!process.env.SERVER_URL || (process.env.SERVER_URL && !process.env.SERVER_URL.length)){
+          return url;
+        }else{
+          return process.env.SERVER_URL
+        }
       }
     }
     let components = await this.componentsRepository.find({ relations: ["plugin"], where: { "plugin.enabled":  true} });
@@ -67,7 +74,11 @@ export class RedirectorService {
   private async getPublicInfoFromPlugins(plugins:PluginInfoDto[], url:string): Promise<PluginInfoDto[]> {
     const context = {
       serverUrl: () => {
-        return url;
+        if (!process.env.SERVER_URL || (process.env.SERVER_URL && !process.env.SERVER_URL.length)){
+          return url;
+        }else{
+          return process.env.SERVER_URL
+        }
       },
       plugin : (fieldValue:any) => {
         try {

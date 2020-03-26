@@ -33,3 +33,10 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
+src/.build
+cms-frontend/node_modules
+cms-frontend/public/build
+.build
+components/node_modules
+.env.production
+.serverless

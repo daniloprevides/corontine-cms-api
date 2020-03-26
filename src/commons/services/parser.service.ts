@@ -54,7 +54,10 @@ export class ParserService {
 
     for (let variable of variables) {
       try {
-        const result = evalInScope(variable.data, context);
+        let result = evalInScope(variable.data, context);
+        if (result.toString().startsWith("{")){
+          result = this.parseVariables(this.getVariablesArray(result), context, result);
+        }
         value = value.replace(`{${variable.unformattedData}}`,result);
       } catch (ex) {
         console.error(ex);

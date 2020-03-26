@@ -17,6 +17,8 @@ export default () => ({
         refreshExpiration: process.env.JWT_EXPIRES_REFRESH
     },
     serverUrl: process.env.SERVER_URL,
+    authenticationUrl: process.env.AUTHENTICATION_URL || null,
+    redirectorUrl: process.env.REDIRECTOR_URL || null,
     emailRequestUrl: process.env.EMAIL_VALIDATE_URL,
     mail: {
         from: process.env.SMTP_FROM,
@@ -64,7 +66,7 @@ export default () => ({
         autoSchemaSync: true,
         synchronize: process.env.DB_SYNCRONIZE === "true" ? true : false || true,
         migrations: [__dirname + '/../migration/*{.ts,.js}'],
-        dropSchema: true,
+        dropSchema: false,
         migrationsRun: false,
         logging: true,
         cli: {

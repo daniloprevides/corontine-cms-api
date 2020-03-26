@@ -31,7 +31,7 @@ async function buildSwagger(
 
 async function bootstrap() {
   require("dotenv-flow").config();
-
+  console.debug(process.env.NODE_ENV);
   const app = await NestFactory.create(AppModule, {
     logger: ["error", "warn", "debug"]
   });
@@ -55,6 +55,7 @@ async function bootstrap() {
   app.use(RequestContextMiddleware);
 
   await app.listen(appConfigService.get("port"));
+  
+  return app;
 }
-
-bootstrap();
+export const app = bootstrap();

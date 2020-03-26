@@ -34,6 +34,7 @@ const mailerAsyncModule: MailerAsyncOptions = {
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      ignoreEnvFile: true,
       load: [configuration]
     }),
     TypeOrmModule.forRootAsync(databaseModule),
@@ -54,7 +55,9 @@ export class AppModule {
 
   async runMigration(){
       initializeTransactionalContext() 
-      await this.connection.synchronize();
-      await this.connection.runMigrations();
+      //if (process.env.NODE_ENV == "development" || !process.env.NODE_ENV){
+        //await this.connection.synchronize();
+        //await this.connection.runMigrations();
+     // }
   }
 }

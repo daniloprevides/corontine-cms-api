@@ -19,7 +19,7 @@ const config = {
 		apiUrl: "http://localhost:3000"
 	},
 	production : {
-		apiUrl: "http://localhost:3000"
+		apiUrl: "https://9ynqkfgaz9.execute-api.us-east-1.amazonaws.com/production"
 	}
 }
 

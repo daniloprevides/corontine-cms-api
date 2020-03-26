@@ -1,0 +1,64 @@
+service: corontine-api
+
+package:
+  include:
+    - views/**/*
+    - cms-frontend/public/**/*
+
+custom:
+  serverless-offline:
+    skipCacheInvalidation: true
+    # httpPort: 2000
+    noPrependStageInUrl: true
+  dotenv:
+    logging: true    
+  apiGateway:
+    binaryMediaTypes:
+      - "image/png"
+      - "image/jpeg"
+      - "text/html"      
+      - "text/*"            
+      - "text/javascript"            
+
+plugins:
+  - serverless-plugin-typescript
+  # - serverless-plugin-optimize
+  - serverless-dotenv-plugin  
+  - serverless-offline
+  - serverless-aws-static-file-handler/plugins/BinaryMediaTypes  
+
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${env:NODE_ENV}
+  memorySize: 1024 # optional, in MB, default is 1024
+  timeout: 30 # optional, in seconds, default is 6
+  versionFunctions: false # optional, default is true
+  tracing:
+    lambda: true 
+
+functions:
+  components:
+    handler: src/lambda.components
+    events:
+      - http:
+          path: /components/{any+}
+          method: get     
+          cors: true
+  app:
+    handler: src/lambda.handler
+    events:
+     - http:
+         method: any
+         path: /{any+}
+         cors: true
+
+  client:
+    handler: src/lambda.frontend
+    events:
+     - http:
+         method: any
+         path: /front/{any+}
+         cors: true         
+    

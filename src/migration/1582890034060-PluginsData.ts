@@ -16,7 +16,7 @@ export class PluginsData1582890034060 implements MigrationInterface {
     private async createScopes(){
         const scopeRepository = getRepository<Scope>("scope");
         const createScope = async (scopeEnum:ScopeEnum, description:string) => {
-            let scope = new Scope();
+            const scope = new Scope();
             scope.name = scopeEnum;
             scope.description = description;
             return await scopeRepository.save(scope);
@@ -79,22 +79,22 @@ export class PluginsData1582890034060 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         const clientCredentialsRepository = getRepository<ClientCredentials>("client-credentials");
-        let clientCredentialsDefault = await clientCredentialsRepository.findOne({where: {name: ClientCredentialsEnum["USER_PERMISSIONS@APP"]}});
+        const clientCredentialsDefault = await clientCredentialsRepository.findOne({where: {name: ClientCredentialsEnum["USER_PERMISSIONS@APP"]}});
         const pluginRepository = getRepository<Plugin>("plugin");
 
         const authenticationPlugin = new Plugin();
-        authenticationPlugin.apiUrl = "http://localhost:3000";
+        authenticationPlugin.apiUrl = "{serverUrl()}";
         authenticationPlugin.pluginType = PluginTypeEnum.AUTH;
         authenticationPlugin.name = "authentication";
         authenticationPlugin.environment = PluginEnvironmentEnum.DEVELOPMENT;
-        authenticationPlugin.componentsUrl = "http://localhost:3000";
+        authenticationPlugin.componentsUrl = "{serverUrl()}";
         authenticationPlugin.clientId = clientCredentialsDefault.id;
 
         const basePlugin = new Plugin();
-        basePlugin.apiUrl = `http://localhost:3000/${Constants.API_PREFIX}/${Constants.API_VERSION_1}`;
+        basePlugin.apiUrl = `{serverUrl()}/${Constants.API_PREFIX}/${Constants.API_VERSION_1}`;
         basePlugin.pluginType = PluginTypeEnum.BASE;
         basePlugin.name = "base";
-        basePlugin.componentsUrl = "http://localhost:3000";
+        basePlugin.componentsUrl = "{serverUrl()}";
         basePlugin.environment = PluginEnvironmentEnum.DEVELOPMENT;
         basePlugin.clientId = clientCredentialsDefault.id;
 
@@ -113,6 +113,7 @@ export class PluginsData1582890034060 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
+        return null
     }
 
 }

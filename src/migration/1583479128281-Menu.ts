@@ -65,11 +65,11 @@ export class Menu1583479128281 implements MigrationInterface {
     const pluginRepository = getRepository<Plugin>("plugin");
 
     const menuPlugin = new Plugin();
-    menuPlugin.apiUrl = "http://localhost:3000";
+    menuPlugin.apiUrl = "{serverUrl()}";
     menuPlugin.pluginType = PluginTypeEnum.MENU;
     menuPlugin.name = "menu";
     menuPlugin.environment = PluginEnvironmentEnum.DEVELOPMENT;
-    menuPlugin.componentsUrl = "http://localhost:3000";
+    menuPlugin.componentsUrl = "{serverUrl()}";
     menuPlugin.clientId = clientCredentialsDefault.id;
 
     return pluginRepository.save(menuPlugin);

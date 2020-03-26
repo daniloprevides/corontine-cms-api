@@ -4,7 +4,8 @@ import {
   HttpService,
   ExecutionContext,
   UnauthorizedException,
-  NotFoundException
+  NotFoundException,
+  Logger
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TokenDto } from "../dto/token.dto";
@@ -14,17 +15,22 @@ import { Constants } from "../constants";
 
 @Injectable()
 export class AuthenticationService {
+  logger: Logger;
+
   constructor(
     private readonly configService: ConfigService,
     private readonly http: HttpService
-  ) {}
+  ) {
+    this.logger = new Logger("Authentication");
+  }
 
   public async getTokenInfo(localUrl:string, authorizationHeader:string) : Promise<TokenDto>{
-    const url = this.configService.get("serverUrl");
+    const url = this.configService.get("redirectorUrl");
     let urlAuthEndpoint: string = `${localUrl}/${Constants.AUTH_DETAILS_ENDPOINT}`;
     let tokenDto: TokenDto = null;
-    if (url && url.trim().length) {
-      const globalInfoResponse = await this.http.get(url).toPromise();
+    if (url && url.trim().length) {      
+      this.logger.debug("Starting microservices authentication", JSON.stringify(`${url}`));
+      const globalInfoResponse = await this.http.get(`${url}`).toPromise();
       if (globalInfoResponse.status != 200)
         throw new UnauthorizedException("Redirector Server is Offline");
       const globalInfo = globalInfoResponse.data as GlobalInfoDto;
@@ -41,7 +47,7 @@ export class AuthenticationService {
 
       urlAuthEndpoint = `${authPlugin.apiUrl}/${Constants.AUTH_DETAILS_ENDPOINT}`;
     }
-
+    this.logger.debug("Authentcation endpoint", JSON.stringify(urlAuthEndpoint));
     //Call authentication server to get token details
     try {
       const tokenDetailsResponse = await this.http
@@ -55,6 +61,7 @@ export class AuthenticationService {
         .toPromise();
       tokenDto = tokenDetailsResponse.data as TokenDto;
     } catch (ex) {
+      this.logger.error(ex);
       if (ex.response?.data?.error?.code === "token_expired"){
         throw new UnauthorizedException(ex.response?.data?.error);
       }
