@@ -4,6 +4,15 @@ Corontine is a Headless CMS platform that allows you to create modules in any la
 Basically we have a SPA CMS client that load custom elements.
 The name comes from my period of quarentine due to Corona Virus. 
 
+Demo running amazon lamda:
+https://9ynqkfgaz9.execute-api.us-east-1.amazonaws.com/production/front/index.html
+
+USER: test@corontine
+PASSWORD: test
+
+API Description:
+https://9ynqkfgaz9.execute-api.us-east-1.amazonaws.com/production/corontine/
+
 # Core Modules
 Actually the core modules are developed using Svelte framework and NodeJS (Nest Framework), but you can develop your modules using any language.
 

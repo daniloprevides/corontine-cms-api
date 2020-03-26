@@ -31,7 +31,7 @@ export class RedirectorService {
       //environment: this.configService.get("env")
     });
     (globalInfoDto.description = api.description),
-      (globalInfoDto.documentation = `${url}\${api.path}`);
+      (globalInfoDto.documentation = `${url}/${api.path}`);
     globalInfoDto.version = api.version;
     globalInfoDto.url = `${url}/info`;
     globalInfoDto.plugins = new Mapper(
