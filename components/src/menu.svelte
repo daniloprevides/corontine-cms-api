@@ -156,8 +156,6 @@
       requiredPermissionErrorMessage = 'Required Permission Must be filled';
     }
 
-    if (curre)
-
     return (
       newPageErrorMessage == null && requiredPermissionErrorMessage == null
     );
