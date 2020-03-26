@@ -66,7 +66,7 @@ export default () => ({
         autoSchemaSync: true,
         synchronize: process.env.DB_SYNCRONIZE === "true" ? true : false || true,
         migrations: [__dirname + '/../migration/*{.ts,.js}'],
-        dropSchema: false,
+        dropSchema: true,
         migrationsRun: false,
         logging: true,
         cli: {

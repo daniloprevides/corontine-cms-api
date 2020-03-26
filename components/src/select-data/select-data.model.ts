@@ -17,7 +17,7 @@ export let requiredMessage = "Field cannot be empty";
 //Data
 export let options = null;
 
-export let data = "";
+export let data = null;
 
 let selectedValue;
 let component;
@@ -61,3 +61,9 @@ export class SelectDataModel {
 export const model = new SelectDataModel();
 export const validateData = model.validate;
 export const getErrorMessage = model.getErrorMessage;
+
+$: {
+  if (data){
+    options = data.items;
+  }
+}

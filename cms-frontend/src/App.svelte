@@ -141,8 +141,8 @@
     const serverInfo = await baseService.getPublicInfo();
     //loading web components
     if (serverInfo.components) {
+      NProgress.start();
       try {
-        NProgress.start();
         await Promise.all(
           serverInfo.components.map(c => WebComponent.loadWebComponent(c.url)),
         );

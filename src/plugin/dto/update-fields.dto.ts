@@ -49,6 +49,10 @@ export class UpdateFieldsDto {
         {
           field: FieldSelectionTypeEnum.SINGLE,
           label: "Singledata"
+        },
+        {
+          field: FieldSelectionTypeEnum.CUSTOM,
+          label: "Custom"
         }
       ]
     })
@@ -74,9 +78,6 @@ export class UpdateFieldsDto {
   defaultEvent?: Fields["defaultEvent"];
 
   @ApiProperty()
-  @ExposeFieldNamesForPage(
-    new ComponentDefinition("input-data", { type: "text" })
-  )
   @IsOptional()
   @ExposeFieldName
   @ExposeFieldNamesForPage(
@@ -98,7 +99,7 @@ export class UpdateFieldsDto {
   @IsOptional()
   @ExposeFieldName
   @ExposeFieldNamesForPage(
-    new ComponentDefinition("boolean", { type: "text" })
+    new ComponentDefinition("checkbox-data", { defaultValue: {val:false}})
   )
   needApi?: Fields["needApi"];
 

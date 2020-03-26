@@ -43,6 +43,10 @@ export class NewFieldsDto {
         {
           field: FieldSelectionTypeEnum.SINGLE,
           label: "Singledata"
+        },
+        {
+          field: FieldSelectionTypeEnum.CUSTOM,
+          label: "Custom"
         }
       ]
     })
@@ -53,7 +57,7 @@ export class NewFieldsDto {
   @IsString()
   @IsOptional()
   @ExposeFieldNamesForPage(
-    new ComponentDefinition("input-data", { type: "textarea" })
+    new ComponentDefinition("input-data", { type: "textarea", required: false })
   )
   @ExposeFieldName
   description?: Fields["description"];
@@ -61,27 +65,24 @@ export class NewFieldsDto {
   @ApiProperty()
   @ExposeFieldName
   @ExposeFieldNamesForPage(
-    new ComponentDefinition("input-data", { type: "text" })
+    new ComponentDefinition("input-data", { type: "text", required: false })
   )
   @IsOptional()
   @ExposeFieldName
   defaultEvent?: Fields["defaultEvent"];
 
   @ApiProperty()
-  @ExposeFieldNamesForPage(
-    new ComponentDefinition("input-data", { type: "text" })
-  )
   @IsOptional()
   @ExposeFieldName
   @ExposeFieldNamesForPage(
-    new ComponentDefinition("input-data", { type: "text" })
+    new ComponentDefinition("input-data", { type: "text", required: false })
   )
   defaultEventPath?: Fields["defaultEventPath"];
 
   @ApiProperty()
   @ExposeFieldName
   @ExposeFieldNamesForPage(
-    new ComponentDefinition("input-data", { type: "text" })
+    new ComponentDefinition("input-data", { type: "text", required: false })
   )
   @IsOptional()
   @ExposeFieldName
@@ -90,16 +91,15 @@ export class NewFieldsDto {
   @ApiProperty()
   @ExposeFieldName
   @IsOptional()
-  @ExposeFieldName
   @ExposeFieldNamesForPage(
-    new ComponentDefinition("boolean", { type: "text" })
+    new ComponentDefinition("checkbox-data")
   )
   needApi?: Fields["needApi"];
 
   @ApiProperty()
   @ExposeFieldName
   @ExposeFieldNamesForPage(
-    new ComponentDefinition("checkbox-data")
+    new ComponentDefinition("checkbox-data", {defaultValue: true})
   )
   @IsOptional()
   allowInComposer?: Fields["allowInComposer"];
@@ -107,9 +107,13 @@ export class NewFieldsDto {
   @ApiProperty({ type: () => NewAttributesDto })
   @IsOptional()
   @ExposeFieldName
-  @ExposeFieldNamesForPage(
-    new ComponentDefinition("input-data", { type: "text" })
-  )
+  // @ExposeFieldNamesForPage(
+  //   new ComponentDefinition("select-data", {
+  //     api: "Attributes",
+  //     field: "id",
+  //     displayLabel: "name"
+  //   })
+  // )
   attributes?: NewAttributesDto[];
 
   @ApiProperty({ type: () => ComponentsDto })

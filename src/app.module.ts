@@ -55,7 +55,7 @@ export class AppModule {
 
   async runMigration(){
       initializeTransactionalContext() 
-      if (process.env.NODE_ENV == "development" || !process.env.NODE_ENV){
+      if (process.env.NODE_ENV == "development" || !process.env.NODE_ENV || process.env.NODE_ENV === ""){
         await this.connection.synchronize();
         await this.connection.runMigrations();
       }
