@@ -1,0 +1,10 @@
+<!-- {{json.stringify(items)}} -->
+
+<div class="form-group" #form>
+  <button type="button" class="btn btn-add " (click)="add()">
+    <fa-icon [icon]="addIcon"></fa-icon><span class="btn-text">{{i18n.add}}</span>
+  </button>
+  <div class="" #container>
+    <list-data [items]="items" (selected)="selected($event)" (change-password)="changePasswordItem($event)" (delete-item)="delete($event)"></list-data>
+  </div>
+</div>

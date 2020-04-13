@@ -1,0 +1,68 @@
+// $icons: aggregation, arrows, asc, cancel, chart, checkbox-checked,
+//   checkbox-indeterminate, checkbox-unchecked, color-picker, column, columns,
+//   contracted, copy, cross, cut, data, desc, expanded, eye-slash, eye, filter,
+//   first, grip, group, indeterminate, last, left, loading, maximize, menu,
+//   minimize, minus, next, none, not-allowed, paste, pin, pivot, plus, previous,
+//   radio-button-off, radio-button-on, right, save, small-down, small-left,
+//   small-right, small-up, tick, tree-closed, tree-indeterminate, tree-open;
+
+// $icon-path: '../../../../cms-angular-frontend/src/assets/resources/icons/';
+
+// @mixin icon-background($path, $icon, $size) {
+//   background: url('#{$path}#{$icon}.svg') no-repeat;
+//   background-color: transparent;
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   background-size: $size $size;
+//   height: $size;
+//   width: $size;
+// }
+
+@import "../node_modules/ag-grid-community/src/styles/ag-grid.scss";
+@import "../node_modules/ag-grid-community/src/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin.scss";
+
+.ag-theme-alpine {
+    @include ag-theme-alpine()
+}
+
+
+// .ag-theme-alpine {
+//     @include ag-theme-alpine(
+//       (
+//         odd-row-background-color: #f5f5f5,
+//         row-border-color: transparent,
+//         row-hover-color: null,
+//         checkbox-checked-color: #03a9f4,
+//         range-selection-border-color: #ff00b1,
+//         range-selection-background-color: #03305633,
+//       )
+//     );
+
+//     .ag-menu-option-active {
+//       background-color: #2661ad;
+//       color: white;
+//     }
+
+//     .ag-icon {
+//       display: inline-block;
+//     }
+
+//     @each $icon in $icons {
+//       .ag-icon.ag-icon-#{$icon} {
+//         @include icon-background($icon-path, $icon, 16px);
+//         &:before {
+//           content: '' !important;
+//         }
+//       }
+//     }
+
+//     .ag-icon.ag-icon-row-drag {
+//       @include icon-background($icon-path, 'grip', 16px);
+//       &:before {
+//         content: '' !important;
+//       }
+//     }
+// }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

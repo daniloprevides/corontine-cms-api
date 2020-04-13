@@ -1,0 +1,20 @@
+@import 'bootstrap/dist/css/bootstrap.css';
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border: none !important;
+}
+
+
+.header {
+  background-color: var(--cms-color-1) !important;
+  color: var(--cms-color-2) !important;
+}
+
+.btn-header {
+  color: var(--cms-color-2) !important;
+}
+
+.btn-brand {
+  color: var(--cms-color-2) !important;
+}

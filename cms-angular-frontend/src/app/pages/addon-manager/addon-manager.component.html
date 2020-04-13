@@ -1,0 +1,29 @@
+<div class="main-form">
+  <h1 class="page-title"> {{"addon.title" | translate}}</h1>
+  <h1>New Addon</h1>
+  <div id="comp-container">
+    <form>
+      <div class="form-group">
+        <label for="addonurl">* Addon URL</label>
+        <input type="url" name="url" class="form-control" id="addonurl" aria-describedby="Addon URL" [(ngModel)]="url"
+          placeholder="Enter Addon url" />
+      </div>
+      <button type="button" class="btn btn-primary" (click)="addNewItem()">Add</button>
+    </form>
+  </div>
+  <br>
+  <h4>
+    Keys
+  </h4>
+  <table-data #table ></table-data>
+  <br>
+  <button type="button" class="btn btn-primary" [disabled]="!canRevoke">Revoke Key</button>
+
+
+  <div class="form-data" #form [hidden]="!dataLoaded"></div>
+  <div class="action-footer">
+
+  </div>
+</div>
+
+<vaadin-dialog #modal></vaadin-dialog>

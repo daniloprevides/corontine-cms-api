@@ -1,0 +1,22 @@
+<div #container class="container" [ngClass]="component.selected ? 'selected' : ''" (click)="selectItem(component)">
+  {{component.uniqueId}}
+  <span *ngIf="component.selected" class="close-icon" (click)="deleteItem(component)">X</span>
+</div>
+
+
+<ng-template #confirmation let-modal>
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss(false)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      {{i18n.delete_message}}
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close(true)">{{i18n.ok}}</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss(false)">{{i18n.cancel}}</button>
+  </div>
+</ng-template>

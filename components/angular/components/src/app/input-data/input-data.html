@@ -1,0 +1,41 @@
+<div class="form-group {{disabled ? 'disabled' : ''}}" #form>
+    <label *ngIf="label" for="select" class="text-left label">{{label}}</label>
+
+    <textarea
+      *ngIf="type === 'textarea'"
+      [placeholder]="placeHolder ? placeHolder : ''"
+      class="form-control"
+      [autofocus]="autofocus"
+      [readonly]="readonly"
+      [disabled]="disabled"
+      [id]="id ? 'input_'+id : 'id'"
+      (change)="changed(data)"
+      (keyDown)="keyDown(data)"
+      (blur)="changed(data)"
+      (click)="changed(data)"
+      [(ngModel)]="data"
+      ></textarea>
+      <small *ngIf="required && errorMessage && validate  && (type === 'textarea')" class="validation-error">{{errorMessage}}</small>
+
+
+
+
+    <input
+      *ngIf="type !== 'textarea'"
+      [type]="type"
+      [placeholder]="placeHolder ? placeHolder : ''"
+      class="form-control"
+      [autofocus]="autofocus"
+      [readonly]="readonly"
+      [disabled]="disabled"
+      [id]="id ? 'input_'+id : 'id'"
+      [(ngModel)]="data"
+      (change)="changed(data)"
+      (keyDown)="keyDown(data)"
+      (blur)="changed(data)"
+      (click)="changed(data)"
+    />
+    <small *ngIf="required && errorMessage && validate && (type !== 'textarea')" class="validation-error">{{errorMessage}}</small>
+
+</div>
+

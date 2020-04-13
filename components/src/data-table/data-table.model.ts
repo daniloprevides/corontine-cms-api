@@ -18,16 +18,7 @@ let modal;
  * Export variables
  */
 export let maxheight = "50vh";
-export let columns = [
-  { field: "code", label: "Code", sortable: true, filterable: true },
-  { field: "name", label: "Name", sortable: true, filterable: true },
-  {
-    field: "description",
-    label: "Description",
-    sortable: true,
-    filterable: true
-  }
-];
+export let columns = [];
 
 export let data = null;
 export let size = 10;

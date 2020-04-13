@@ -34,6 +34,7 @@ export class MenuService extends GenericService<
   }
 
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     @Inject(forwardRef(() => MenuRepository))
     public readonly MenuRepository: MenuRepository,
     @Inject(forwardRef(() => AuthenticationService))
@@ -47,7 +48,7 @@ export class MenuService extends GenericService<
   async addNewEntry(newEntry: MenuAddEntryDTO): Promise<Menu>{
     console.log("Entry",newEntry);
 
-    let menu = await this.repository.findOne({ where: { name: "default" } });
+    const menu = await this.repository.findOne({ where: { name: "default" } });
     let customMenu = menu.content?.find(m => m.id === "custom");
     if (!customMenu){      
       menu.content.push({
@@ -96,16 +97,16 @@ export class MenuService extends GenericService<
       );
 
     const scopes = tokenDto.scope.split(" ");
-    let menu = await this.repository.findOne({ where: { name: "default" } });
+    const menu = await this.repository.findOne({ where: { name: "default" } });
 
     //filtering items that user does not have access
     if (menu.content) {
       const getChildren = (items:Array<any>) => {
-        let subitems = [];
+        const subitems = [];
 
         if (!items || (items && !items.length)) return null;
 
-        for (let children of items){
+        for (const children of items){
           if (scopes.indexOf(children.requiredPermission) >= 0){
             subitems.push(children);
           }
@@ -116,7 +117,7 @@ export class MenuService extends GenericService<
 
       const reference = JSON.parse(JSON.stringify(menu.content));
       const items = new Array<any>();
-      for (let item of reference){
+      for (const item of reference){
         item.children = getChildren(item.children);
         if (scopes.indexOf(item.requiredPermission) >= 0 && item.children?.length){
           items.push(item);

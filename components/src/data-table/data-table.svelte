@@ -113,4 +113,4 @@
     </li>
   </ul>
 {/if}
-<svelte:options tag="table-data" />
+<svelte:options tag="table-data2" />

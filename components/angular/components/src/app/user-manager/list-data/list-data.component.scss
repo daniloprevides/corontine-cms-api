@@ -1,0 +1,35 @@
+.item-card {
+  // width: 100%;
+}
+
+.icon {
+  max-height: 10rem;
+  position: relative;
+}
+
+.card {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  margin: 1rem;
+  &-item {
+    cursor: pointer;
+  }
+}
+
+.card:hover {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  &-item {
+    cursor: pointer;
+  }
+}
+
+.btn-icon {
+  width: 10rem;
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 2rem;
+  color: var(--cms-color-1);
+}
+
+.text-delete {
+  color: var(--cms-color-danger);
+}

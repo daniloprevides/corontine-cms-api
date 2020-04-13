@@ -1,0 +1,180 @@
+{
+  "name": "Corontine CMS",
+  "auth.change_password" : {
+    "title": "Change Password Required",
+    "message": "You need to change your password before log in",
+    "success_message": "Your password has been changed.Please, log in again"
+  },
+  "forgot_password": {
+    "success_message": "Your password has been changed"
+  },
+  "auth.not_found" : {
+    "title": "Not Found",
+    "message": "user or password not found"
+  },
+  "forgot-password": {
+    "page": {
+      "header": {
+        "title": "Forgot Your Password"
+      },
+      "form": {
+        "username": "Username",
+        "submit": "Ok"
+      },
+      "errorMessage": {
+        "required": "Field is required"
+      }
+    }
+  },
+  "change-password": {
+    "page": {
+      "header": {
+        "title": "Change Password"
+      },
+      "form": {
+        "username": "Username",
+        "password": "Password",
+        "newPassword": "New Password",
+        "confirmNewPassword": "Confirm New Password",
+        "submit": "Change Password"
+      },
+      "errorMessage": {
+        "required": "Field is required",
+        "match": "The passwords must be the same"
+      }
+    }
+  },
+  "login": {
+    "success_message": "Login Sucessfuly",
+    "page":  {
+      "header": {
+        "title": "Corontine CMS",
+        "description": "Access to system"
+      },
+      "form": {
+        "title": "Log in",
+        "username": "Username",
+        "password": "Password",
+        "submit": "Log in",
+        "forgotPassword": "Forgot password"
+      },
+      "errorMessage": {
+        "required": "Field is required",
+        "title": "Incorrect username or password",
+        "message":
+          "Check that you have entered the correct username and password and try again."
+      }
+    }
+  },
+  "user": {
+    "title": "User Management",
+    "columns": {
+      "name": "User Name",
+      "description": "User Description",
+      "group": "Groups"
+    },
+    "message": {
+      "success": "User saved successfully",
+      "error": "Error saving user",
+      "deleted": "User deleted successfully"
+    }
+  },
+  "menu": {
+    "title": "Menu Management",
+    "message": {
+      "success": "Menu saved successfully",
+      "error": "Error saving menu",
+      "deleted": "Menu deleted successfully"
+    }
+  },
+  "addon": {
+    "columns": {
+      "name": "Name",
+      "description": "Description"
+    },
+    "title": "Addon Management",
+    "message": {
+      "success": "Menu saved successfully",
+      "error": "Error saving menu",
+      "deleted": "Menu deleted successfully"
+    }
+  },
+  "group": {
+    "title": "Group Management",
+    "columns": {
+      "name": "Group Name",
+      "description": "Group Description"
+    },
+    "message": {
+      "success": "Group saved successfully",
+      "error": "Error saving group",
+      "deleted": "Group deleted successfully"
+    }
+  },
+  "pages": {
+    "title": "Pages Management",
+    "message": {
+      "success": "Page saved successfully",
+      "error": "Error saving page",
+      "deleted": "Page deleted successfully"
+    }
+  },
+  "logoff": {
+    "title": "Log off",
+    "message": "Do you want to log off?",
+    "ok": "ok",
+    "cancel": "cancel"
+  },
+  "user_manager": {
+    "message_delete": "Are you sure you want to delete this item?",
+    "ok": "ok",
+    "cancel": "cancel",
+    "add": "Add",
+    "title": "User",
+    "groups": "Groups",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "save": "save",
+    "required": "Item is required",
+    "notEqual": "Passwords don`t match",
+    "user": {
+      "email": "Email",
+      "name": "name"
+    }
+  },
+  "group_manager": {
+    "message_delete": "Are you sure you want to delete this item?",
+    "ok": "ok",
+    "cancel": "cancel",
+    "add": "Add",
+    "title": "Group",
+    "save": "save",
+    "required": "Item is required",
+    "delete": "delete",
+    "scopes": "Scopes",
+    "group": {
+      "description": "Description",
+      "name": "name"
+    }
+  },
+  "global": {
+    "ok": "ok",
+    "delete": "delete",
+    "save": "save",
+    "cancel": "cancel",
+    "saved.success": "Item successfully saved",
+    "saved.error" : {
+      "generic": "Error saving item",
+      "conflict": "Item already exists",
+      "permission": "Permission Denied",
+      "not_found": "Item not found"
+    }
+  },
+  "error": {
+    "expired": {
+      "title": "Expired",
+      "message": "Acces expired. Please, log in again",
+      "ok": "ok"
+    }
+  }
+}

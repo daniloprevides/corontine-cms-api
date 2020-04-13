@@ -18,6 +18,16 @@ export class InitialComponents1583311713506 implements MigrationInterface {
       where: { pluginType: PluginTypeEnum.BASE }
     });
 
+    //angular components
+    //Creating the components
+    const angularComponents = new Components();
+    angularComponents.clientId = pluginBase?.clientId;
+    angularComponents.description = "Angular Components";
+    angularComponents.name = "angular_component";
+    angularComponents.plugin = pluginBase;
+    angularComponents.url = `{plugin('pluginType','${PluginTypeEnum.BASE}').componentsUrl}/components/angularcomponents.js`;
+    await componentsRepository.save(angularComponents);
+
     //Creating the components
     const loginComponents = new Components();
     loginComponents.clientId = pluginBase?.clientId;

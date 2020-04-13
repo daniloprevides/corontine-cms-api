@@ -1,0 +1,17 @@
+<div class="main-form">
+  <h1 class="page-title"> {{"menu.title" | translate}}</h1>
+  <div class="form-data" #form [hidden]="!dataLoaded"></div>
+  <div class="action-footer" >
+    <button
+    class="btn btn-primary"
+    type="button"
+    (click)="save($event)">
+    {{"global.save" | translate}}
+  </button>
+  <button
+    class="btn btn-warning"
+    type="button" (click)="cancel($event)">
+    {{"global.cancel" | translate}}
+  </button>
+  </div>
+</div>

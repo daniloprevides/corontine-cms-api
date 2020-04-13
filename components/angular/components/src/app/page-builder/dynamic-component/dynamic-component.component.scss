@@ -1,0 +1,33 @@
+.close-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: var(--cms-color-danger);
+  color: white !important;
+  width: 25px;
+  height: 27px;
+  transform: translate(50%,-50%);
+  border-radius: 25px;
+  padding-left: 7px;
+  padding-top: 1px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.selected{
+  border-style: solid !important;
+  border-color: var(--cms-color-5) !important;
+}
+
+.container {
+  width: 100%;
+  position: relative;
+  min-height: 40px;
+  border: 1px dotted var(--cms-color-1);
+  cursor: pointer;
+}
+
+
+:host{
+  margin-top: 1rem;
+}

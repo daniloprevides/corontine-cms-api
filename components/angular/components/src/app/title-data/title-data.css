@@ -1,0 +1,31 @@
+@import 'bootstrap/dist/css/bootstrap.css';
+
+
+.addon-image {
+  width: 150px;
+  margin: 0 auto;
+}
+
+.card-container{
+  margin-top: 15px;
+}
+
+
+.toast-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 0.5em;
+  z-index: 1200;
+  background-color: #3C8939;
+}
+
+.toast-header {
+  background-color: #3C8939;
+  color: white;
+}
+
+.center {
+  margin:0 auto;
+  width: 100%;
+}

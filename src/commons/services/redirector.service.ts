@@ -26,7 +26,8 @@ export class RedirectorService {
     }
 
     public async getInfo(localUrl:string) : Promise<GlobalInfoDto>{
-        const url = this.configService.get("serverUrl");
+        const url = this.configService.get("redirectorUrl");
+
         if (url && url.trim().length) {
           const globalInfoResponse = await this.http.get(url).toPromise();
           if (globalInfoResponse.status != 200)

@@ -1,0 +1,15 @@
+@import "bootstrap/dist/css/bootstrap.css";
+
+.btn {
+  &-add {
+    width: 4rem;
+    margin-bottom: 2rem;
+    color: var(--cms-color-1);
+  }
+
+  &-text {
+    width: 100%;
+    text-align: left;
+    display: inline-block;
+  }
+}

@@ -82,7 +82,7 @@
 
 </style>
 
-<svelte:options tag="login-page" />
+<svelte:options tag="login-pageold2" />
 <svelte-head>
   <link
     rel="stylesheet"

@@ -1,0 +1,24 @@
+<h2>{{i18n.page.header.title}}</h2>
+
+<div class="form-group">
+  <label for="username">{{i18n.page.form.username}}</label>
+  <input type="text" [(ngModel)]="username" class="form-control"
+    [ngClass]="{ 'is-invalid': submitted && f.username.errors }" autofocus />
+  <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+    <div *ngIf="f.username.errors.required">{{i18n.page.errorMessage.required}}</div>
+  </div>
+</div>
+<div class="form-group">
+  <label for="password">{{i18n.page.form.password}}</label>
+  <input type="password" [(ngModel)]="password" class="form-control" (keydown)="checkSubmit($event)"
+    [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+  <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+    <div *ngIf="f.password.errors.required">{{i18n.page.errorMessage.required}}</div>
+  </div>
+</div>
+<div class="form-group">
+  <button class="btn btn-primary" (click)="login()">
+    {{i18n.page.form.submit}}
+  </button>
+  <a class="btn btn-link" (click)="changePassword()">{{i18n.page.form.forgotPassword}}</a>
+</div>

@@ -1,0 +1,12 @@
+<div class="form-group {{disabled ? 'disabled' : ''}}" #form>
+  <label for="select" class="text-left label" *ngIf="label">
+    {{label}}
+  </label>
+  <select name="select" class="form-control" [(ngModel)]="selectedData" [disabled]="disabled"
+    [id]="id ? 'input_'+id : 'id'" (changed)="changed(selectedData)">
+    <option value="">{{i18n.choose}}</option>
+    <option *ngFor="let item of data.items" [(ngModel)]="item[field]" [name]="item[field]" ngDefaultControl>
+      {{item[displayLabel]}}</option>
+  </select>
+  <small class="validation-error" *ngIf="required && errorMessage && validate">{{errorMessage}}</small>
+</div>

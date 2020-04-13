@@ -1,0 +1,27 @@
+<div class="form-group" #form>
+  <div class="components-panel">
+    <div class="components-panel-container" #componentsContainer>
+      <div cdkDropList [cdkDropListData]="draggableComponents" class="example-list" (cdkDropListDropped)="drop($event)"
+        [cdkDropListConnectedTo]="[target]" #source="cdkDropList">
+        <div class="component-item" *ngFor="let item of draggableComponents" cdkDrag>{{item.data.label}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-panel">
+    <div class="droppable-panel">
+      <div cdkDropList [cdkDropListConnectedTo]="[source]" [cdkDropListData]="pageComponentsList" class="target-list"
+        (cdkDropListDropped)="drop($event)" #target="cdkDropList">
+        <dynamic-component (remove-item)="removeItem($event)" (select-item)="selectItem($event)"
+          class="col-md-12 target-item" *ngFor="let item of pageComponentsList" [component]="item.data" cdkDrag>
+        </dynamic-component>
+      </div>
+    </div>
+  </div>
+
+  <div class="properties-panel">
+    <div class="" #propertiesContainer>
+
+    </div>
+  </div>
+</div>

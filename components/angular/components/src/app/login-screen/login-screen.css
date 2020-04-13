@@ -1,0 +1,6 @@
+@import 'bootstrap/dist/css/bootstrap.css';
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border: none !important;
+}

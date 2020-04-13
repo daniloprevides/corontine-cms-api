@@ -1,0 +1,16 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light header">
+  <a class="navbar-brand btn-brand" href="#">{{name}}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div *ngFor="let item of values" (click)="open(myDrop)">
+    <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown" >
+      <button *ngIf="!item.children" class="btn btn-header mr-2" id="dropdownManual" (click)="select(item)">{{item.text}}</button>
+      <button *ngIf="item.children" class="btn btn-header mr-2" id="dropdownManual">{{item.text}}</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownManual" *ngIf="item.children">
+        <button ngbDropdownItem *ngFor="let child of item.children" (click)="select(child)">{{child.text}}</button>
+      </div>
+    </div>
+  </div>
+</nav>

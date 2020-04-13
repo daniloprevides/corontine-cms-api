@@ -6,7 +6,7 @@
 
 </style>
 
-<svelte:options tag="page-view" />
+<svelte:options tag="page-view2" />
 
 <div class="main-container" bind:this={mainComponent}>
   {#if !permissionDenied}

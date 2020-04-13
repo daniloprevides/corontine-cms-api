@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { PageParser } from "./page-parser";
 
 //Data for building page
@@ -183,6 +184,18 @@ export class PageViewModel {
         a => a.name === "displayLabel"
       );
 
+      element.plugins = custom_plugins;
+      element.page_api = custom_api;
+
+      element.scopes = custom_scopes;
+      element.page = custom_page;
+
+      element.getList = custom_getList;
+      element.getOne = custom_getOne;
+      element.createItem = custom_createItem;
+      element.updateItem = custom_updateItem;
+      element.deleteItem = custom_deleteItem;
+
       if (field && displayLabel && field.value && displayLabel.value) {
         const childrenData = await getData(
           apiData.value.apiUrl,
@@ -209,6 +222,7 @@ export class PageViewModel {
     selectedItem: any,
     id: string
   ) {
+    debugger;
     let fieldsDefinition = selectedItem.attributes.find(
       a => a.name === "fieldDefinition"
     );
@@ -234,10 +248,20 @@ export class PageViewModel {
           };
         });
 
-      console.log(element.columns);
-
       element.columns = JSON.parse(JSON.stringify(columns));
       element.getData = getData;
+
+      element.plugins = custom_plugins;
+      element.page_api = custom_api;
+
+      element.scopes = custom_scopes;
+      element.page = custom_page;
+
+      element.getList = custom_getList;
+      element.getOne = custom_getOne;
+      element.createItem = custom_createItem;
+      element.updateItem = custom_updateItem;
+      element.deleteItem = custom_deleteItem;
     } else {
       console.debug(`Field definition not found to ${selectedItem.name}`);
     }

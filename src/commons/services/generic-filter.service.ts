@@ -27,13 +27,17 @@ export class GenericFilterService {
 
   private getValueFromFilter(filter: string, value: any) {
     switch (filter) {
-      case "$not": return Not(value);
+      case "$not": return Not(Equal(value));
+      case "$ne": return Not(Equal(value));
       case "$eq": return Equal(value);
       case "$lt": return LessThan(value);
       case "$lte": return LessThanOrEqual(value);
       case "$gt": return MoreThan(value);
       case "$gte": return MoreThanOrEqual(value);
-      case "$like": return Like(value);
+      case "$like": return Like("%"+value+"%");
+      case "$notlike": return Not(Like("%"+value+"%"));
+      case "$starts": return Like(value+"%");
+      case "$ends": return Like("%"+value);
       case "$bt": {
         if (value.length <= 1) throw new BadRequestException(`Value ${value} for field ${filter} needs to be an array`);
         return Between(value[0],value[1]);

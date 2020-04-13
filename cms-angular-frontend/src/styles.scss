@@ -1,0 +1,92 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../node_modules/nprogress/nprogress.css';
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../node_modules/angular-notifier/styles/core.scss';
+@import '../node_modules/angular-notifier/styles/themes/theme-material.scss';
+
+:root {
+  --lumo-font-size-m: 0.9rem;
+  --cms-options-custom-elements-size: 100%;
+  --cms-dynamic-element-margin: 5px;
+  --cms-validation-error-color: red;
+  --lumo-primary-color: hsla(0, 0%, 16%, 0.83);
+
+  --cms-color-1: hsla(200, 3%, 22%, 1);
+  --cms-color-2: hsla(204, 28%, 93%, 1);
+  --cms-color-3: hsla(0, 14%, 81%, 1);
+  --cms-color-4: hsla(207, 24%, 82%, 1);
+  --cms-color-5: hsla(207, 73%, 69%, 1);
+
+  --cms-color-warning: var(--cms-color-2);
+  --cms-color-danger: #f24832;
+  --cms-color-front: var(--cms-color-2);
+
+  --cms-validation-error-color: var(--cms-color-danger);
+  --lumo-primary-color: var(--cms-color-1);
+  --lumo-primary-text-color: var(--cms-color-2);
+  --cms-options-color: var(--cms-color-2);
+  --primary-color: var(--cms-color-1) !important;
+  --cms-options-bg-color: var(--cms-color-1);
+  --cms-options-title-bg-color: var(--cms-color-1);
+  --cms-options-dark-text-color: var(--cms-color-1);
+  --cms-options-disabled: var(--cms-color-3);
+  --blue: var(--cms-color-5) !important;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  /* default from browser is 16px */
+  font-size: 80%;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+
+.main-form {
+  padding: 50px;
+}
+
+.action-footer > button {
+  margin: 5px;
+}
+
+.page-title {
+  font-size: 3em;
+  margin-bottom: 15px;
+}
+
+.header {
+  background-color: var(--cms-options-bg-color);
+}
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border: none !important;
+}
+
+.btn-warning {
+  background-color: var(--cms-color-warning) !important;
+  color: var(--cms-color-front) !important;
+  border: none !important;
+}
+
+.btn-danger {
+  background-color: var(--cms-color-danger) !important;
+  color: var(--cms-color-front) !important;
+  border: none !important;
+}
+
+.btn-secondary {
+  background-color: var(--cms-color-warning) !important;
+  color: var(--cms-color-1) !important;
+  border: none !important;
+}

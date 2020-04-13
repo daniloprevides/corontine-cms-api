@@ -1,0 +1,71 @@
+<div class="modal-header">
+  {{i18n.title}}
+  <button type="button" class="close" aria-label="Close" (click)="dismiss(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="form-group" #form>
+    <div class="row" #container>
+      <div class="form-group col-md-12">
+        <label for="email">{{i18n.user.email}}</label>
+        <input type="email" class="form-control" id="email" aria-describedby="Email"
+          placeholder="{{i18n.user.email}}" [(ngModel)]="user.email" autofocus (blur)="validate()"
+          (keyDown)="validate()">
+        <small id="emailError" class="form-text text-warning">{{errors.email.required}}</small>
+      </div>
+      <div class="form-group col-md-12">
+        <label for="name">{{i18n.user.name}}</label>
+        <input type="text" class="form-control" id="name" aria-describedby="Name"
+          placeholder="{{i18n.user.name}}" [(ngModel)]="user.name" autofocus (blur)="validate()"
+          (keyDown)="validate()">
+        <small id="nameError" class="form-text text-warning">{{errors.name.required}}</small>
+      </div>
+      <div class="form-group col-md-12" *ngIf="showPassword">
+        <label for="newPassword">{{i18n.newPassword}}</label>
+        <input type="password" class="form-control" id="newPassword" aria-describedby="Password"
+          placeholder="{{i18n.newPassword}}" [(ngModel)]="user.newPassword" autofocus (blur)="validate()"
+          (keyDown)="validate()">
+        <small id="passwordError" class="form-text text-warning">{{errors.newPassword.required}}</small>
+      </div>
+      <div class="form-group col-md-12" *ngIf="showPassword">
+        <label for="newPassword">{{i18n.confirmNewPassword}}</label>
+        <input type="password" class="form-control" id="confirmNewPassword" aria-describedby="New Password"
+          placeholder="{{i18n.confirmNewPassword}}" [(ngModel)]="user.confirmNewPassword" (blur)="validate()"
+          (keyDown)="validate()" (keyDown.enter)="save()">
+        <small id="newPasswordErrorRequired"
+          class="form-text text-warning">{{errors.confirmNewPassword.required}}</small>
+        <small id="newPasswordErrorEqual" class="form-text text-warning">{{errors.confirmNewPassword.notequal}}</small>
+      </div>
+
+      <div id="accordion">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                {{i18n.groups}}
+              </button>
+            </h5>
+          </div>
+
+          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <div class="input-group mb-3" *ngFor="let group of formattedGroups">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <input type="checkbox" aria-label="Group" [(ngModel)]="group.selected"><span > {{group.name}} </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="save()">{{i18n.save}}</button>
+  <button type="button" class="btn btn-secondary" (click)="dismiss(false)">{{i18n.cancel}}</button>
+</div>

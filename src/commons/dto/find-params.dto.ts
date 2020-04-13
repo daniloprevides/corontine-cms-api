@@ -21,10 +21,9 @@ export class FindParamsDto {
   q: string;
 
   @ApiProperty({ type: String })
-  @IsString()
   @IsOptional()  
   @Expose()
-  sort: string;
+  sort: any;
 
   @ApiProperty({ type: () => String })
   @IsString()

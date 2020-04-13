@@ -1,0 +1,7 @@
+<div class="main-form">
+  <div class="form-data" #form [hidden]="!dataLoaded"></div>
+  <div class="action-footer">
+    <button type="button" *ngIf="pageMode === 'add' || pageMode === 'edit'" class="btn btn-primary" (click)="save()">{{"global.save" | translate}}</button>
+    <button type="button" *ngIf="pageMode === 'add' || pageMode === 'edit'" class="btn btn-secondary" (click)="cancel()">{{"global.cancel" | translate}}</button>
+  </div>
+</div>
